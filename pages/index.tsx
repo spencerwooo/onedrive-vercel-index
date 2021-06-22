@@ -1,6 +1,6 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 import siteConfig from '../config/site.json'
 import Navbar from '../components/Navbar'
@@ -8,7 +8,7 @@ import FileListing from '../components/FileListing'
 import Footer from '../components/Footer'
 
 export default function Home() {
-  const { query } = useRouter()
+  const { asPath } = useRouter()
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
@@ -18,8 +18,11 @@ export default function Home() {
 
       <main className="flex flex-col w-full flex-1 bg-gray-50">
         <Navbar />
-        <div className="mx-auto w-full max-w-4xl border-4 border-red-100">
-          <FileListing query={query} />
+        <div className="mx-auto w-full max-w-4xl">
+          <div className="py-3 text-sm text-gray-600">
+            <Link href="/">🚩 Home</Link>
+          </div>
+          <FileListing path={asPath} />
         </div>
       </main>
 
