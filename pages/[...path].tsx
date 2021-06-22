@@ -7,7 +7,7 @@ import Navbar from '../components/Navbar'
 import FileListing from '../components/FileListing'
 import Footer from '../components/Footer'
 
-export default function Home() {
+export default function Folders() {
   const { query } = useRouter()
 
   return (
@@ -18,7 +18,7 @@ export default function Home() {
 
       <main className="flex flex-col w-full flex-1 bg-gray-50">
         <Navbar />
-        <div className="mx-auto w-full max-w-4xl border-4 border-red-100">
+        <div className="mx-auto w-full max-w-4xl">
           <FileListing query={query} />
         </div>
       </main>
