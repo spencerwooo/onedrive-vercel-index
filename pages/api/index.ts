@@ -40,6 +40,9 @@ const getAccessToken = async () => {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { path = '/' } = req.query
+  if (path === '[...path]') {
+    res.status(400).json({ error: 'Path query invalid.' })
+  }
 
   if (typeof path === 'string') {
     const accessToken = await getAccessToken()

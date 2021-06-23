@@ -1,7 +1,12 @@
 import axios from 'axios'
-import useSWR from 'swr'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+import { ParsedUrlQuery } from 'querystring'
 import { FunctionComponent } from 'react'
+import useSWR from 'swr'
 import Link from 'next/link'
+
+import getFileIcon from '../utils/getFileIcon'
 
 const humanFileSize = (size: number) => {
   if (size < 1024) return size + ' B'
@@ -12,17 +17,20 @@ const humanFileSize = (size: number) => {
   return `${formatted} ${'KMGTPEZY'[i - 1]}B`
 }
 
-const encodePath = (path: string) => {
-  const encodedPath = path === '/' ? '' : path
-  if (encodedPath === '/' || encodedPath === '') {
-    return ''
+const queryToPath = (query?: ParsedUrlQuery) => {
+  if (query) {
+    const { path } = query
+    if (!path) return '/'
+    if (typeof path === 'string') return `/${path}`
+    return `/${path.join('/')}`
   }
-  return encodedPath
+  return '/'
 }
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data)
 
-const FileListing: FunctionComponent<{ path: string }> = ({ path }) => {
+const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => {
+  const path = queryToPath(query)
   const { data, error } = useSWR(`/api?path=${path}`, fetcher)
   if (error) return <div>Failed to load</div>
   if (!data)
@@ -50,19 +58,25 @@ const FileListing: FunctionComponent<{ path: string }> = ({ path }) => {
   } = data
   return (
     <div className="bg-white shadow rounded">
-      <div className="p-3 grid grid-cols-9 items-center space-x-2">
-        <div className="col-span-6 font-bold">Name</div>
+      <div className="p-3 grid grid-cols-10 items-center space-x-2 border-b border-gray-200">
+        <div className="col-span-7 font-bold">Name</div>
         <div className="font-bold col-span-2">Created</div>
         <div className="font-bold">Size</div>
       </div>
       {children.map((c: any) => (
-        <Link href={`${encodePath(path)}/${c.name}`} key={c.id} passHref>
-          <div className="p-3 grid grid-cols-9 items-center space-x-2 cursor-pointer hover:bg-gray-100">
-            <div className="col-span-6 truncate">{c.name}</div>
-            <div className="font-mono text-sm col-span-2">
+        <Link href={`${path === '/' ? '' : path}/${c.name}`} key={c.id} passHref>
+          <div className="p-3 grid grid-cols-10 items-center space-x-2 cursor-pointer hover:bg-gray-100">
+            <div className="flex space-x-2 items-center col-span-7 truncate">
+              {/* <div>{c.file ? c.file.mimeType : 'folder'}</div> */}
+              <div className="w-5 text-center">
+                <FontAwesomeIcon icon={c.file ? getFileIcon(c.name) : ['far', 'folder']} />
+              </div>
+              <div className="truncate">{c.name}</div>
+            </div>
+            <div className="font-mono text-sm col-span-2 text-gray-700">
               {new Date(c.createdDateTime).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}
             </div>
-            <div className="font-mono text-sm">{humanFileSize(c.size)}</div>
+            <div className="font-mono text-sm text-gray-700">{humanFileSize(c.size)}</div>
           </div>
         </Link>
       ))}
