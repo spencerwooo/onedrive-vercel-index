@@ -1,4 +1,6 @@
-const icons = {
+import { IconPrefix, IconName } from '@fortawesome/fontawesome-common-types'
+
+const icons: { [key: string]: [IconPrefix, IconName] } = {
   image: ['far', 'file-image'],
   pdf: ['far', 'file-pdf'],
   word: ['far', 'file-word'],
@@ -67,11 +69,15 @@ const extensions = {
  * @param key The index key
  * @returns Whether or not the key exists inside the object
  */
-const hasKey = <O>(obj: O, key: PropertyKey): key is keyof O => {
+export const hasKey = <O>(obj: O, key: PropertyKey): key is keyof O => {
   return key in obj
 }
 
-export default function getFileIcon(fileName: string) {
-  const extension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
+export const getExtension = (fileName: string) => {
+  return fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
+}
+
+export const getFileIcon = (fileName: string) => {
+  const extension = getExtension(fileName)
   return hasKey(extensions, extension) ? extensions[extension] : icons.file
 }

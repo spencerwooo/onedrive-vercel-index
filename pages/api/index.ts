@@ -47,15 +47,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (typeof path === 'string') {
     const accessToken = await getAccessToken()
     const requestUrl = `${apiConfig.driveApi}/root${encodePath(path)}`
-    const files = await axios.get(requestUrl, {
+    const { data } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
-        select: 'name,size,id,createdDateTime',
-        expand: 'children(select=name,createdDateTime,eTag,size,id,file)',
+        select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
+        expand: 'children(select=@content.downloadUrl,name,lastModifiedDateTime,eTag,size,id,folder,file)',
       },
     })
 
-    res.status(200).json({ path, files: files.data })
+    res.status(200).json({ path, data })
     return
   }
 
