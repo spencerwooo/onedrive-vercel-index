@@ -2,7 +2,7 @@ import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { ParsedUrlQuery } from 'querystring'
-import { FunctionComponent, useState } from 'react'
+import { FunctionComponent, useEffect, useState } from 'react'
 import { ImageDecorator } from 'react-viewer/lib/ViewerProps'
 
 import useSWR from 'swr'
@@ -55,20 +55,20 @@ const FileListItem: FunctionComponent<{
 }> = ({ fileContent: c }) => {
   return (
     <div className="p-3 grid grid-cols-10 items-center space-x-2 cursor-pointer hover:bg-gray-100">
-      <div className="flex space-x-2 items-center col-span-7 truncate">
+      <div className="flex space-x-2 items-center col-span-10 md:col-span-7 truncate">
         {/* <div>{c.file ? c.file.mimeType : 'folder'}</div> */}
         <div className="w-5 text-center">
           <FontAwesomeIcon icon={c.file ? getFileIcon(c.name) : ['far', 'folder']} />
         </div>
         <div className="truncate">{c.name}</div>
       </div>
-      <div className="font-mono text-sm col-span-2 text-gray-700">
+      <div className="hidden md:visible font-mono text-sm col-span-2 text-gray-700">
         {new Date(c.lastModifiedDateTime).toLocaleString(undefined, {
           dateStyle: 'short',
           timeStyle: 'short',
         })}
       </div>
-      <div className="font-mono text-sm text-gray-700">{humanFileSize(c.size)}</div>
+      <div className="hidden md:visible font-mono text-sm text-gray-700">{humanFileSize(c.size)}</div>
     </div>
   )
 }
@@ -80,7 +80,12 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
   const router = useRouter()
 
   const path = queryToPath(query)
-  const { data, error } = useSWR(`/api?path=${path}`, fetcher)
+
+  const { data, error } = useSWR(`/api?path=${path}`, fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  })
+
   if (error) return <div>Failed to load</div>
   if (!data) {
     return (
@@ -134,9 +139,9 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     return (
       <div className="bg-white shadow rounded">
         <div className="p-3 grid grid-cols-10 items-center space-x-2 border-b border-gray-200">
-          <div className="col-span-7 font-bold">Name</div>
-          <div className="font-bold col-span-2">Last Modified</div>
-          <div className="font-bold">Size</div>
+          <div className="col-span-10 md:col-span-7 font-bold">Name</div>
+          <div className="hidden md:visible font-bold col-span-2">Last Modified</div>
+          <div className="hidden md:visible font-bold">Size</div>
         </div>
 
         {imagesInFolder.length !== 0 && (

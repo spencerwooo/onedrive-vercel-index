@@ -18,7 +18,7 @@ export default function Folders() {
 
       <main className="flex flex-col w-full flex-1 bg-gray-50">
         <Navbar />
-        <div className="mx-auto w-full max-w-4xl mb-8">
+        <div className="mx-auto w-full max-w-4xl p-4">
           <Breadcrumb query={query} />
           <FileListing query={query} />
         </div>
