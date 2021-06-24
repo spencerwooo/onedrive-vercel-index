@@ -14,7 +14,7 @@ import {
   faFile,
   faFolder,
 } from '@fortawesome/free-regular-svg-icons'
-import { faMusic } from '@fortawesome/free-solid-svg-icons'
+import { faMusic, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { faGithub, faMarkdown } from '@fortawesome/free-brands-svg-icons'
 
 import type { AppProps } from 'next/app'
@@ -34,7 +34,9 @@ library.add(
   faFolder,
   faGithub,
   faMarkdown,
-  faMusic
+  faMusic,
+  faArrowLeft,
+  faArrowRight
 )
 
 function MyApp({ Component, pageProps }: AppProps) {

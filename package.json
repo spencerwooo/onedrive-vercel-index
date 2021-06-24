@@ -18,12 +18,14 @@
     "next": "11.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-pdf": "^5.3.0",
     "react-player": "^2.9.0",
     "react-viewer": "^3.2.2",
     "swr": "^0.5.6"
   },
   "devDependencies": {
     "@types/react": "17.0.11",
+    "@types/react-pdf": "^5.0.4",
     "autoprefixer": "^10.2.6",
     "eslint": "7.29.0",
     "eslint-config-next": "11.0.0",
