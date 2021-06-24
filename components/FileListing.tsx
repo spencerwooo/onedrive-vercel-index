@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { ParsedUrlQuery } from 'querystring'
 import { FunctionComponent, useState } from 'react'
+import { ImageDecorator } from 'react-viewer/lib/ViewerProps'
 
 import useSWR from 'swr'
 import { useRouter } from 'next/router'
@@ -10,7 +11,8 @@ import dynamic from 'next/dynamic'
 
 import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
-import { ImageDecorator } from 'react-viewer/lib/ViewerProps'
+import { VideoPreview } from './previews/VideoPreview'
+import { AudioPreview } from './previews/AudioPreview'
 
 // View images as gallery
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
@@ -30,6 +32,12 @@ const humanFileSize = (size: number) => {
   return `${formatted} ${'KMGTPEZY'[i - 1]}B`
 }
 
+/**
+ * Convert url query into path string
+ *
+ * @param query Url query property
+ * @returns Path string
+ */
 const queryToPath = (query?: ParsedUrlQuery) => {
   if (query) {
     const { path } = query
@@ -182,6 +190,23 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
               </div>
             </div>
           )
+
+        case preview.text:
+          return <div>text</div>
+
+        case preview.code:
+          return <div>code</div>
+
+        case preview.markdown:
+          return <div>markdown</div>
+
+        case preview.video:
+          return <VideoPreview file={resp} />
+        case preview.audio:
+          return <AudioPreview file={resp} />
+
+        case preview.pdf:
+          return <div>pdf</div>
 
         default:
           return <div className="bg-white shadow rounded">{fileName}</div>

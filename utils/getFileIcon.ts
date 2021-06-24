@@ -37,14 +37,22 @@ const extensions = {
   aac: icons.audio,
   mp3: icons.audio,
   ogg: icons.audio,
+  flac: icons.audio,
+  oga: icons.audio,
+  opus: icons.audio,
 
   avi: icons.video,
   flv: icons.video,
   mkv: icons.video,
   mp4: icons.video,
 
+  '7z': icons.archive,
+  bz2: icons.archive,
+  xz: icons.archive,
+  wim: icons.archive,
   gz: icons.archive,
   rar: icons.archive,
+  tar: icons.archive,
   zip: icons.archive,
 
   css: icons.code,
