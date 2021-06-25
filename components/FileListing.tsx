@@ -10,12 +10,12 @@ import useSWR from 'swr'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 
-import Loading from './Loading'
-
+import config from '../config/site.json'
 import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
 import { VideoPreview } from './previews/VideoPreview'
 import { AudioPreview } from './previews/AudioPreview'
+import Loading from './Loading'
 import FourOhFour from './FourOhFour'
 import TextPreview from './previews/TextPreview'
 import MarkdownPreview from './previews/MarkdownPreview'
@@ -161,13 +161,20 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
               setImageViewerVisibility(false)
             }}
             customToolbar={toolbars => {
+              toolbars[0].render = <FontAwesomeIcon icon="plus" />
+              toolbars[1].render = <FontAwesomeIcon icon="minus" />
+              toolbars[2].render = <FontAwesomeIcon icon="arrow-left" />
+              toolbars[4].render = <FontAwesomeIcon icon="arrow-right" />
+              toolbars[9].render = <FontAwesomeIcon icon="download" />
               return toolbars.concat([
                 {
                   key: 'copy',
-                  render: <FontAwesomeIcon icon={['far', 'copy']} />,
+                  render: <FontAwesomeIcon icon="copy" />,
                   onClick: i => {
-                    navigator.clipboard.writeText(i.downloadUrl ? i.downloadUrl : '')
-                    toast.success('Copied to clipboard.')
+                    navigator.clipboard.writeText(
+                      i.alt ? `${config.baseUrl}/api?path=${encodeURIComponent(path + '/' + i.alt)}&raw=true` : ''
+                    )
+                    toast.success('Copied image permanent link to clipboard.')
                   },
                 },
               ])
@@ -203,8 +210,12 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     if (hasKey(extensions, fileExtension)) {
       switch (extensions[fileExtension]) {
         case preview.image:
-          router.push(downloadUrl)
-          return <></>
+          return (
+            <div className="shadow bg-white rounded p-3 w-full">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="mx-auto" src={downloadUrl} alt={fileName} />
+            </div>
+          )
 
         case preview.text:
           return <TextPreview file={resp} />

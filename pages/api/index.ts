@@ -39,9 +39,10 @@ const getAccessToken = async () => {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { path = '/' } = req.query
+  const { path = '/', raw = false } = req.query
   if (path === '[...path]') {
-    res.status(400).json({ error: 'Path query invalid.' })
+    res.status(400).json({ error: 'No path specified.' })
+    return
   }
 
   if (typeof path === 'string') {
@@ -55,9 +56,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     })
 
+    if (raw) {
+      if ('folder' in data) {
+        res.status(400).json({ error: "Folders doesn't have raw download urls." })
+        return
+      }
+      if ('file' in data) {
+        res.redirect(data['@microsoft.graph.downloadUrl'])
+        return
+      }
+    }
+
     res.status(200).json({ path, data })
     return
   }
 
   res.status(404).json({ error: 'Path query invalid.' })
+  return
 }
