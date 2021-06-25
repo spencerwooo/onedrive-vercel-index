@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import toast, { Toaster } from 'react-hot-toast'
 
 import { ParsedUrlQuery } from 'querystring'
 import { FunctionComponent, useState } from 'react'
@@ -142,6 +143,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           <div className="hidden md:block font-bold col-span-2">Last Modified</div>
           <div className="hidden md:block font-bold">Size</div>
         </div>
+        <Toaster />
 
         {imagesInFolder.length !== 0 && (
           <ReactViewer
@@ -151,10 +153,24 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
             drag={false}
             rotatable={false}
             noClose={true}
+            scalable={false}
+            zoomSpeed={0.5}
             downloadable={true}
             downloadInNewWindow={true}
             onMaskClick={() => {
               setImageViewerVisibility(false)
+            }}
+            customToolbar={toolbars => {
+              return toolbars.concat([
+                {
+                  key: 'copy',
+                  render: <FontAwesomeIcon icon={['far', 'copy']} />,
+                  onClick: i => {
+                    navigator.clipboard.writeText(i.downloadUrl ? i.downloadUrl : '')
+                    toast.success('Copied to clipboard.')
+                  },
+                },
+              ])
             }}
           />
         )}
@@ -187,13 +203,8 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     if (hasKey(extensions, fileExtension)) {
       switch (extensions[fileExtension]) {
         case preview.image:
-          return (
-            <div className="bg-white shadow rounded">
-              <div className="p-3 text-center">
-                <div>{downloadUrl}</div>
-              </div>
-            </div>
-          )
+          router.push(downloadUrl)
+          return <></>
 
         case preview.text:
           return <TextPreview file={resp} />
