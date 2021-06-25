@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import '../styles/prism-github.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faFileImage,
