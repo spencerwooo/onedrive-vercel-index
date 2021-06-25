@@ -15,6 +15,8 @@ import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
 import { VideoPreview } from './previews/VideoPreview'
 import { AudioPreview } from './previews/AudioPreview'
+import FourOhFour from './FourOhFour'
+import TextPreview from './previews/TextPreview'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
@@ -86,10 +88,15 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
   const { data, error } = useSWR(`/api?path=${path}`, fetcher, {
     revalidateOnFocus: false,
-    revalidateOnReconnect: false,
   })
 
-  if (error) return <div>Failed to load</div>
+  if (error) {
+    return (
+      <div className="shadow bg-white rounded p-3">
+        <FourOhFour errorMsg={error.message} />
+      </div>
+    )
+  }
   if (!data) {
     return (
       <div className="shadow bg-white rounded p-3">
@@ -187,7 +194,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           )
 
         case preview.text:
-          return <div>text</div>
+          return <TextPreview file={resp} />
 
         case preview.code:
           return <div>code</div>
@@ -210,7 +217,11 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     }
   }
 
-  return <div>404</div>
+  return (
+    <div className="shadow bg-white rounded p-3">
+      <FourOhFour errorMsg={`Cannot preview ${resp.name}.`} />
+    </div>
+  )
 }
 
 export default FileListing
