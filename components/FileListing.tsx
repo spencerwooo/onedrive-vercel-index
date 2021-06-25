@@ -18,6 +18,7 @@ import { AudioPreview } from './previews/AudioPreview'
 import FourOhFour from './FourOhFour'
 import TextPreview from './previews/TextPreview'
 import MarkdownPreview from './previews/MarkdownPreview'
+import CodePreview from './previews/CodePreview'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
@@ -198,7 +199,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           return <TextPreview file={resp} />
 
         case preview.code:
-          return <div>code</div>
+          return <CodePreview file={resp} />
 
         case preview.markdown:
           return <MarkdownPreview file={resp} />
