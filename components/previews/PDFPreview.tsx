@@ -1,4 +1,4 @@
-import { createRef, FunctionComponent, useEffect, useRef, useState } from 'react'
+import { FunctionComponent, useEffect, useRef, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -31,7 +31,7 @@ const PDFPreview: FunctionComponent<{ file: any }> = ({ file }) => {
       >
         <div className="w-full flex-1 overflow-scroll" ref={pdfContainter} style={{ maxHeight: '80vh' }}>
           <Document
-            className="bg-gray-200"
+            className="bg-gray-100"
             file={file['@microsoft.graph.downloadUrl']}
             onLoadSuccess={onDocumentLoadSuccess}
             loading={<Loading loadingText={loadingText} />}

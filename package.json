@@ -17,6 +17,7 @@
     "axios": "^0.21.1",
     "github-markdown-css": "^4.0.0",
     "next": "11.0.0",
+    "preview-office-docs": "^1.0.2",
     "prismjs": "^1.23.0",
     "react": "17.0.2",
     "react-copy-to-clipboard": "^5.0.3",

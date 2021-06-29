@@ -6,6 +6,7 @@ const preview = {
   code: 'code',
   video: 'video',
   audio: 'audio',
+  office: 'ms-office',
 }
 
 const extensions = {
@@ -20,6 +21,13 @@ const extensions = {
   mdown: preview.markdown,
 
   pdf: preview.pdf,
+
+  doc: preview.office,
+  docx: preview.office,
+  ppt: preview.office,
+  pptx: preview.office,
+  xls: preview.office,
+  xlsx: preview.office,
 
   c: preview.code,
   cpp: preview.code,

@@ -6,4 +6,5 @@
 
 .react-pdf__Page__canvas {
   @apply mx-auto;
+  @apply shadow-md;
 }

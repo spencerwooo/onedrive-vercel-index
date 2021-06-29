@@ -20,6 +20,7 @@ import FourOhFour from './FourOhFour'
 import TextPreview from './previews/TextPreview'
 import MarkdownPreview from './previews/MarkdownPreview'
 import CodePreview from './previews/CodePreview'
+import OfficePreview from './previews/OfficePreview'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
@@ -234,6 +235,9 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
         case preview.pdf:
           return <PDFPreview file={resp} />
+
+        case preview.office:
+          return <OfficePreview file={resp} />
 
         default:
           return <div className="bg-white shadow rounded">{fileName}</div>
