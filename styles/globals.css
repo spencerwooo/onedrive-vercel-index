@@ -8,3 +8,10 @@
   @apply mx-auto;
   @apply shadow-md;
 }
+
+.markdown-body ul {
+  @apply list-disc;
+}
+.markdown-body ol {
+  @apply list-decimal;
+}

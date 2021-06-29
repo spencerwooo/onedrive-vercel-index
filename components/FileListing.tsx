@@ -21,6 +21,7 @@ import TextPreview from './previews/TextPreview'
 import MarkdownPreview from './previews/MarkdownPreview'
 import CodePreview from './previews/CodePreview'
 import OfficePreview from './previews/OfficePreview'
+import DownloadBtn from './DownloadBtn'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
@@ -155,7 +156,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
             rotatable={false}
             noClose={true}
             scalable={false}
-            zoomSpeed={0.5}
+            zoomSpeed={0.2}
             downloadable={true}
             downloadInNewWindow={true}
             onMaskClick={() => {
@@ -165,6 +166,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
               toolbars[0].render = <FontAwesomeIcon icon="plus" />
               toolbars[1].render = <FontAwesomeIcon icon="minus" />
               toolbars[2].render = <FontAwesomeIcon icon="arrow-left" />
+              toolbars[3].render = <FontAwesomeIcon icon="undo" />
               toolbars[4].render = <FontAwesomeIcon icon="arrow-right" />
               toolbars[9].render = <FontAwesomeIcon icon="download" />
               return toolbars.concat([
@@ -243,6 +245,19 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           return <div className="bg-white shadow rounded">{fileName}</div>
       }
     }
+
+    return (
+      <>
+        <div className="shadow bg-white rounded p-3">
+          <FourOhFour
+            errorMsg={`Preview for file ${resp.name} is not available, download directly with the button below.`}
+          />
+        </div>
+        <div className="mt-4">
+          <DownloadBtn downloadUrl={downloadUrl} />
+        </div>
+      </>
+    )
   }
 
   return (
