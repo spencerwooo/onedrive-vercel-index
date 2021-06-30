@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import toast, { Toaster } from 'react-hot-toast'
+import emojiRegex from 'emoji-regex'
 
 import { ParsedUrlQuery } from 'querystring'
 import { FunctionComponent, useState } from 'react'
@@ -63,14 +64,23 @@ const fetcher = (url: string) => axios.get(url).then(res => res.data)
 const FileListItem: FunctionComponent<{
   fileContent: { id: string; name: string; size: number; file: Object; lastModifiedDateTime: string }
 }> = ({ fileContent: c }) => {
+  const emojiIcon = emojiRegex().exec(c.name)
+  const renderEmoji = emojiIcon && !emojiIcon.index
+
   return (
     <div className="p-3 grid grid-cols-10 items-center space-x-2 cursor-pointer hover:bg-gray-100">
       <div className="flex space-x-2 items-center col-span-10 md:col-span-7 truncate">
         {/* <div>{c.file ? c.file.mimeType : 'folder'}</div> */}
         <div className="w-5 text-center">
-          <FontAwesomeIcon icon={c.file ? getFileIcon(c.name) : ['far', 'folder']} />
+          {renderEmoji ? (
+            <span>{emojiIcon ? emojiIcon[0] : '📁'}</span>
+          ) : (
+            <FontAwesomeIcon icon={c.file ? getFileIcon(c.name) : ['far', 'folder']} />
+          )}
         </div>
-        <div className="truncate">{c.name}</div>
+        <div className="truncate">
+          {renderEmoji ? c.name.replace(emojiIcon ? emojiIcon[0] : '', '').trim() : c.name}
+        </div>
       </div>
       <div className="hidden md:block font-mono text-sm col-span-2 text-gray-700">
         {new Date(c.lastModifiedDateTime).toLocaleString(undefined, {
