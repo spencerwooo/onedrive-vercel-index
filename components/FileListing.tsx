@@ -149,6 +149,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
         {imagesInFolder.length !== 0 && (
           <ReactViewer
+            zIndex={99}
             visible={imageViewerVisible}
             activeIndex={activeImageIdx}
             images={imagesInFolder}
