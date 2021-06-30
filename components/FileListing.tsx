@@ -123,9 +123,16 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
   if ('folder' in resp) {
     const { children } = resp
+
+    // Image preview rendering preparations
     const imagesInFolder: ImageDecorator[] = []
     const imageIndexDict: { [key: string]: number } = {}
     let imageIndex = 0
+
+    // README rendering preparations
+    let renderReadme = false
+    let readmeFile = null
+
     children.forEach((c: any) => {
       if (fileIsImage(c.name)) {
         imagesInFolder.push({
@@ -135,6 +142,11 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
         })
         imageIndexDict[c.id] = imageIndex
         imageIndex += 1
+      }
+
+      if (c.name.toLowerCase() === 'readme.md') {
+        renderReadme = true
+        readmeFile = c
       }
     })
 
@@ -202,6 +214,12 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
             <FileListItem fileContent={c} />
           </div>
         ))}
+
+        {renderReadme && (
+          <div className="border-t">
+            <MarkdownPreview file={readmeFile} standalone={false} />
+          </div>
+        )}
       </div>
     )
   }

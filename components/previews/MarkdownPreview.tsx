@@ -16,7 +16,7 @@ import DownloadBtn from '../DownloadBtn'
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data)
 
-const MarkdownPreview: FunctionComponent<{ file: any }> = ({ file }) => {
+const MarkdownPreview: FunctionComponent<{ file: any; standalone?: boolean }> = ({ file, standalone = true }) => {
   const { data, error } = useSWR(file['@microsoft.graph.downloadUrl'], fetcher)
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -26,14 +26,14 @@ const MarkdownPreview: FunctionComponent<{ file: any }> = ({ file }) => {
 
   if (error) {
     return (
-      <div className="shadow bg-white rounded p-3">
+      <div className={`${standalone ? 'shadow bg-white rounded p-3' : ''}`}>
         <FourOhFour errorMsg={error.message} />
       </div>
     )
   }
   if (!data) {
     return (
-      <div className="shadow bg-white rounded p-3">
+      <div className={standalone ? 'shadow bg-white rounded p-3' : ''}>
         <Loading loadingText="Loading file content..." />
       </div>
     )
@@ -41,14 +41,16 @@ const MarkdownPreview: FunctionComponent<{ file: any }> = ({ file }) => {
 
   return (
     <>
-      <div className="markdown-body shadow bg-white rounded p-3">
+      <div className={standalone ? 'markdown-body shadow bg-white rounded p-3' : 'markdown-body p-3'}>
         <ReactMarkdown remarkPlugins={[gfm, remarkMath]} rehypePlugins={[rehypeKatex]}>
           {data}
         </ReactMarkdown>
       </div>
-      <div className="mt-4">
-        <DownloadBtn downloadUrl={file['@microsoft.graph.downloadUrl']} />
-      </div>
+      {standalone && (
+        <div className="mt-4">
+          <DownloadBtn downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        </div>
+      )}
     </>
   )
 }
