@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
 import { FunctionComponent } from 'react'
 
+import i18n from '../utils/i18n'
+
 const Breadcrumb: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => {
   if (query) {
     const { path } = query
@@ -10,7 +12,7 @@ const Breadcrumb: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =>
       return (
         <div className="pb-4 text-sm text-gray-600 flex overflow-x-scroll">
           <div className="p-1 hover:text-black transition-all duration-75 flex-shrink-0">
-            <Link href="/">🚩 Home</Link>
+            <Link href="/">{`🚩 ${i18n('home')}`}</Link>
           </div>
           {path.map((q: string, i: number) => (
             <div key={i} className="flex items-center flex-shrink-0">
@@ -28,7 +30,7 @@ const Breadcrumb: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =>
   return (
     <div className="pb-4 text-sm text-gray-600 hover:text-black transition-all duration-75">
       <div className="p-1">
-        <Link href="/">🚩 Home</Link>
+        <Link href="/">{`🚩 ${i18n('home')}`}</Link>
       </div>
     </div>
   )

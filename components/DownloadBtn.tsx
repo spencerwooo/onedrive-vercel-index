@@ -4,6 +4,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import { useRouter } from 'next/router'
 
 import config from '../config/site.json'
+import i18n from '../utils/i18n'
 
 const DownloadBtn: FunctionComponent<{ downloadUrl: string }> = ({ downloadUrl }) => {
   const { asPath } = useRouter()
@@ -18,7 +19,7 @@ const DownloadBtn: FunctionComponent<{ downloadUrl: string }> = ({ downloadUrl }
         rel="noopener noreferrer"
       >
         <FontAwesomeIcon icon="file-download" />
-        <span>Download</span>
+        <span>{i18n('download')}</span>
       </a>
       <button
         className="flex-shrink-0 w-48 flex space-x-4 items-center justify-center bg-yellow-500 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-yellow-300 hover:bg-yellow-600 mb-2"
@@ -28,7 +29,7 @@ const DownloadBtn: FunctionComponent<{ downloadUrl: string }> = ({ downloadUrl }
         }}
       >
         <FontAwesomeIcon icon="copy" />
-        <span>Copy direct link</span>
+        <span>{i18n('copy-direct-link')}</span>
       </button>
     </div>
   )

@@ -24,6 +24,8 @@ import CodePreview from './previews/CodePreview'
 import OfficePreview from './previews/OfficePreview'
 import DownloadBtn from './DownloadBtn'
 
+import i18n from '../utils/i18n'
+
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
 const PDFPreview = dynamic(() => import('./previews/PDFPreview'), { ssr: false })
@@ -107,15 +109,15 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
   if (error) {
     return (
-      <div className="shadow bg-white rounded p-3">
+      <div className="shadow-md bg-white rounded p-3">
         <FourOhFour errorMsg={error.message} />
       </div>
     )
   }
   if (!data) {
     return (
-      <div className="shadow bg-white rounded p-3">
-        <Loading loadingText="Loading ..." />
+      <div className="shadow-md bg-white rounded p-3">
+        <Loading loadingText={i18n('loading')} />
       </div>
     )
   }
@@ -161,11 +163,11 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     })
 
     return (
-      <div className="bg-white shadow rounded">
+      <div className="bg-white shadow-md rounded">
         <div className="p-3 grid grid-cols-10 items-center space-x-2 border-b border-gray-200">
-          <div className="col-span-10 md:col-span-7 font-bold">Name</div>
-          <div className="hidden md:block font-bold col-span-2">Last Modified</div>
-          <div className="hidden md:block font-bold">Size</div>
+          <div className="col-span-10 md:col-span-7 font-bold">{i18n('file_name')}</div>
+          <div className="hidden md:block font-bold col-span-2">{i18n('last_modified')}</div>
+          <div className="hidden md:block font-bold">{i18n('file_size')}</div>
         </div>
         <Toaster />
 
@@ -243,7 +245,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       switch (extensions[fileExtension]) {
         case preview.image:
           return (
-            <div className="shadow bg-white rounded p-3 w-full">
+            <div className="shadow-md bg-white rounded p-3 w-full">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img className="mx-auto" src={downloadUrl} alt={fileName} />
             </div>
@@ -271,13 +273,13 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           return <OfficePreview file={resp} />
 
         default:
-          return <div className="bg-white shadow rounded">{fileName}</div>
+          return <div className="bg-white shadow-md rounded">{fileName}</div>
       }
     }
 
     return (
       <>
-        <div className="shadow bg-white rounded p-3">
+        <div className="shadow-md bg-white rounded p-3">
           <FourOhFour
             errorMsg={`Preview for file ${resp.name} is not available, download directly with the button below.`}
           />
@@ -290,7 +292,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
   }
 
   return (
-    <div className="shadow bg-white rounded p-3">
+    <div className="shadow-md bg-white rounded p-3">
       <FourOhFour errorMsg={`Cannot preview ${resp.name}.`} />
     </div>
   )

@@ -3,6 +3,7 @@ import ReactPlayer from 'react-player'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import DownloadBtn from '../DownloadBtn'
+import i18n from '../../utils/i18n'
 
 enum PlayerState {
   Loading,
@@ -46,7 +47,7 @@ export const AudioPreview: FunctionComponent<{ file: any }> = ({ file }) => {
           <div className="flex flex-col w-full space-y-2">
             <div>{file.name}</div>
             <div className="text-gray-500 text-sm pb-4">
-              Last modified:{' '}
+              {i18n('last_modified')}:{' '}
               {new Date(file.lastModifiedDateTime).toLocaleString(undefined, {
                 dateStyle: 'short',
                 timeStyle: 'short',
