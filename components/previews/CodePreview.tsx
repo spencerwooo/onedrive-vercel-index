@@ -30,7 +30,7 @@ const CodePreview: FunctionComponent<{ file: any }> = ({ file }) => {
   if (!data) {
     return (
       <div className="shadow bg-white rounded p-3">
-        <Loading loadingText={i18n('loading-content')} />
+        <Loading loadingText={i18n('loading_content')} />
       </div>
     )
   }
