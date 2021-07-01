@@ -20,7 +20,7 @@ const getAccessToken = async () => {
   }
 
   const body = new URLSearchParams()
-  body.append('client_id', process.env.CLIENT_ID ? process.env.CLIENT_ID : '')
+  body.append('client_id', apiConfig.clientId)
   body.append('redirect_uri', apiConfig.redirectUri)
   body.append('client_secret', process.env.CLIENT_SECRET ? process.env.CLIENT_SECRET : '')
   body.append('refresh_token', process.env.REFRESH_TOKEN ? process.env.REFRESH_TOKEN : '')
