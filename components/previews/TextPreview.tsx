@@ -6,6 +6,8 @@ import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import DownloadBtn from '../DownloadBtn'
 
+import i18n from '../../utils/i18n'
+
 const fetcher = (url: string) => axios.get(url).then(res => res.data)
 
 const TextPreview: FunctionComponent<{ file: any }> = ({ file }) => {
@@ -20,7 +22,7 @@ const TextPreview: FunctionComponent<{ file: any }> = ({ file }) => {
   if (!data) {
     return (
       <div className="shadow bg-white rounded p-3">
-        <Loading loadingText="Loading file content..." />
+        <Loading loadingText={i18n('loading-content')} />
       </div>
     )
   }
