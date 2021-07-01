@@ -36,7 +36,7 @@ const MarkdownPreview: FunctionComponent<{ file: any; standalone?: boolean }> = 
   if (!data) {
     return (
       <div className={standalone ? 'shadow bg-white rounded p-3' : ''}>
-        <Loading loadingText={i18n('loading-content')} />
+        <Loading loadingText={i18n('loading_content')} />
       </div>
     )
   }

@@ -29,7 +29,7 @@ const DownloadBtn: FunctionComponent<{ downloadUrl: string }> = ({ downloadUrl }
         }}
       >
         <FontAwesomeIcon icon="copy" />
-        <span>{i18n('copy-direct-link')}</span>
+        <span>{i18n('copy_direct_link')}</span>
       </button>
     </div>
   )
