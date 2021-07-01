@@ -24,7 +24,7 @@ const DownloadBtn: FunctionComponent<{ downloadUrl: string }> = ({ downloadUrl }
       <button
         className="flex-shrink-0 w-48 flex space-x-4 items-center justify-center bg-yellow-500 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-yellow-300 hover:bg-yellow-600 mb-2"
         onClick={() => {
-          navigator.clipboard.writeText(`${config.baseUrl}/api?path=${asPath}&raw=true`)
+          navigator.clipboard.writeText(`https://${process.env.VERCEL_URL}/api?path=${asPath}&raw=true`)
           toast.success('Copied direct link to clipboard.')
         }}
       >
