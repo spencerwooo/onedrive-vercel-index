@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import toast, { Toaster } from 'react-hot-toast'
 import { useRouter } from 'next/router'
 
-import config from '../config/site.json'
+import { getBaseUrl } from '../utils/tools'
 
 const DownloadBtn: FunctionComponent<{ downloadUrl: string }> = ({ downloadUrl }) => {
   const { asPath } = useRouter()
@@ -23,7 +23,7 @@ const DownloadBtn: FunctionComponent<{ downloadUrl: string }> = ({ downloadUrl }
       <button
         className="flex-shrink-0 w-48 flex space-x-4 items-center justify-center bg-yellow-500 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-yellow-300 hover:bg-yellow-600 mb-2"
         onClick={() => {
-          navigator.clipboard.writeText(`${config.baseUrl}/api?path=${asPath}&raw=true`)
+          navigator.clipboard.writeText(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
           toast.success('Copied direct link to clipboard.')
         }}
       >

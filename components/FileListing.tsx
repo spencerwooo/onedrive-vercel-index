@@ -11,9 +11,9 @@ import useSWR from 'swr'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 
-import config from '../config/site.json'
 import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
+import { getBaseUrl } from '../utils/tools'
 import { VideoPreview } from './previews/VideoPreview'
 import { AudioPreview } from './previews/AudioPreview'
 import Loading from './Loading'
@@ -198,7 +198,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                   render: <FontAwesomeIcon icon="copy" />,
                   onClick: i => {
                     navigator.clipboard.writeText(
-                      i.alt ? `${config.baseUrl}/api?path=${encodeURIComponent(path + '/' + i.alt)}&raw=true` : ''
+                      i.alt ? `${getBaseUrl()}/api?path=${encodeURIComponent(path + '/' + i.alt)}&raw=true` : ''
                     )
                     toast.success('Copied image permanent link to clipboard.')
                   },
