@@ -13,7 +13,7 @@ export default function Folders() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <Head>
-        <title>{siteConfig.title}</title>
+        <title>{process.env.TITLE ? process.env.TITLE : siteConfig.title}</title>
       </Head>
 
       <main className="flex flex-col w-full flex-1 bg-gray-50">
