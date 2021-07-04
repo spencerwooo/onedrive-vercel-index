@@ -5,12 +5,12 @@ import Navbar from '../components/Navbar'
 import FileListing from '../components/FileListing'
 import Footer from '../components/Footer'
 import Breadcrumb from '../components/Breadcrumb'
-
+import { getTitle } from '../utils/tools'
 export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <Head>
-        <title>{process.env.TITLE ? process.env.TITLE : siteConfig.title}</title>
+        <title>{getTitle()}</title>
       </Head>
 
       <main className="flex flex-col w-full flex-1 bg-gray-50">

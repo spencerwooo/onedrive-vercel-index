@@ -4,3 +4,7 @@ export const getBaseUrl = () => {
   }
   return ''
 }
+
+export const getTitle = () => {
+  return process.env.TITLE ? process.env.TITLE : siteConfig.title
+}
