@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import siteConfig from '../config/site.json'
 import { getTitle } from '../utils/tools'
 const Navbar = () => {
   return (

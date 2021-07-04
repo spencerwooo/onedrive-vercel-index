@@ -1,6 +1,5 @@
 import Head from 'next/head'
 
-import siteConfig from '../config/site.json'
 import Navbar from '../components/Navbar'
 import FileListing from '../components/FileListing'
 import Footer from '../components/Footer'
