@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import apiConfig from '../../config/api.json'
 
 const encodePath = (path: string) => {
-  const encodedPath = `${apiConfig.base}${path === '/' ? '' : path}`
+  const encodedPath = `${process.env.BASE ? process.env.BASE : apiConfig.base}${path === '/' ? '' : path}`
   if (encodedPath === '/' || encodedPath === '') {
     return ''
   }
