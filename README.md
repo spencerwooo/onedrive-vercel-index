@@ -11,7 +11,7 @@ This is [onedrive-cf-index](https://github.com/spencerwooo/onedrive-cf-index)'s 
 ## Features
 
 - A TOTAL REFACTOR!
-- Much more easier to deploy and manage.
+- Much easier to deploy and manage.
 - Many more upcoming...
 
 ## Discussion
