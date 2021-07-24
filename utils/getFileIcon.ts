@@ -13,6 +13,7 @@ const icons: { [key: string]: [IconPrefix, IconName] } = {
   text: ['far', 'file-alt'],
   file: ['far', 'file'],
   markdown: ['fab', 'markdown'],
+  book: ['fas', 'book'],
 }
 
 const extensions = {
@@ -67,6 +68,10 @@ const extensions = {
   txt: icons.text,
   rtf: icons.text,
   md: icons.markdown,
+
+  epub: icons.book,
+  mobi: icons.book,
+  azw3: icons.book,
 }
 
 /**

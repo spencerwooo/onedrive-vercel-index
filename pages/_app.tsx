@@ -25,6 +25,7 @@ import {
   faFileDownload,
   faCopy,
   faUndo,
+  faBook,
 } from '@fortawesome/free-solid-svg-icons'
 import { faGithub, faMarkdown } from '@fortawesome/free-brands-svg-icons'
 
@@ -53,7 +54,8 @@ library.add(
   faPlus,
   faMinus,
   faDownload,
-  faUndo
+  faUndo,
+  faBook
 )
 
 function MyApp({ Component, pageProps }: AppProps) {
