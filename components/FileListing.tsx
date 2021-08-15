@@ -83,9 +83,13 @@ const FileListItem: FunctionComponent<{
         </div>
       </div>
       <div className="hidden md:block font-mono text-sm col-span-2 text-gray-700">
-        {new Date(c.lastModifiedDateTime).toLocaleString(undefined, {
-          dateStyle: 'short',
-          timeStyle: 'short',
+        {new Date(c.lastModifiedDateTime).toLocaleString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
         })}
       </div>
       <div className="hidden md:block font-mono text-sm text-gray-700">{humanFileSize(c.size)}</div>
