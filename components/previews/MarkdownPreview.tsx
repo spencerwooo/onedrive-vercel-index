@@ -43,6 +43,7 @@ const MarkdownPreview: FunctionComponent<{ file: any; standalone?: boolean }> = 
   return (
     <>
       <div className={standalone ? 'markdown-body shadow bg-white rounded p-3' : 'markdown-body p-3'}>
+        {/* Using rehypeRaw to render HTML inside Markdown, is potentially dangerous, use under safe environments. (#18) */}
         <ReactMarkdown remarkPlugins={[gfm, remarkMath]} rehypePlugins={[rehypeKatex, rehypeRaw as any]}>
           {data}
         </ReactMarkdown>
