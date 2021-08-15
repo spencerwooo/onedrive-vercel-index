@@ -53,13 +53,16 @@ const queryToPath = (query?: ParsedUrlQuery) => {
   if (query) {
     const { path } = query
     if (!path) return '/'
-    if (typeof path === 'string') return `/${path}`
-    return `/${path.join('/')}`
+    if (typeof path === 'string') return `/${encodeURIComponent(path)}`
+    return `/${path.map(p => encodeURIComponent(p)).join('/')}`
   }
   return '/'
 }
 
-const fetcher = (url: string) => axios.get(url).then(res => res.data)
+const fetcher = (url: string) => {
+  console.log(url)
+  return axios.get(url).then(res => res.data)
+}
 
 const FileListItem: FunctionComponent<{
   fileContent: { id: string; name: string; size: number; file: Object; lastModifiedDateTime: string }
@@ -71,7 +74,7 @@ const FileListItem: FunctionComponent<{
     <div className="p-3 grid grid-cols-10 items-center space-x-2 cursor-pointer hover:bg-gray-100">
       <div className="flex space-x-2 items-center col-span-10 md:col-span-7 truncate">
         {/* <div>{c.file ? c.file.mimeType : 'folder'}</div> */}
-        <div className="w-5 text-center">
+        <div className="w-5 text-center flex-shrink-0">
           {renderEmoji ? (
             <span>{emojiIcon ? emojiIcon[0] : '📁'}</span>
           ) : (
@@ -82,7 +85,7 @@ const FileListItem: FunctionComponent<{
           {renderEmoji ? c.name.replace(emojiIcon ? emojiIcon[0] : '', '').trim() : c.name}
         </div>
       </div>
-      <div className="hidden md:block font-mono text-sm col-span-2 text-gray-700">
+      <div className="hidden md:block font-mono text-sm col-span-2 text-gray-700 flex-shrink-0">
         {new Date(c.lastModifiedDateTime).toLocaleString('en-US', {
           year: 'numeric',
           month: '2-digit',
@@ -92,7 +95,7 @@ const FileListItem: FunctionComponent<{
           hour12: false,
         })}
       </div>
-      <div className="hidden md:block font-mono text-sm text-gray-700">{humanFileSize(c.size)}</div>
+      <div className="hidden md:block font-mono text-sm text-gray-700 flex-shrink-0">{humanFileSize(c.size)}</div>
     </div>
   )
 }
@@ -105,7 +108,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
   const path = queryToPath(query)
 
-  const { data, error } = useSWR(`/api?path=${encodeURIComponent(path)}`, fetcher, {
+  const { data, error } = useSWR(`/api?path=${path}`, fetcher, {
     revalidateOnFocus: false,
   })
 
@@ -216,12 +219,14 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           <div
             key={c.id}
             onClick={e => {
+              e.preventDefault()
+
               if (!c.folder && fileIsImage(c.name)) {
                 setActiveImageIdx(imageIndexDict[c.id])
                 setImageViewerVisibility(true)
               } else {
-                e.preventDefault()
-                router.push(`${path === '/' ? '' : path}/${c.name}`)
+                console.log(path)
+                router.push(`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)
               }
             }}
           >

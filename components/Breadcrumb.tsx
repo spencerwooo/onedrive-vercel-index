@@ -16,7 +16,14 @@ const Breadcrumb: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =>
             <div key={i} className="flex items-center flex-shrink-0">
               <div>/</div>
               <div className="p-1 hover:text-black transition-all duration-75">
-                <Link href={`/${path.slice(0, i + 1).join('/')}`}>{q}</Link>
+                <Link
+                  href={`/${path
+                    .slice(0, i + 1)
+                    .map(p => encodeURIComponent(p))
+                    .join('/')}`}
+                >
+                  {q}
+                </Link>
               </div>
             </div>
           ))}
