@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown'
 import gfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
+import rehypeRaw from 'rehype-raw'
 
 import 'katex/dist/katex.min.css'
 import 'github-markdown-css/github-markdown.css'
@@ -42,7 +43,7 @@ const MarkdownPreview: FunctionComponent<{ file: any; standalone?: boolean }> = 
   return (
     <>
       <div className={standalone ? 'markdown-body shadow bg-white rounded p-3' : 'markdown-body p-3'}>
-        <ReactMarkdown remarkPlugins={[gfm, remarkMath]} rehypePlugins={[rehypeKatex]}>
+        <ReactMarkdown remarkPlugins={[gfm, remarkMath]} rehypePlugins={[rehypeKatex, rehypeRaw as any]}>
           {data}
         </ReactMarkdown>
       </div>

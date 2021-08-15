@@ -1,5 +1,5 @@
 <div align="center">
-  <image src="./public/header.png" alt="onedrive-vercel-index" />
+  <img src="./public/header.png" alt="onedrive-vercel-index" />
   <h3><a href="https://drive.spencerwoo.com">onedrive-vercel-index</a></h3>
   <em>Yet another-another OneDrive index, powered by Vercel and Next.js</em>
 </div>
