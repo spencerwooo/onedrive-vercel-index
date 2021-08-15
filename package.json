@@ -17,7 +17,7 @@
     "axios": "^0.21.1",
     "emoji-regex": "^9.2.2",
     "github-markdown-css": "^4.0.0",
-    "next": "11.0.0",
+    "next": "^11.1.0",
     "preview-office-docs": "^1.0.2",
     "prismjs": "^1.23.0",
     "react": "17.0.2",

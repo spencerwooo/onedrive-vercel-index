@@ -1,5 +1,5 @@
 <div align="center">
-  <image src="./public/onedrive-vercel-index.png" alt="onedrive-vercel-index" width="160px" />
+  <image src="./public/header.png" alt="onedrive-vercel-index" />
   <h3><a href="https://drive.spencerwoo.com">onedrive-vercel-index</a></h3>
   <em>Yet another-another OneDrive index, powered by Vercel and Next.js</em>
 </div>
@@ -10,15 +10,17 @@ This is [onedrive-cf-index](https://github.com/spencerwooo/onedrive-cf-index)'s 
 
 ## Features
 
+🚧 **_This is a work in progress._**
+
 - A TOTAL REFACTOR!
-- Much more easier to deploy and manage.
+- Much easier to deploy and manage.
 - Many more upcoming...
 
 ## Discussion
 
 Please go to our discussion forum for general questions, **issues are for bug reports and bug reports only.**
 
-[![GitHub Discussions](https://img.shields.io/github/discussions/spencerwooo/onedrive-vercel-index?color=0364B9&labelColor=24292F&logo=github&style=flat-square)](https://github.com/spencerwooo/onedrive-vercel-index/discussions)
+[![GitHub Discussions](https://img.shields.io/github/discussions/spencerwooo/onedrive-vercel-index?color=0364B9&labelColor=24292F&logo=github&style=for-the-badge)](https://github.com/spencerwooo/onedrive-vercel-index/discussions)
 
 ## Demo
 
