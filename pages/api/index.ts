@@ -1,10 +1,12 @@
 import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { posix as pathPosix } from 'path'
 
 import apiConfig from '../../config/api.json'
 
+const basePath = pathPosix.resolve('/', apiConfig.base)
 const encodePath = (path: string) => {
-  const encodedPath = `${apiConfig.base}${path === '/' ? '' : path}`
+  const encodedPath = pathPosix.join(basePath, pathPosix.resolve('/', path))
   if (encodedPath === '/' || encodedPath === '') {
     return ''
   }
