@@ -9,7 +9,6 @@ import rehypeKatex from 'rehype-katex'
 import rehypeRaw from 'rehype-raw'
 
 import 'katex/dist/katex.min.css'
-import 'github-markdown-css/github-markdown.css'
 
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
@@ -18,7 +17,15 @@ import DownloadBtn from '../DownloadBtn'
 const fetcher = (url: string) => axios.get(url).then(res => res.data)
 
 const MarkdownPreview: FunctionComponent<{ file: any; standalone?: boolean }> = ({ file, standalone = true }) => {
-  const { data, error } = useSWR(file['@microsoft.graph.downloadUrl'], fetcher)
+  const { data, error } = useSWR(file['@microsoft.graph.downloadUrl'], fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnMount: false,
+    revalidateOnReconnect: false,
+    refreshWhenOffline: false,
+    refreshWhenHidden: false,
+    refreshInterval: 0,
+  })
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       Prism.highlightAll()
@@ -27,14 +34,14 @@ const MarkdownPreview: FunctionComponent<{ file: any; standalone?: boolean }> = 
 
   if (error) {
     return (
-      <div className={`${standalone ? 'shadow bg-white rounded p-3' : ''}`}>
+      <div className={`${standalone ? 'shadow bg-white dark:bg-gray-900 rounded p-3' : ''}`}>
         <FourOhFour errorMsg={error.message} />
       </div>
     )
   }
   if (!data) {
     return (
-      <div className={standalone ? 'shadow bg-white rounded p-3' : ''}>
+      <div className={standalone ? 'shadow bg-white dark:bg-gray-900 rounded p-3' : ''}>
         <Loading loadingText="Loading file content..." />
       </div>
     )
@@ -42,7 +49,13 @@ const MarkdownPreview: FunctionComponent<{ file: any; standalone?: boolean }> = 
 
   return (
     <>
-      <div className={standalone ? 'markdown-body shadow bg-white rounded p-3' : 'markdown-body p-3'}>
+      <div
+        className={
+          standalone
+            ? 'markdown-body shadow bg-white dark:bg-gray-900 rounded p-3 dark:text-white'
+            : 'markdown-body p-3 dark:text-white'
+        }
+      >
         {/* Using rehypeRaw to render HTML inside Markdown, is potentially dangerous, use under safe environments. (#18) */}
         <ReactMarkdown remarkPlugins={[gfm, remarkMath]} rehypePlugins={[rehypeKatex, rehypeRaw as any]}>
           {data}

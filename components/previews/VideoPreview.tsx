@@ -14,7 +14,7 @@ export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
 
   return (
     <>
-      <div className="bg-white rounded shadow p-3">
+      <div className="bg-white dark:bg-gray-900 rounded shadow p-3">
         <div className="relative" style={{ paddingTop: '56.25%' }}>
           <ReactPlayer
             className="absolute top-0 left-0 w-full h-full"

@@ -60,10 +60,7 @@ const queryToPath = (query?: ParsedUrlQuery) => {
   return '/'
 }
 
-const fetcher = (url: string) => {
-  console.log(url)
-  return axios.get(url).then(res => res.data)
-}
+const fetcher = (url: string) => axios.get(url).then(res => res.data)
 
 const FileListItem: FunctionComponent<{
   fileContent: { id: string; name: string; size: number; file: Object; lastModifiedDateTime: string }
@@ -72,7 +69,7 @@ const FileListItem: FunctionComponent<{
   const renderEmoji = emojiIcon && !emojiIcon.index
 
   return (
-    <div className="p-3 grid grid-cols-10 items-center space-x-2 cursor-pointer hover:bg-gray-100">
+    <div className="p-3 grid grid-cols-10 items-center space-x-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
       <div className="flex space-x-2 items-center col-span-10 md:col-span-7 truncate">
         {/* <div>{c.file ? c.file.mimeType : 'folder'}</div> */}
         <div className="w-5 text-center flex-shrink-0">
@@ -86,7 +83,7 @@ const FileListItem: FunctionComponent<{
           {renderEmoji ? c.name.replace(emojiIcon ? emojiIcon[0] : '', '').trim() : c.name}
         </div>
       </div>
-      <div className="hidden md:block font-mono text-sm col-span-2 text-gray-700 flex-shrink-0">
+      <div className="hidden md:block font-mono text-sm col-span-2 text-gray-700 dark:text-gray-500 flex-shrink-0">
         {new Date(c.lastModifiedDateTime).toLocaleString('en-US', {
           year: 'numeric',
           month: '2-digit',
@@ -96,7 +93,9 @@ const FileListItem: FunctionComponent<{
           hour12: false,
         })}
       </div>
-      <div className="hidden md:block font-mono text-sm text-gray-700 flex-shrink-0">{humanFileSize(c.size)}</div>
+      <div className="hidden md:block font-mono text-sm text-gray-700 dark:text-gray-500 flex-shrink-0">
+        {humanFileSize(c.size)}
+      </div>
     </div>
   )
 }
@@ -116,14 +115,14 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
   if (error) {
     return (
-      <div className="shadow bg-white rounded p-3">
+      <div className="shadow bg-white dark:bg-gray-900 rounded p-3">
         <FourOhFour errorMsg={error.message} />
       </div>
     )
   }
   if (!data) {
     return (
-      <div className="shadow bg-white rounded p-3">
+      <div className="shadow bg-white dark:bg-gray-900 rounded p-3">
         <Loading loadingText="Loading ..." />
       </div>
     )
@@ -170,8 +169,8 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     })
 
     return (
-      <div className="bg-white shadow rounded">
-        <div className="p-3 grid grid-cols-10 items-center space-x-2 border-b border-gray-200">
+      <div className="bg-white dark:bg-gray-900 dark:text-white shadow rounded">
+        <div className="p-3 grid grid-cols-10 items-center space-x-2 border-b border-gray-200 dark:border-gray-700">
           <div className="col-span-10 md:col-span-7 font-bold">Name</div>
           <div className="hidden md:block font-bold col-span-2">Last Modified</div>
           <div className="hidden md:block font-bold">Size</div>
@@ -234,7 +233,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
         ))}
 
         {renderReadme && (
-          <div className="border-t">
+          <div className="border-t dark:border-gray-700">
             <MarkdownPreview file={readmeFile} standalone={false} />
           </div>
         )}
