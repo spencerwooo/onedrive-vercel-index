@@ -205,7 +205,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                   render: <FontAwesomeIcon icon="copy" />,
                   onClick: i => {
                     navigator.clipboard.writeText(
-                      i.alt ? `${getBaseUrl()}/api?path=${encodeURIComponent(path + '/' + i.alt)}&raw=true` : ''
+                      i.alt ? `${getBaseUrl()}/api?path=${path + '/' + i.alt}&raw=true` : ''
                     )
                     toast.success('Copied image permanent link to clipboard.')
                   },
