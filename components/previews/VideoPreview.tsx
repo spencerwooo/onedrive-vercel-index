@@ -2,6 +2,7 @@ import { FunctionComponent } from 'react'
 import ReactPlayer from 'react-player'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { useClipboard } from 'use-clipboard-copy'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import toast, { Toaster } from 'react-hot-toast'
 
@@ -9,6 +10,7 @@ import { getBaseUrl } from '../../utils/tools'
 
 export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
   const { asPath } = useRouter()
+  const clipboard = useClipboard()
 
   return (
     <>
@@ -40,7 +42,7 @@ export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
         <button
           className="flex-shrink-0 w-48 flex space-x-4 items-center justify-center bg-yellow-500 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-yellow-300 hover:bg-yellow-600 mb-2"
           onClick={() => {
-            navigator.clipboard.writeText(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
+            clipboard.copy(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
             toast.success('Copied direct link to clipboard.')
           }}
         >

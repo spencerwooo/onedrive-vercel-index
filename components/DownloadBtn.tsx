@@ -2,11 +2,13 @@ import { FunctionComponent } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import toast, { Toaster } from 'react-hot-toast'
 import { useRouter } from 'next/router'
+import { useClipboard } from 'use-clipboard-copy'
 
 import { getBaseUrl } from '../utils/tools'
 
 const DownloadBtn: FunctionComponent<{ downloadUrl: string }> = ({ downloadUrl }) => {
   const { asPath } = useRouter()
+  const clipboard = useClipboard()
 
   return (
     <div className="flex flex-wrap space-x-2 justify-center">
@@ -23,7 +25,7 @@ const DownloadBtn: FunctionComponent<{ downloadUrl: string }> = ({ downloadUrl }
       <button
         className="flex-shrink-0 w-48 flex space-x-4 items-center justify-center bg-yellow-500 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-yellow-300 hover:bg-yellow-600 mb-2"
         onClick={() => {
-          navigator.clipboard.writeText(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
+          clipboard.copy(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
           toast.success('Copied direct link to clipboard.')
         }}
       >

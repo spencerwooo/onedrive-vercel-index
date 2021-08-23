@@ -32,7 +32,8 @@
     "rehype-raw": "^6.0.0",
     "remark-gfm": "^1.0.0",
     "remark-math": "^4.0.0",
-    "swr": "^0.5.6"
+    "swr": "^0.5.6",
+    "use-clipboard-copy": "^0.2.0"
   },
   "devDependencies": {
     "@types/prismjs": "^1.16.5",
