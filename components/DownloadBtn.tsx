@@ -12,7 +12,14 @@ const DownloadBtn: FunctionComponent<{ downloadUrl: string }> = ({ downloadUrl }
 
   return (
     <div className="flex flex-wrap space-x-2 justify-center">
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          style: {
+            background: '#316C23',
+            color: '#ffffff',
+          },
+        }}
+      />
       <a
         className="flex-shrink-0 w-36 flex space-x-4 items-center justify-center bg-blue-500 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-600 mb-2"
         href={downloadUrl}

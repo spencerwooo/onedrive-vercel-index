@@ -170,7 +170,15 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           <div className="hidden md:block font-bold">Size</div>
           <div className="hidden md:block font-bold">Actions</div>
         </div>
-        <Toaster />
+
+        <Toaster
+          toastOptions={{
+            style: {
+              background: '#316C23',
+              color: '#ffffff',
+            },
+          }}
+        />
 
         {imagesInFolder.length !== 0 && (
           <ReactViewer
@@ -210,7 +218,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
         )}
 
         {children.map((c: any) => (
-          <div className="grid grid-cols-12 hover:bg-gray-100 dark:hover:bg-gray-800" key={c.id}>
+          <div className="grid grid-cols-12 hover:bg-gray-100 dark:hover:bg-gray-850" key={c.id}>
             <div
               className="col-span-11"
               onClick={e => {
@@ -227,33 +235,33 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
               <FileListItem fileContent={c} />
             </div>
             {c.folder ? (
-              <div className="hidden md:block col-span-1 space-x-2 p-3 text-gray-700 dark:text-gray-500">
+              <div className="hidden md:flex p-1 text-gray-700 dark:text-gray-400">
                 <span
                   title="Copy folder permalink"
-                  className="cursor-pointer hover:opacity-80"
+                  className="cursor-pointer p-2 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
                   onClick={() => {
                     clipboard.copy(`${getBaseUrl()}${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)
-                    toast.success('Copied folder permanent link to clipboard.')
+                    toast.success('Copied folder permalink.')
                   }}
                 >
                   <FontAwesomeIcon icon={['far', 'copy']} />
                 </span>
               </div>
             ) : (
-              <div className="hidden md:block col-span-1 space-x-2 p-3 text-gray-700 dark:text-gray-500">
+              <div className="hidden md:flex p-1 text-gray-700 dark:text-gray-400">
                 <span
                   title="Copy raw file permalink"
-                  className="cursor-pointer hover:opacity-80"
+                  className="cursor-pointer p-2 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
                   onClick={() => {
                     clipboard.copy(`${getBaseUrl()}/api?path=${path === '/' ? '' : path}/${c.name}&raw=true`)
-                    toast.success('Copied permanent raw file link to clipboard.')
+                    toast.success('Copied raw file permalink.')
                   }}
                 >
                   <FontAwesomeIcon icon={['far', 'copy']} />
                 </span>
                 <a
                   title="Download file"
-                  className="cursor-pointer hover:opacity-80"
+                  className="cursor-pointer p-2 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
                   href={c['@microsoft.graph.downloadUrl']}
                 >
                   <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />

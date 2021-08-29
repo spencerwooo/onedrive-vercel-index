@@ -22,7 +22,7 @@ const fetcher = (url: string) => axios.get(url).then(res => res.data)
  */
 export const useStaleSWR = (dataKey: Key) => {
   const revalidationOptions = {
-    revalidateOnMount: !cache.has(dataKey), //here we refer to the SWR cache
+    revalidateOnMount: !cache.has(dataKey),
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   }

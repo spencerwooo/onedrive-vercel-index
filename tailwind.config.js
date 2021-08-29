@@ -4,7 +4,7 @@ const colors = require('tailwindcss/colors')
 module.exports = {
   mode: 'jit',
   purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
-  darkMode: 'media', // or 'media' or 'class'
+  darkMode: 'media',
   theme: {
     colors: {
       transparent: 'transparent',
@@ -23,6 +23,11 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Inter', '"Noto Sans SC"', ...defaultTheme.fontFamily.sans]
+      },
+      colors: {
+        gray: {
+          850: '#2E2E34'
+        }
       }
     }
   },
