@@ -1,15 +1,12 @@
-import axios from 'axios'
 import { FunctionComponent } from 'react'
-import useSWR from 'swr'
 
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import DownloadBtn from '../DownloadBtn'
-
-const fetcher = (url: string) => axios.get(url).then(res => res.data)
+import { useStaleSWR } from '../../utils/tools'
 
 const TextPreview: FunctionComponent<{ file: any }> = ({ file }) => {
-  const { data, error } = useSWR(file['@microsoft.graph.downloadUrl'], fetcher)
+  const { data, error } = useStaleSWR(file['@microsoft.graph.downloadUrl'])
   if (error) {
     return (
       <div className="shadow bg-white dark:bg-gray-900 rounded p-3">

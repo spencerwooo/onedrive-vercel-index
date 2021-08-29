@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import toast, { Toaster } from 'react-hot-toast'
 import emojiRegex from 'emoji-regex'
@@ -8,13 +7,12 @@ import { ParsedUrlQuery } from 'querystring'
 import { FunctionComponent, useState } from 'react'
 import { ImageDecorator } from 'react-viewer/lib/ViewerProps'
 
-import useSWR from 'swr'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 
 import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
-import { getBaseUrl } from '../utils/tools'
+import { getBaseUrl, useStaleSWR } from '../utils/tools'
 import { VideoPreview } from './previews/VideoPreview'
 import { AudioPreview } from './previews/AudioPreview'
 import Loading from './Loading'
@@ -59,8 +57,6 @@ const queryToPath = (query?: ParsedUrlQuery) => {
   }
   return '/'
 }
-
-const fetcher = (url: string) => axios.get(url).then(res => res.data)
 
 const FileListItem: FunctionComponent<{
   fileContent: { id: string; name: string; size: number; file: Object; lastModifiedDateTime: string }
@@ -109,7 +105,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
   const path = queryToPath(query)
 
-  const { data, error } = useSWR(`/api?path=${path}`, fetcher)
+  const { data, error } = useStaleSWR(`/api?path=${path}`)
 
   if (error) {
     return (

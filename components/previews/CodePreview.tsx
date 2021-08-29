@@ -1,17 +1,15 @@
 import { useEffect, FunctionComponent } from 'react'
-import useSWR from 'swr'
-import axios from 'axios'
 import Prism from 'prismjs'
 
 import { getExtension } from '../../utils/getFileIcon'
+import { useStaleSWR } from '../../utils/tools'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import DownloadBtn from '../DownloadBtn'
 
-const fetcher = (url: string) => axios.get(url).then(res => res.data)
-
 const CodePreview: FunctionComponent<{ file: any }> = ({ file }) => {
-  const { data, error } = useSWR(file['@microsoft.graph.downloadUrl'], fetcher)
+  const { data, error } = useStaleSWR(file['@microsoft.graph.downloadUrl'])
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       Prism.highlightAll()
