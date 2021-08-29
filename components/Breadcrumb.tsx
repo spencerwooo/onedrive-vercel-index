@@ -8,7 +8,7 @@ const Breadcrumb: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =>
     const { path } = query
     if (Array.isArray(path)) {
       return (
-        <div className="pb-4 text-sm text-gray-600 dark:text-gray-300 flex overflow-x-scroll">
+        <div className="pb-4 text-sm text-gray-600 dark:text-gray-300 flex overflow-x-scroll no-scrollbar">
           <div className="p-1 hover:text-black dark:hover:text-gray-400 transition-all duration-75 flex-shrink-0">
             <Link href="/">🚩 Home</Link>
           </div>
