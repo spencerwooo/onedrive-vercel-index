@@ -26,10 +26,10 @@ const PDFPreview: FunctionComponent<{ file: any }> = ({ file }) => {
   return (
     <>
       <div
-        className="flex flex-col bg-white dark:bg-gray-900 rounded shadow md:p-3 w-full overflow-scroll"
+        className="flex flex-col bg-white dark:bg-gray-900 rounded shadow md:p-3 w-full overflow-scroll no-scrollbar"
         style={{ maxHeight: '90vh' }}
       >
-        <div className="w-full flex-1 overflow-scroll" ref={pdfContainter} style={{ maxHeight: '80vh' }}>
+        <div className="w-full flex-1 overflow-scroll no-scrollbar" ref={pdfContainter} style={{ maxHeight: '80vh' }}>
           <Document
             className="bg-gray-100 dark:bg-gray-800"
             file={file['@microsoft.graph.downloadUrl']}
