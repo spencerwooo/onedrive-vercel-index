@@ -16,16 +16,18 @@ import {
   faFileAlt,
   faFile,
   faFolder,
+  faCopy,
+  faArrowAltCircleDown,
 } from '@fortawesome/free-regular-svg-icons'
 import {
   faPlus,
   faMinus,
+  faCopy as faCopySolid,
   faDownload,
   faMusic,
   faArrowLeft,
   faArrowRight,
   faFileDownload,
-  faCopy,
   faUndo,
   faBook,
 } from '@fortawesome/free-solid-svg-icons'
@@ -53,11 +55,13 @@ library.add(
   faArrowRight,
   faFileDownload,
   faCopy,
+  faCopySolid,
   faPlus,
   faMinus,
   faDownload,
   faUndo,
-  faBook
+  faBook,
+  faArrowAltCircleDown
 )
 
 function MyApp({ Component, pageProps }: AppProps) {
