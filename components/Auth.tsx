@@ -33,6 +33,11 @@ const Auth: FunctionComponent<{ redirect: string }> = ({ redirect }) => {
         onChange={e => {
           setToken(e.target.value)
         }}
+        onKeyPress={e => {
+          if (e.key === 'Enter' || e.key === 'NumpadEnter') {
+            router.reload()
+          }
+        }}
       />
       <button
         className="inline-flex space-x-2 items-center justify-center bg-blue-500 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-600"
