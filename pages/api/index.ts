@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { posix as pathPosix } from 'path'
 
 import apiConfig from '../../config/api.json'
+import siteConfig from '../../config/site.json'
 
 const basePath = pathPosix.resolve('/', apiConfig.base)
 const encodePath = (path: string) => {
@@ -49,6 +50,46 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (typeof path === 'string') {
     const accessToken = await getAccessToken()
+
+    // Handle authentication through .password
+    const protectedRoutes = siteConfig.protectedRoutes
+    let authTokenPath = ''
+    for (const r of protectedRoutes) {
+      if (path.startsWith(r)) {
+        authTokenPath = `${r}/.password`
+        break
+      }
+    }
+
+    // Fetch password from remote file content
+    if (authTokenPath !== '') {
+      try {
+        const token = await axios.get(`${apiConfig.driveApi}/root${encodePath(authTokenPath)}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          params: {
+            select: '@microsoft.graph.downloadUrl,file',
+          },
+        })
+
+        // Handle request and check for header 'od-protected-token'
+        const odProtectedToken = await axios.get(token.data['@microsoft.graph.downloadUrl'])
+        // console.log(req.headers['od-protected-token'], odProtectedToken.data.trim())
+
+        if (req.headers['od-protected-token'] !== odProtectedToken.data.trim()) {
+          res.status(401).json({ error: 'Password required for this folder.' })
+          return
+        }
+      } catch (error) {
+        // Password file not found, fallback to 404
+        if (error.response.status === 404) {
+          res.status(404).json({ error: "You didn't set a password for your protected folder." })
+        }
+        res.status(500).end()
+        return
+      }
+    }
+
+    // Handle response from OneDrive API
     const requestUrl = `${apiConfig.driveApi}/root${encodePath(path)}`
     const { data } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },

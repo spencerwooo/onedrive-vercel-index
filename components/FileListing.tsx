@@ -17,6 +17,7 @@ import { VideoPreview } from './previews/VideoPreview'
 import { AudioPreview } from './previews/AudioPreview'
 import Loading from './Loading'
 import FourOhFour from './FourOhFour'
+import Auth from './Auth'
 import TextPreview from './previews/TextPreview'
 import MarkdownPreview from './previews/MarkdownPreview'
 import CodePreview from './previews/CodePreview'
@@ -105,12 +106,12 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
   const path = queryToPath(query)
 
-  const { data, error } = useStaleSWR(`/api?path=${path}`)
+  const { data, error } = useStaleSWR(`/api?path=${path}`, path)
 
   if (error) {
     return (
       <div className="shadow bg-white dark:bg-gray-900 rounded p-3">
-        <FourOhFour errorMsg={error.message} />
+        {error.message.includes('401') ? <Auth redirect={path} /> : <FourOhFour errorMsg={error.message} />}
       </div>
     )
   }
