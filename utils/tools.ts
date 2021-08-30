@@ -32,9 +32,9 @@ const fetcher = (url: string, token?: string) => {
  */
 export const useStaleSWR = (url: Key, path: string = '') => {
   const revalidationOptions = {
-    revalidateOnMount: !cache.has(url),
+    revalidateOnMount: !(cache.has(`arg@"${url}"@null`) || cache.has(url)),
     revalidateOnFocus: false,
-    revalidateOnReconnect: false,
+    revalidateOnReconnect: true,
   }
 
   const token =

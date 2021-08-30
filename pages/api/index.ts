@@ -73,7 +73,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // Handle request and check for header 'od-protected-token'
         const odProtectedToken = await axios.get(token.data['@microsoft.graph.downloadUrl'])
-        if (req.headers['od-protected-token'] !== odProtectedToken.data) {
+        // console.log(req.headers['od-protected-token'], odProtectedToken.data.trim())
+
+        if (req.headers['od-protected-token'] !== odProtectedToken.data.trim()) {
           res.status(401).json({ error: 'Password required for this folder.' })
           return
         }
