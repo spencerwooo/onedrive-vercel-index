@@ -4,6 +4,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import toast, { Toaster } from 'react-hot-toast'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 
@@ -46,7 +47,7 @@ const Navbar = () => {
 
         <Link href="/">
           <a className="flex items-center space-x-2 font-bold text-xl p-2 dark:text-white hover:opacity-80">
-            <FontAwesomeIcon icon="cloud" />
+            <Image src={siteConfig.icon} alt="icon" width="32" height="32" />
             <span className="hidden sm:block">{siteConfig.title}</span>
           </a>
         </Link>
