@@ -27,6 +27,7 @@ const Auth: FunctionComponent<{ redirect: string }> = ({ redirect }) => {
 
       <input
         className="font-mono p-2 bg-blue-50 dark:bg-gray-600 dark:text-white rounded focus:ring focus:ring-blue-300 dark:focus:ring-blue-700 focus:outline-none"
+        autoFocus
         type="text"
         placeholder="************"
         value={token}

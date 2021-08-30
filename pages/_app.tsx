@@ -19,6 +19,7 @@ import {
   faCopy,
   faArrowAltCircleDown,
   faTrashAlt,
+  faEnvelope,
 } from '@fortawesome/free-regular-svg-icons'
 import {
   faPlus,
@@ -32,6 +33,8 @@ import {
   faUndo,
   faBook,
   faKey,
+  faSignOutAlt,
+  faCloud,
 } from '@fortawesome/free-solid-svg-icons'
 import { faGithub, faMarkdown } from '@fortawesome/free-brands-svg-icons'
 
@@ -65,7 +68,10 @@ library.add(
   faBook,
   faArrowAltCircleDown,
   faKey,
-  faTrashAlt
+  faTrashAlt,
+  faSignOutAlt,
+  faEnvelope,
+  faCloud
 )
 
 function MyApp({ Component, pageProps }: AppProps) {

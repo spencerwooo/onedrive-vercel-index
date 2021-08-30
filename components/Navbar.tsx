@@ -1,16 +1,30 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { IconName } from '@fortawesome/fontawesome-svg-core'
 import { Dialog, Transition } from '@headlessui/react'
 import toast, { Toaster } from 'react-hot-toast'
 
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 import siteConfig from '../config/site.json'
 
 const Navbar = () => {
   const router = useRouter()
+  const [tokenPresent, setTokenPresent] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    const storedToken = () => {
+      for (const r of siteConfig.protectedRoutes) {
+        if (localStorage.hasOwnProperty(r)) {
+          return true
+        }
+      }
+      return false
+    }
+    setTokenPresent(storedToken())
+  }, [])
 
   const clearTokens = () => {
     setIsOpen(false)
@@ -30,25 +44,39 @@ const Navbar = () => {
       <div className="max-w-4xl w-full mx-auto flex items-center justify-between">
         <Toaster />
 
-        <h1 className="font-bold text-xl p-2 rounded dark:text-white hover:opacity-80">
-          <Link href="/">{siteConfig.title}</Link>
-        </h1>
-        <div className="flex items-center">
-          <button
-            className="flex space-x-2 items-center p-3 rounded dark:text-white hover:opacity-80"
-            onClick={() => setIsOpen(true)}
-          >
-            <FontAwesomeIcon icon="key" />
-            <span>Logout</span>
-          </button>
-          <a
-            href="https://github.com/spencerwooo/onedrive-vercel-index"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded dark:text-white hover:opacity-80"
-          >
-            <FontAwesomeIcon icon={['fab', 'github']} size="lg" />
+        <Link href="/">
+          <a className="flex items-center space-x-2 font-bold text-xl p-2 dark:text-white hover:opacity-80">
+            <FontAwesomeIcon icon="cloud" />
+            <span className="hidden sm:block">{siteConfig.title}</span>
           </a>
+        </Link>
+
+        <div className="flex items-center">
+          {siteConfig.contacts.map((c, i) => (
+            <a
+              key={i}
+              href={c.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700"
+            >
+              {c.platform === 'email' ? (
+                <FontAwesomeIcon icon={['far', 'envelope']} size="lg" />
+              ) : (
+                <FontAwesomeIcon icon={['fab', c.platform as IconName]} size="lg" />
+              )}
+            </a>
+          ))}
+
+          {tokenPresent && (
+            <button
+              className="flex space-x-2 items-center p-2 rounded hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700"
+              onClick={() => setIsOpen(true)}
+            >
+              <span>Logout</span>
+              <FontAwesomeIcon icon="sign-out-alt" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -64,7 +92,7 @@ const Navbar = () => {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Dialog.Overlay className="fixed inset-0" />
+              <Dialog.Overlay className="fixed inset-0 bg-gray-50 dark:bg-gray-800" />
             </Transition.Child>
 
             {/* This element is to trick the browser into centering the modal contents. */}

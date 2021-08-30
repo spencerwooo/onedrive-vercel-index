@@ -4,5 +4,15 @@
   "protectedRoutes": [
     "/🌞 Private folder/u-need-a-password",
     "/🥟 Some test files/Protected route"
+  ],
+  "contacts": [
+    {
+      "platform": "email",
+      "link": "mailto:spencer.wushangbo@gmail.com"
+    },
+    {
+      "platform": "github",
+      "link": "https://github.com/spencerwooo/onedrive-vercel-index"
+    }
   ]
 }
