@@ -27,7 +27,7 @@ const fetcher = (url: string, token: string) =>
  * @param url request url
  * @returns useSWR instance
  */
-export const useStaleSWR = (url: Key, path: string) => {
+export const useStaleSWR = (url: Key, path: string = '') => {
   const revalidationOptions = {
     revalidateOnMount: !cache.has(url),
     revalidateOnFocus: false,
