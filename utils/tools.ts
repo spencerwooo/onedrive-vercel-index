@@ -15,12 +15,15 @@ export const getBaseUrl = () => {
 }
 
 // Common axios fetch function
-const fetcher = (url: string, token: string) =>
-  axios
-    .get(url, {
-      headers: { 'od-protected-token': token },
-    })
-    .then(res => res.data)
+const fetcher = (url: string, token?: string) => {
+  return token
+    ? axios
+        .get(url, {
+          headers: { 'od-protected-token': token },
+        })
+        .then(res => res.data)
+    : axios.get(url).then(res => res.data)
+}
 /**
  * Use stale SWR instead of revalidating on each request. Not ideal for this scenario but have to do
  * if fetching serverside props from component instead of pages.
