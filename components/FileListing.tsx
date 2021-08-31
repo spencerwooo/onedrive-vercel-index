@@ -274,7 +274,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
         {renderReadme && (
           <div className="border-t dark:border-gray-700">
-            <MarkdownPreview file={readmeFile} standalone={false} />
+            <MarkdownPreview file={readmeFile} path={path} standalone={false} />
           </div>
         )}
       </div>
@@ -303,7 +303,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           return <CodePreview file={resp} />
 
         case preview.markdown:
-          return <MarkdownPreview file={resp} />
+          return <MarkdownPreview file={resp} path={path} />
 
         case preview.video:
           return <VideoPreview file={resp} />
