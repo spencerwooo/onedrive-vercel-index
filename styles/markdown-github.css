@@ -62,8 +62,6 @@
   line-height: 1.5;
   color: #24292e;
   background-color: #ffffff;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji,
-    Segoe UI Emoji;
   font-size: 16px;
   line-height: 1.5;
   word-wrap: break-word;
@@ -992,8 +990,8 @@
   .markdown-body {
     /* color: #c9d1d9; */
     /* background-color: #0d1117; */
-    color: #F3F4F6;
-    background-color: #18181B;
+    color: #f3f4f6;
+    background-color: #18181b;
   }
   .markdown-body a {
     color: #58a6ff;
