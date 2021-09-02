@@ -44,19 +44,23 @@ export const useStaleSWR = (url: Key, path: string = '') => {
 }
 
 export const matchProtectedRoute = (route: string) => {
-  const protectedRoutes = siteConfig.protectedRoutes
+  const protectedRoutes: string[] = siteConfig.protectedRoutes
   let authTokenPath = ''
+
   for (const r of protectedRoutes) {
-    if (
-      route.startsWith(
-        r
-          .split('/')
-          .map(p => encodeURIComponent(p))
-          .join('/')
-      )
-    ) {
-      authTokenPath = r
-      break
+    // protected route array could be empty
+    if (r) {
+      if (
+        route.startsWith(
+          r
+            .split('/')
+            .map(p => encodeURIComponent(p))
+            .join('/')
+        )
+      ) {
+        authTokenPath = r
+        break
+      }
     }
   }
   return authTokenPath
