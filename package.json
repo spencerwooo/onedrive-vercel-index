@@ -16,6 +16,7 @@
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@headlessui/react": "^1.4.0",
     "axios": "^0.21.1",
+    "crypto-js": "^4.1.1",
     "emoji-regex": "^9.2.2",
     "next": "^11.1.0",
     "preview-office-docs": "^1.0.2",
@@ -36,6 +37,7 @@
     "use-clipboard-copy": "^0.2.0"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.0.2",
     "@types/prismjs": "^1.16.5",
     "@types/react": "17.0.11",
     "@types/react-copy-to-clipboard": "^5.0.0",

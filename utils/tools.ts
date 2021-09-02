@@ -1,4 +1,5 @@
 import axios from 'axios'
+import sha256 from 'crypto-js/sha256'
 import useSWR, { cache, Key } from 'swr'
 
 import siteConfig from '../config/site.json'
@@ -37,26 +38,44 @@ export const useStaleSWR = (url: Key, path: string = '') => {
     revalidateOnReconnect: true,
   }
 
-  const token =
+  const storedToken =
     typeof window !== 'undefined' ? JSON.parse(localStorage.getItem(matchProtectedRoute(path)) as string) : ''
+  const hashedToken = storedToken ? encryptToken(storedToken) : null
 
-  return useSWR([url, token], fetcher, revalidationOptions)
+  return useSWR([url, hashedToken], fetcher, revalidationOptions)
+}
+
+const encryptToken = (token: string) => {
+  return sha256(token).toString()
+}
+/**
+ * Compares the hash of .password and od-protected-token header
+ * @param odTokenHeader od-protected-token header (sha256 hashed token)
+ * @param dotPassword non-hashed .password file
+ * @returns whether the two hashes are the same
+ */
+export const compareHashedToken = (odTokenHeader: string, dotPassword: string) => {
+  return encryptToken(dotPassword.trim()) === odTokenHeader
 }
 
 export const matchProtectedRoute = (route: string) => {
-  const protectedRoutes = siteConfig.protectedRoutes
+  const protectedRoutes: string[] = siteConfig.protectedRoutes
   let authTokenPath = ''
+
   for (const r of protectedRoutes) {
-    if (
-      route.startsWith(
-        r
-          .split('/')
-          .map(p => encodeURIComponent(p))
-          .join('/')
-      )
-    ) {
-      authTokenPath = r
-      break
+    // protected route array could be empty
+    if (r) {
+      if (
+        route.startsWith(
+          r
+            .split('/')
+            .map(p => encodeURIComponent(p))
+            .join('/')
+        )
+      ) {
+        authTokenPath = r
+        break
+      }
     }
   }
   return authTokenPath
