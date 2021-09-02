@@ -81,7 +81,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         /*if (req.headers['od-protected-token'] !== odProtectedToken.data.trim()) {*/
         if(  !req.headers.hasOwnProperty('od-protected-token')
           || !req.headers['od-protected-token']
-          || odProtectedToken.data.trim() !== crypto.createHmac('sha256', '').update(req.headers['od-protected-token'].toString()).digest('hex')
+          || odProtectedToken.data.trim() !== crypto.createHash('sha256').update(req.headers['od-protected-token'].toString()).digest('hex')
         ){
           res.status(401).json({ error: 'Password required for this folder.' })
           return
