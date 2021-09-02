@@ -77,7 +77,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Handle request and check for header 'od-protected-token'
         const odProtectedToken = await axios.get(token.data['@microsoft.graph.downloadUrl'])
         let authenticated
-        if(process.env.PASSWORD_HASHING) {
+        if(process.env.PASSWORD_HASHING ? process.env.PASSWORD_HASHING : apiConfig.passwordHashing) {
           authenticated = (!req.headers.hasOwnProperty('od-protected-token')
           || !req.headers['od-protected-token']
           || odProtectedToken.data.trim() !== crypto.createHash('sha256').update(req.headers['od-protected-token'].toString()).digest('hex'))
