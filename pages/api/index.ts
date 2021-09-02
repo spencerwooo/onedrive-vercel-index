@@ -5,7 +5,9 @@ import { posix as pathPosix } from 'path'
 import apiConfig from '../../config/api.json'
 import siteConfig from '../../config/site.json'
 
-const basePath = pathPosix.resolve('/', apiConfig.base)
+const driveApi = process.env.DRIVE_API ? process.env.DRIVE_API : apiConfig.driveApi
+const authApi = process.env.AUTH_API ? process.env.AUTH_API : apiConfig.authApi
+const basePath = pathPosix.resolve('/', process.env.BASE_DIR ? process.env.BASE_DIR : apiConfig.base)
 const encodePath = (path: string) => {
   const encodedPath = pathPosix.join(basePath, pathPosix.resolve('/', path))
   if (encodedPath === '/' || encodedPath === '') {
@@ -23,13 +25,13 @@ const getAccessToken = async () => {
   }
 
   const body = new URLSearchParams()
-  body.append('client_id', apiConfig.clientId)
-  body.append('redirect_uri', apiConfig.redirectUri)
+  body.append('client_id', process.env.CLIENT_ID ? process.env.CLIENT_ID : apiConfig.clientId)
+  body.append('redirect_uri', process.env.REDIRECT_URI ? process.env.REDIRECT_URI : apiConfig.redirectUri)
   body.append('client_secret', process.env.CLIENT_SECRET ? process.env.CLIENT_SECRET : '')
   body.append('refresh_token', process.env.REFRESH_TOKEN ? process.env.REFRESH_TOKEN : '')
   body.append('grant_type', 'refresh_token')
 
-  const resp = await axios.post(apiConfig.authApi, body, {
+  const resp = await axios.post(authApi, body, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
@@ -90,7 +92,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Handle response from OneDrive API
-    const requestUrl = `${apiConfig.driveApi}/root${encodePath(path)}`
+    const requestUrl = `${driveApi}/root${encodePath(path)}`
     const { data } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
