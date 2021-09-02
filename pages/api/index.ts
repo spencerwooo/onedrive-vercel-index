@@ -1,6 +1,7 @@
 import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { posix as pathPosix } from 'path'
+import crypto from 'crypto'
 
 import apiConfig from '../../config/api.json'
 import siteConfig from '../../config/site.json'
@@ -77,10 +78,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const odProtectedToken = await axios.get(token.data['@microsoft.graph.downloadUrl'])
         // console.log(req.headers['od-protected-token'], odProtectedToken.data.trim())
 
-        if (req.headers['od-protected-token'] !== odProtectedToken.data.trim()) {
+        /*if (req.headers['od-protected-token'] !== odProtectedToken.data.trim()) {*/
+        if(  !req.headers.hasOwnProperty('od-protected-token')
+          || !req.headers['od-protected-token']
+          || odProtectedToken.data.trim() !== crypto.createHmac('sha256', '').update(req.headers['od-protected-token'].toString()).digest('hex')
+        ){
           res.status(401).json({ error: 'Password required for this folder.' })
           return
         }
+
       } catch (error) {
         // Password file not found, fallback to 404
         if (error.response.status === 404) {
