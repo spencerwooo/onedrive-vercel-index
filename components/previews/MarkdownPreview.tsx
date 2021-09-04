@@ -26,16 +26,37 @@ const MarkdownPreview: FunctionComponent<{ file: any; path: string; standalone?:
   const isUrlAbsolute = url => url.indexOf('://') > 0 || url.indexOf('//') === 0
   // Custom renderer to render images with relative path
   const relativeImagePathRenderer = {
-    img: ({ alt, src, title, style }: { alt?: string; src?: string; title?: string; style?: CSSProperties }) => {
+    img: ({
+      alt,
+      src,
+      title,
+      width,
+      height,
+      style,
+    }: {
+      alt?: string
+      src?: string
+      title?: string
+      width?: string | number
+      height?: string | number
+      style?: CSSProperties
+    }) => {
       if (isUrlAbsolute(src as string)) {
         return (
           // eslint-disable-next-line @next/next/no-img-element
-          <img alt={alt} src={src} title={title} style={style} />
+          <img alt={alt} src={src} title={title} width={width} height={height} style={style} />
         )
       }
       return (
         // eslint-disable-next-line @next/next/no-img-element
-        <img alt={alt} src={`/api?path=${parentPath}/${src}&raw=true`} title={title} style={style} />
+        <img
+          alt={alt}
+          src={`/api?path=${parentPath}/${src}&raw=true`}
+          title={title}
+          width={width}
+          height={height}
+          style={style}
+        />
       )
     },
   }
