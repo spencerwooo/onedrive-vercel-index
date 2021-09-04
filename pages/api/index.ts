@@ -92,15 +92,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Handle response from OneDrive API
     const requestUrl = `${apiConfig.driveApi}/root${encodePath(path)}`
-    const { data } = await axios.get(requestUrl, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-      params: {
-        select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
-        expand: 'children(select=@content.downloadUrl,name,lastModifiedDateTime,eTag,size,id,folder,file)',
-      },
-    })
 
+    // Go for file raw download link and query with only temporary link parameter
     if (raw) {
+      const { data } = await axios.get(requestUrl, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: {
+          select: '@microsoft.graph.downloadUrl,folder,file',
+        },
+      })
+
       if ('folder' in data) {
         res.status(400).json({ error: "Folders doesn't have raw download urls." })
         return
@@ -111,6 +112,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
+    // Normal query selecting and expanding every children in current directory
+    const { data } = await axios.get(requestUrl, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      params: {
+        select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
+        expand: 'children(select=@content.downloadUrl,name,lastModifiedDateTime,eTag,size,id,folder,file)',
+      },
+    })
     res.status(200).json({ path, data })
     return
   }
