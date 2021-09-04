@@ -53,21 +53,28 @@ const Navbar = () => {
         </Link>
 
         <div className="flex items-center">
-          {siteConfig.contacts.map((c, i) => (
-            <a
-              key={i}
-              href={c.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700 p-2 rounded"
-            >
-              {c.platform === 'email' ? (
-                <FontAwesomeIcon icon={['far', 'envelope']} size="lg" />
-              ) : (
-                <FontAwesomeIcon icon={['fab', c.platform as IconName]} size="lg" />
-              )}
-            </a>
-          ))}
+          <a
+            href={siteConfig.contact.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700 p-2 rounded"
+          >
+            <FontAwesomeIcon icon={['fab', 'github']} size="lg" />
+          </a>
+          <a
+            href={siteConfig.contact.telegram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700 p-2 rounded"
+          >
+            <FontAwesomeIcon icon={['fab', 'telegram-plane']} size="lg" />
+          </a>
+          <a
+            href={siteConfig.contact.email}
+            className="hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700 p-2 rounded"
+          >
+            <FontAwesomeIcon icon={['far', 'envelope']} size="lg" />
+          </a>
 
           {tokenPresent && (
             <button

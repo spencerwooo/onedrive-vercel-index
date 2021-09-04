@@ -11,14 +11,9 @@
     "/🌞 Private folder/u-need-a-password",
     "/🥟 Some test files/Protected route"
   ],
-  "contacts": [
-    {
-      "platform": "email",
-      "link": "mailto:spencer.wushangbo@gmail.com"
-    },
-    {
-      "platform": "github",
-      "link": "https://github.com/spencerwooo/onedrive-vercel-index"
-    }
-  ]
+  "contact": {
+    "email": "mailto:spencer.wushangbo@gmail.com",
+    "telegram": "https://t.me/realSpencerWoo",
+    "github": "https://github.com/spencerwooo/onedrive-vercel-index"
+  }
 }
