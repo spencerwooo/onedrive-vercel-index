@@ -14,7 +14,7 @@ export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
 
   return (
     <>
-      <div className="bg-white dark:bg-gray-900 rounded shadow p-3">
+      <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
         <div className="relative" style={{ paddingTop: '56.25%' }}>
           <ReactPlayer
             className="absolute top-0 left-0 w-full h-full"
@@ -27,7 +27,7 @@ export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
         </div>
       </div>
 
-      <div className="flex flex-wrap space-x-2 justify-center mt-4">
+      <div className="flex flex-wrap justify-center mt-4 space-x-2">
         <Toaster
           toastOptions={{
             style: {
@@ -37,7 +37,7 @@ export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
           }}
         />
         <a
-          className="flex-shrink-0 w-36 flex space-x-4 items-center justify-center bg-blue-500 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-600 mb-2"
+          className="w-36 focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-600 flex items-center justify-center flex-shrink-0 px-4 py-2 mb-2 space-x-4 text-white bg-blue-500 rounded"
           href={file['@microsoft.graph.downloadUrl']}
           target="_blank"
           rel="noopener noreferrer"
@@ -47,7 +47,7 @@ export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
         </a>
 
         <button
-          className="flex-shrink-0 w-48 flex space-x-4 items-center justify-center bg-yellow-500 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-yellow-300 hover:bg-yellow-600 mb-2"
+          className="focus:outline-none focus:ring focus:ring-yellow-300 hover:bg-yellow-600 flex items-center justify-center flex-shrink-0 w-48 px-4 py-2 mb-2 space-x-4 text-white bg-yellow-500 rounded"
           onClick={() => {
             clipboard.copy(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
             toast.success('Copied direct link to clipboard.')
@@ -58,7 +58,7 @@ export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
         </button>
 
         <a
-          className="flex space-x-2 items-center justify-center bg-gray-700 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-blue-300 hover:bg-gray-600 mb-2"
+          className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-gray-600 flex items-center justify-center px-4 py-2 mb-2 space-x-2 text-white bg-gray-700 rounded"
           href={`iina://weblink?url=${file['@microsoft.graph.downloadUrl']}`}
           target="_blank"
           rel="noopener noreferrer"
@@ -67,7 +67,7 @@ export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
           <span>IINA</span>
         </a>
         <a
-          className="flex space-x-2 items-center justify-center bg-yellow-600 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-blue-300 hover:bg-yellow-500 mb-2"
+          className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-yellow-500 flex items-center justify-center px-4 py-2 mb-2 space-x-2 text-white bg-yellow-600 rounded"
           href={`vlc://${file['@microsoft.graph.downloadUrl']}`}
           target="_blank"
           rel="noopener noreferrer"
@@ -76,7 +76,7 @@ export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
           <span>VLC</span>
         </a>
         <a
-          className="flex space-x-2 items-center justify-center bg-yellow-400 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-blue-300 hover:bg-yellow-300 mb-2"
+          className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-yellow-300 flex items-center justify-center px-4 py-2 mb-2 space-x-2 text-white bg-yellow-400 rounded"
           href={`potplayer://${file['@microsoft.graph.downloadUrl']}`}
           target="_blank"
           rel="noopener noreferrer"

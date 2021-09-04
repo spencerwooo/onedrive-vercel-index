@@ -14,11 +14,11 @@ const Auth: FunctionComponent<{ redirect: string }> = ({ redirect }) => {
   const [token, setToken] = useLocalStorage(authTokenPath, '')
 
   return (
-    <div className="flex flex-col space-y-4 max-w-sm mx-auto md:my-10">
-      <div className="mx-auto w-3/4 md:w-5/6">
+    <div className="md:my-10 flex flex-col max-w-sm mx-auto space-y-4">
+      <div className="md:w-5/6 w-3/4 mx-auto">
         <Image src={'/images/no-looking.png'} alt="authenticate" width={912} height={912} />
       </div>
-      <div className="dark:text-gray-100 text-gray-900 text-lg font-bold">Enter Password</div>
+      <div className="dark:text-gray-100 text-lg font-bold text-gray-900">Enter Password</div>
 
       <p className="text-sm text-gray-500">
         This route (the folder itself and the files inside) is password protected. If you know the password, please
@@ -26,7 +26,7 @@ const Auth: FunctionComponent<{ redirect: string }> = ({ redirect }) => {
       </p>
 
       <input
-        className="font-mono p-2 bg-blue-50 dark:bg-gray-600 dark:text-white rounded focus:ring focus:ring-blue-300 dark:focus:ring-blue-700 focus:outline-none"
+        className="bg-blue-50 dark:bg-gray-600 dark:text-white focus:ring focus:ring-blue-300 dark:focus:ring-blue-700 focus:outline-none p-2 font-mono rounded"
         autoFocus
         type="text"
         placeholder="************"
@@ -41,7 +41,7 @@ const Auth: FunctionComponent<{ redirect: string }> = ({ redirect }) => {
         }}
       />
       <button
-        className="inline-flex space-x-2 items-center justify-center bg-blue-500 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-600"
+        className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-600 inline-flex items-center justify-center px-4 py-2 space-x-2 text-white bg-blue-500 rounded"
         onClick={() => {
           router.reload()
         }}

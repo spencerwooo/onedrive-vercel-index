@@ -26,12 +26,12 @@ const PDFPreview: FunctionComponent<{ file: any }> = ({ file }) => {
   return (
     <>
       <div
-        className="flex flex-col bg-white dark:bg-gray-900 rounded shadow md:p-3 w-full overflow-scroll no-scrollbar"
+        className="dark:bg-gray-900 md:p-3 no-scrollbar flex flex-col w-full overflow-scroll bg-white rounded shadow"
         style={{ maxHeight: '90vh' }}
       >
-        <div className="w-full flex-1 overflow-scroll no-scrollbar" ref={pdfContainter} style={{ maxHeight: '80vh' }}>
+        <div className="no-scrollbar flex-1 w-full overflow-scroll" ref={pdfContainter} style={{ maxHeight: '80vh' }}>
           <Document
-            className="bg-gray-100 dark:bg-gray-800"
+            className="dark:bg-gray-800 bg-gray-100"
             file={file['@microsoft.graph.downloadUrl']}
             onLoadSuccess={onDocumentLoadSuccess}
             loading={<Loading loadingText={loadingText} />}
@@ -46,9 +46,9 @@ const PDFPreview: FunctionComponent<{ file: any }> = ({ file }) => {
           </Document>
         </div>
 
-        <div className="flex flex-wrap space-x-2 my-4 md:mb-0 w-full items-center justify-center dark:text-white">
+        <div className="md:mb-0 dark:text-white flex flex-wrap items-center justify-center w-full my-4 space-x-2">
           <button
-            className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer focus:ring focus:ring-red-300 focus:outline-none hover:bg-red-600 transition-all duration-75 disabled:opacity-50"
+            className="focus:ring focus:ring-red-300 focus:outline-none hover:bg-red-600 disabled:opacity-50 px-4 py-2 text-white transition-all duration-75 bg-red-500 rounded cursor-pointer"
             onClick={() => {
               pageNumber > 1 && setPageNumber(pageNumber - 1)
             }}
@@ -60,7 +60,7 @@ const PDFPreview: FunctionComponent<{ file: any }> = ({ file }) => {
             Page{' '}
             <input
               value={pageNumber}
-              className="w-10 mr-1 text-center p-1 bg-red-50 dark:bg-gray-600 rounded focus:ring focus:ring-red-300 dark:focus:ring-red-700 focus:outline-none"
+              className="bg-red-50 dark:bg-gray-600 focus:ring focus:ring-red-300 dark:focus:ring-red-700 focus:outline-none w-10 p-1 mr-1 text-center rounded"
               style={{
                 maxWidth: 50,
               }}
@@ -74,7 +74,7 @@ const PDFPreview: FunctionComponent<{ file: any }> = ({ file }) => {
             /<span className="ml-1 text-center">{totalPages}</span>
           </div>
           <button
-            className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer focus:ring focus:ring-red-300 focus:outline-none hover:bg-red-600 transition-all duration-75 disabled:opacity-50"
+            className="focus:ring focus:ring-red-300 focus:outline-none hover:bg-red-600 disabled:opacity-50 px-4 py-2 text-white transition-all duration-75 bg-red-500 rounded cursor-pointer"
             onClick={() => {
               pageNumber < totalPages && setPageNumber(pageNumber + 1)
             }}

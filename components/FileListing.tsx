@@ -66,10 +66,10 @@ const FileListItem: FunctionComponent<{
   const renderEmoji = emojiIcon && !emojiIcon.index
 
   return (
-    <div className="p-3 grid grid-cols-11 items-center space-x-2 cursor-pointer">
-      <div className="flex space-x-2 items-center col-span-11 md:col-span-7 truncate">
+    <div className="grid items-center grid-cols-11 p-3 space-x-2 cursor-pointer">
+      <div className="md:col-span-7 flex items-center col-span-11 space-x-2 truncate">
         {/* <div>{c.file ? c.file.mimeType : 'folder'}</div> */}
-        <div className="w-5 text-center flex-shrink-0">
+        <div className="flex-shrink-0 w-5 text-center">
           {renderEmoji ? (
             <span>{emojiIcon ? emojiIcon[0] : '📁'}</span>
           ) : (
@@ -80,7 +80,7 @@ const FileListItem: FunctionComponent<{
           {renderEmoji ? c.name.replace(emojiIcon ? emojiIcon[0] : '', '').trim() : c.name}
         </div>
       </div>
-      <div className="hidden md:block text-sm font-mono col-span-3 text-gray-700 dark:text-gray-500 flex-shrink-0">
+      <div className="md:block dark:text-gray-500 flex-shrink-0 hidden col-span-3 font-mono text-sm text-gray-700">
         {new Date(c.lastModifiedDateTime).toLocaleString('en-US', {
           year: 'numeric',
           month: '2-digit',
@@ -90,7 +90,7 @@ const FileListItem: FunctionComponent<{
           hour12: false,
         })}
       </div>
-      <div className="hidden md:block text-sm font-mono col-span-1 truncate text-gray-700 dark:text-gray-500 flex-shrink-0">
+      <div className="md:block dark:text-gray-500 flex-shrink-0 hidden col-span-1 font-mono text-sm text-gray-700 truncate">
         {humanFileSize(c.size)}
       </div>
     </div>
@@ -110,14 +110,14 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
   if (error) {
     return (
-      <div className="shadow bg-white dark:bg-gray-900 rounded p-3">
+      <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
         {error.message.includes('401') ? <Auth redirect={path} /> : <FourOhFour errorMsg={error.message} />}
       </div>
     )
   }
   if (!data) {
     return (
-      <div className="shadow bg-white dark:bg-gray-900 rounded p-3">
+      <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
         <Loading loadingText="Loading ..." />
       </div>
     )
@@ -164,12 +164,12 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     })
 
     return (
-      <div className="bg-white dark:bg-gray-900 dark:text-gray-100 shadow rounded">
-        <div className="p-3 grid grid-cols-12 items-center space-x-2 border-b border-gray-200 dark:border-gray-700">
-          <div className="col-span-12 md:col-span-7 font-bold">Name</div>
-          <div className="hidden md:block font-bold col-span-3">Last Modified</div>
-          <div className="hidden md:block font-bold">Size</div>
-          <div className="hidden md:block font-bold">Actions</div>
+      <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded shadow">
+        <div className="dark:border-gray-700 grid items-center grid-cols-12 p-3 space-x-2 border-b border-gray-200">
+          <div className="md:col-span-7 col-span-12 font-bold">Name</div>
+          <div className="md:block hidden col-span-3 font-bold">Last Modified</div>
+          <div className="md:block hidden font-bold">Size</div>
+          <div className="md:block hidden font-bold">Actions</div>
         </div>
 
         <Toaster
@@ -219,7 +219,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
         )}
 
         {children.map((c: any) => (
-          <div className="grid grid-cols-12 hover:bg-gray-100 dark:hover:bg-gray-850" key={c.id}>
+          <div className="hover:bg-gray-100 dark:hover:bg-gray-850 grid grid-cols-12" key={c.id}>
             <div
               className="col-span-11"
               onClick={e => {
@@ -236,10 +236,10 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
               <FileListItem fileContent={c} />
             </div>
             {c.folder ? (
-              <div className="hidden md:flex p-1 text-gray-700 dark:text-gray-400">
+              <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
                 <span
                   title="Copy folder permalink"
-                  className="cursor-pointer p-2 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
                   onClick={() => {
                     clipboard.copy(`${getBaseUrl()}${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)
                     toast.success('Copied folder permalink.')
@@ -249,10 +249,10 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 </span>
               </div>
             ) : (
-              <div className="hidden md:flex p-1 text-gray-700 dark:text-gray-400">
+              <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
                 <span
                   title="Copy raw file permalink"
-                  className="cursor-pointer p-2 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
                   onClick={() => {
                     clipboard.copy(`${getBaseUrl()}/api?path=${path === '/' ? '' : path}/${c.name}&raw=true`)
                     toast.success('Copied raw file permalink.')
@@ -262,7 +262,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 </span>
                 <a
                   title="Download file"
-                  className="cursor-pointer p-2 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
                   href={c['@microsoft.graph.downloadUrl']}
                 >
                   <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
@@ -273,7 +273,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
         ))}
 
         {renderReadme && (
-          <div className="border-t dark:border-gray-700">
+          <div className="dark:border-gray-700 border-t">
             <MarkdownPreview file={readmeFile} path={path} standalone={false} />
           </div>
         )}
@@ -290,7 +290,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       switch (extensions[fileExtension]) {
         case preview.image:
           return (
-            <div className="shadow bg-white rounded p-3 w-full">
+            <div className="w-full p-3 bg-white rounded shadow">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img className="mx-auto" src={downloadUrl} alt={fileName} />
             </div>
@@ -318,13 +318,13 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           return <OfficePreview file={resp} />
 
         default:
-          return <div className="bg-white dark:bg-gray-900 shadow rounded">{fileName}</div>
+          return <div className="dark:bg-gray-900 bg-white rounded shadow">{fileName}</div>
       }
     }
 
     return (
       <>
-        <div className="shadow bg-white dark:bg-gray-900 rounded p-3">
+        <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
           <FourOhFour
             errorMsg={`Preview for file ${resp.name} is not available, download directly with the button below.`}
           />
@@ -337,7 +337,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
   }
 
   return (
-    <div className="shadow bg-white dark:bg-gray-900 rounded p-3">
+    <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
       <FourOhFour errorMsg={`Cannot preview ${resp.name}.`} />
     </div>
   )

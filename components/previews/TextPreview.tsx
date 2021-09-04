@@ -9,14 +9,14 @@ const TextPreview: FunctionComponent<{ file: any }> = ({ file }) => {
   const { data, error } = useStaleSWR(file['@microsoft.graph.downloadUrl'])
   if (error) {
     return (
-      <div className="shadow bg-white dark:bg-gray-900 rounded p-3">
+      <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
         <FourOhFour errorMsg={error.message} />
       </div>
     )
   }
   if (!data) {
     return (
-      <div className="shadow bg-white dark:bg-gray-900 rounded p-3">
+      <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
         <Loading loadingText="Loading file content..." />
       </div>
     )
@@ -24,8 +24,8 @@ const TextPreview: FunctionComponent<{ file: any }> = ({ file }) => {
 
   return (
     <>
-      <div className="shadow bg-white dark:bg-gray-900 dark:text-gray-100 rounded p-3">
-        <pre className="p-0 md:p-3 overflow-scroll">{data}</pre>
+      <div className="dark:bg-gray-900 dark:text-gray-100 p-3 bg-white rounded shadow">
+        <pre className="md:p-3 p-0 overflow-scroll">{data}</pre>
       </div>
       <div className="mt-4">
         <DownloadBtn downloadUrl={file['@microsoft.graph.downloadUrl']} />

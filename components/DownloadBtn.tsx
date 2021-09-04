@@ -11,7 +11,7 @@ const DownloadBtn: FunctionComponent<{ downloadUrl: string }> = ({ downloadUrl }
   const clipboard = useClipboard()
 
   return (
-    <div className="flex flex-wrap space-x-2 justify-center">
+    <div className="flex flex-wrap justify-center space-x-2">
       <Toaster
         toastOptions={{
           style: {
@@ -21,7 +21,7 @@ const DownloadBtn: FunctionComponent<{ downloadUrl: string }> = ({ downloadUrl }
         }}
       />
       <a
-        className="flex-shrink-0 w-36 flex space-x-4 items-center justify-center bg-blue-500 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-600 mb-2"
+        className="w-36 focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-600 flex items-center justify-center flex-shrink-0 px-4 py-2 mb-2 space-x-4 text-white bg-blue-500 rounded"
         href={downloadUrl}
         target="_blank"
         rel="noopener noreferrer"
@@ -30,7 +30,7 @@ const DownloadBtn: FunctionComponent<{ downloadUrl: string }> = ({ downloadUrl }
         <span>Download</span>
       </a>
       <button
-        className="flex-shrink-0 w-48 flex space-x-4 items-center justify-center bg-yellow-500 rounded py-2 px-4 text-white focus:outline-none focus:ring focus:ring-yellow-300 hover:bg-yellow-600 mb-2"
+        className="focus:outline-none focus:ring focus:ring-yellow-300 hover:bg-yellow-600 flex items-center justify-center flex-shrink-0 w-48 px-4 py-2 mb-2 space-x-4 text-white bg-yellow-500 rounded"
         onClick={() => {
           clipboard.copy(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
           toast.success('Copied direct link to clipboard.')

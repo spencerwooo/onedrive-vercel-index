@@ -23,7 +23,7 @@ const MarkdownPreview: FunctionComponent<{ file: any; path: string; standalone?:
   // The parent folder of the markdown file, which is also the relative image folder
   const parentPath = path.substring(0, path.lastIndexOf('/'))
   // Check if the image is relative path instead of a absolute url
-  const isUrlAbsolute = url => url.indexOf('://') > 0 || url.indexOf('//') === 0
+  const isUrlAbsolute = (url: string | string[]) => url.indexOf('://') > 0 || url.indexOf('//') === 0
   // Custom renderer to render images with relative path
   const relativeImagePathRenderer = {
     img: ({

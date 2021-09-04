@@ -16,13 +16,13 @@ export const AudioPreview: FunctionComponent<{ file: any }> = ({ file }) => {
 
   return (
     <>
-      <div className="bg-white dark:bg-gray-900 dark:text-white rounded shadow p-3 w-full">
-        <div className="flex flex-col space-y-4 md:flex-row md:space-x-4">
-          <div className="flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded w-full h-72 md:w-40 md:h-36 transition-all duration-75">
+      <div className="dark:bg-gray-900 dark:text-white w-full p-3 bg-white rounded shadow">
+        <div className="md:flex-row md:space-x-4 flex flex-col space-y-4">
+          <div className="dark:bg-gray-700 h-72 md:w-40 md:h-36 flex items-center justify-center w-full transition-all duration-75 bg-gray-100 rounded">
             {playerStatus === PlayerState.Loading ? (
               <div>
                 <svg
-                  className="animate-spin h-5 w-5"
+                  className="animate-spin w-5 h-5"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -45,7 +45,7 @@ export const AudioPreview: FunctionComponent<{ file: any }> = ({ file }) => {
           </div>
           <div className="flex flex-col w-full space-y-2">
             <div>{file.name}</div>
-            <div className="text-gray-500 text-sm pb-4">
+            <div className="pb-4 text-sm text-gray-500">
               Last modified:{' '}
               {new Date(file.lastModifiedDateTime).toLocaleString(undefined, {
                 dateStyle: 'short',

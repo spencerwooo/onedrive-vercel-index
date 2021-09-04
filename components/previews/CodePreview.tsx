@@ -18,14 +18,14 @@ const CodePreview: FunctionComponent<{ file: any }> = ({ file }) => {
 
   if (error) {
     return (
-      <div className="shadow bg-white dark:bg-gray-900 rounded p-3">
+      <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
         <FourOhFour errorMsg={error.message} />
       </div>
     )
   }
   if (!data) {
     return (
-      <div className="shadow bg-white dark:bg-gray-900 rounded p-3">
+      <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
         <Loading loadingText="Loading file content..." />
       </div>
     )
@@ -33,7 +33,7 @@ const CodePreview: FunctionComponent<{ file: any }> = ({ file }) => {
 
   return (
     <>
-      <div className="markdown-body shadow bg-gray-900 rounded p-3">
+      <div className="markdown-body p-3 bg-gray-900 rounded shadow">
         <pre className={`language-${getExtension(file.name)}`}>
           <code>{data}</code>
         </pre>
