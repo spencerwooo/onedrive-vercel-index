@@ -123,7 +123,6 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     )
   }
 
-  const resp = data.data
   const fileIsImage = (fileName: string) => {
     const fileExtension = getExtension(fileName)
     if (hasKey(extensions, fileExtension)) {
@@ -134,8 +133,8 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     return false
   }
 
-  if ('folder' in resp) {
-    const { children } = resp
+  if ('folderData' in data) {
+    const { value } = data.folderData
 
     // Image preview rendering preparations
     const imagesInFolder: ImageDecorator[] = []
@@ -146,7 +145,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     let renderReadme = false
     let readmeFile = null
 
-    children.forEach((c: any) => {
+    value.forEach((c: any) => {
       if (fileIsImage(c.name)) {
         imagesInFolder.push({
           src: c['@microsoft.graph.downloadUrl'],
@@ -218,7 +217,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           />
         )}
 
-        {children.map((c: any) => (
+        {value.map((c: any) => (
           <div className="hover:bg-gray-100 dark:hover:bg-gray-850 grid grid-cols-12" key={c.id}>
             <div
               className="col-span-11"
@@ -281,9 +280,10 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     )
   }
 
-  if ('file' in resp) {
-    const downloadUrl = resp['@microsoft.graph.downloadUrl']
-    const fileName = resp.name
+  if ('identityData' in data) {
+    const { identityData } = data
+    const downloadUrl = identityData['@microsoft.graph.downloadUrl']
+    const fileName = data.identityData.name
     const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
 
     if (hasKey(extensions, fileExtension)) {
@@ -297,25 +297,25 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           )
 
         case preview.text:
-          return <TextPreview file={resp} />
+          return <TextPreview file={identityData} />
 
         case preview.code:
-          return <CodePreview file={resp} />
+          return <CodePreview file={identityData} />
 
         case preview.markdown:
-          return <MarkdownPreview file={resp} path={path} />
+          return <MarkdownPreview file={identityData} path={path} />
 
         case preview.video:
-          return <VideoPreview file={resp} />
+          return <VideoPreview file={identityData} />
 
         case preview.audio:
-          return <AudioPreview file={resp} />
+          return <AudioPreview file={identityData} />
 
         case preview.pdf:
-          return <PDFPreview file={resp} />
+          return <PDFPreview file={identityData} />
 
         case preview.office:
-          return <OfficePreview file={resp} />
+          return <OfficePreview file={identityData} />
 
         default:
           return <div className="dark:bg-gray-900 bg-white rounded shadow">{fileName}</div>
@@ -326,7 +326,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       <>
         <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
           <FourOhFour
-            errorMsg={`Preview for file ${resp.name} is not available, download directly with the button below.`}
+            errorMsg={`Preview for file ${identityData.name} is not available, download directly with the button below.`}
           />
         </div>
         <div className="mt-4">
@@ -338,7 +338,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
   return (
     <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
-      <FourOhFour errorMsg={`Cannot preview ${resp.name}.`} />
+      <FourOhFour errorMsg={`Cannot preview ${path}.`} />
     </div>
   )
 }

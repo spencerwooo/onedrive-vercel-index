@@ -112,15 +112,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    // Normal query selecting and expanding every children in current directory
-    const { data } = await axios.get(requestUrl, {
+    // Querying current path identity (file or folder) and follow up query childrens in folder
+    const { data: identityData } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
         select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
-        expand: 'children(select=@content.downloadUrl,name,lastModifiedDateTime,eTag,size,id,folder,file)',
       },
     })
-    res.status(200).json({ path, data })
+
+    if ('folder' in identityData) {
+      const { data: folderData } = await axios.get(`${requestUrl}:/children`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: {
+          select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
+        },
+      })
+      res.status(200).json({ path, identityData, folderData })
+      return
+    }
+    res.status(200).json({ path, identityData })
     return
   }
 
