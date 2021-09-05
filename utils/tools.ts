@@ -15,7 +15,7 @@ export const getBaseUrl = () => {
   return ''
 }
 
-// Common axios fetch function
+// Common axios fetch function for use with useSWR
 const fetcher = (url: string, token?: string) => {
   return token
     ? axios
@@ -45,6 +45,7 @@ export const useStaleSWR = (url: Key, path: string = '') => {
   return useSWR([url, hashedToken], fetcher, revalidationOptions)
 }
 
+// Hash password token with SHA256
 const encryptToken = (token: string) => {
   return sha256(token).toString()
 }
@@ -58,6 +59,11 @@ export const compareHashedToken = (odTokenHeader: string, dotPassword: string) =
   return encryptToken(dotPassword.trim()) === odTokenHeader
 }
 
+/**
+ * Match the specified route against a list of predefined routes
+ * @param route directory path
+ * @returns whether the directory is protected
+ */
 export const matchProtectedRoute = (route: string) => {
   const protectedRoutes: string[] = siteConfig.protectedRoutes
   let authTokenPath = ''

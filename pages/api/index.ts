@@ -12,7 +12,7 @@ const encodePath = (path: string) => {
   if (encodedPath === '/' || encodedPath === '') {
     return ''
   }
-  return encodeURIComponent(':' + encodedPath)
+  return `:${encodeURIComponent(encodedPath)}`
 }
 
 // Store access token in memory, cuz Vercel doesn't provide key-value storage natively
@@ -43,7 +43,7 @@ const getAccessToken = async () => {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { path = '/', raw = false } = req.query
+  const { path = '/', raw = false, t = '' } = req.query
   if (path === '[...path]') {
     res.status(400).json({ error: 'No path specified.' })
     return
@@ -113,6 +113,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Querying current path identity (file or folder) and follow up query childrens in folder
+    // console.log(accessToken)
+
     const { data: identityData } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
@@ -123,11 +125,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if ('folder' in identityData) {
       const { data: folderData } = await axios.get(`${requestUrl}:/children`, {
         headers: { Authorization: `Bearer ${accessToken}` },
-        params: {
-          select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
-        },
+        params: t
+          ? {
+              select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
+              top: siteConfig.maxItems,
+              $skipToken: t,
+            }
+          : {
+              select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
+              top: siteConfig.maxItems,
+            },
       })
-      res.status(200).json({ path, identityData, folderData })
+
+      // Extract next page token from full @odata.nextLink
+      const nextPage = folderData['@odata.nextLink']
+        ? folderData['@odata.nextLink'].match(/&\$skiptoken=(.+)/i)[1]
+        : null
+
+      // Return paging token if specified
+      if (nextPage) {
+        res.status(200).json({ path, identityData, folderData, nextPage })
+      } else {
+        res.status(200).json({ path, identityData, folderData })
+      }
       return
     }
     res.status(200).json({ path, identityData })
