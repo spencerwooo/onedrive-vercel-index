@@ -283,12 +283,12 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
         {!onlyOnePage && (
           <div>
-            <div className="p-3 font-mono text-sm text-center text-gray-400 border-b">
+            <div className="dark:border-gray-700 p-3 font-mono text-sm text-center text-gray-400 border-b border-gray-200">
               - showing {size} page{size > 1 ? 's' : ''} of {isLoadingMore ? '...' : children.length} files -
             </div>
             <button
               className={`flex items-center justify-center w-full p-3 space-x-2 ${
-                isLoadingMore || isReachingEnd ? 'opacity-60' : 'hover:bg-gray-100'
+                isLoadingMore || isReachingEnd ? 'opacity-60' : 'hover:bg-gray-100 dark:hover:bg-gray-850'
               }`}
               onClick={() => setSize(size + 1)}
               disabled={isLoadingMore || isReachingEnd}

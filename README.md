@@ -24,7 +24,7 @@
 - [x] File permalink copy and direct file download
 - [x] Dark mode
 - [x] Protected routes (password protection and authentication) through `.password` files
-- [ ] Pagination for folders with more than 200 items
+- [x] Pagination for folders with more than 200 items
 
 ## Discussion
 
