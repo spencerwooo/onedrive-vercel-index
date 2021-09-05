@@ -43,7 +43,7 @@ const getAccessToken = async () => {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { path = '/', raw = false, t = '' } = req.query
+  const { path = '/', raw = false, next = '' } = req.query
   if (path === '[...path]') {
     res.status(400).json({ error: 'No path specified.' })
     return
@@ -125,11 +125,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if ('folder' in identityData) {
       const { data: folderData } = await axios.get(`${requestUrl}:/children`, {
         headers: { Authorization: `Bearer ${accessToken}` },
-        params: t
+        params: next
           ? {
               select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
               top: siteConfig.maxItems,
-              $skipToken: t,
+              $skipToken: next,
             }
           : {
               select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
@@ -144,13 +144,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // Return paging token if specified
       if (nextPage) {
-        res.status(200).json({ path, identityData, folderData, nextPage })
+        res.status(200).json({ folder: folderData, next: nextPage })
       } else {
-        res.status(200).json({ path, identityData, folderData })
+        res.status(200).json({ folder: folderData })
       }
       return
     }
-    res.status(200).json({ path, identityData })
+    res.status(200).json({ file: identityData })
     return
   }
 

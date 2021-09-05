@@ -35,6 +35,7 @@ import {
   faKey,
   faSignOutAlt,
   faCloud,
+  faChevronCircleDown,
 } from '@fortawesome/free-solid-svg-icons'
 import { faGithub, faMarkdown, faTelegramPlane } from '@fortawesome/free-brands-svg-icons'
 
@@ -72,7 +73,8 @@ library.add(
   faSignOutAlt,
   faEnvelope,
   faCloud,
-  faTelegramPlane
+  faTelegramPlane,
+  faChevronCircleDown
 )
 
 function MyApp({ Component, pageProps }: AppProps) {

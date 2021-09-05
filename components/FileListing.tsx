@@ -12,7 +12,8 @@ import dynamic from 'next/dynamic'
 
 import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
-import { getBaseUrl, useStaleSWR } from '../utils/tools'
+import { getBaseUrl, useProtectedSWRInfinite } from '../utils/tools'
+
 import { VideoPreview } from './previews/VideoPreview'
 import { AudioPreview } from './previews/AudioPreview'
 import Loading from './Loading'
@@ -106,7 +107,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
   const path = queryToPath(query)
 
-  const { data, error } = useStaleSWR(`/api?path=${path}`, path)
+  const { data, error, size, setSize } = useProtectedSWRInfinite(path)
 
   if (error) {
     return (
@@ -133,9 +134,15 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     return false
   }
 
-  if ('folderData' in data) {
-    const { value } = data.folderData
+  const responses: any[] = data ? [].concat(...data) : []
 
+  const isLoadingInitialData = !data && !error
+  const isLoadingMore = isLoadingInitialData || (size > 0 && data && typeof data[size - 1] === 'undefined')
+  const isEmpty = data?.[0]?.length === 0
+  const isReachingEnd = isEmpty || (data && typeof data[data.length - 1]?.next === 'undefined')
+  const onlyOnePage = data && typeof data[0].next === 'undefined'
+
+  if ('folder' in responses[0]) {
     // Image preview rendering preparations
     const imagesInFolder: ImageDecorator[] = []
     const imageIndexDict: { [key: string]: number } = {}
@@ -145,7 +152,10 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     let renderReadme = false
     let readmeFile = null
 
-    value.forEach((c: any) => {
+    // Expand list of API returns into flattened file data
+    const children = [].concat(...responses.map(r => r.folder.value))
+
+    children.forEach((c: any) => {
       if (fileIsImage(c.name)) {
         imagesInFolder.push({
           src: c['@microsoft.graph.downloadUrl'],
@@ -217,7 +227,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           />
         )}
 
-        {value.map((c: any) => (
+        {children.map((c: any) => (
           <div className="hover:bg-gray-100 dark:hover:bg-gray-850 grid grid-cols-12" key={c.id}>
             <div
               className="col-span-11"
@@ -271,6 +281,54 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           </div>
         ))}
 
+        {!onlyOnePage && (
+          <div>
+            <div className="p-3 font-mono text-sm text-center text-gray-400 border-b">
+              - showing {size} page{size > 1 ? 's' : ''} of {isLoadingMore ? '...' : children.length} files -
+            </div>
+            <button
+              className={`flex items-center justify-center w-full p-3 space-x-2 ${
+                isLoadingMore || isReachingEnd ? 'opacity-60' : 'hover:bg-gray-100'
+              }`}
+              onClick={() => setSize(size + 1)}
+              disabled={isLoadingMore || isReachingEnd}
+            >
+              {isLoadingMore ? (
+                <>
+                  <span>Loading ...</span>{' '}
+                  <svg
+                    className="animate-spin w-5 h-5 mr-3 -ml-1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                </>
+              ) : isReachingEnd ? (
+                <span>No more files</span>
+              ) : (
+                <>
+                  <span>Load more</span>
+                  <FontAwesomeIcon icon="chevron-circle-down" />
+                </>
+              )}
+            </button>
+          </div>
+        )}
+
         {renderReadme && (
           <div className="dark:border-gray-700 border-t">
             <MarkdownPreview file={readmeFile} path={path} standalone={false} />
@@ -280,10 +338,10 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     )
   }
 
-  if ('identityData' in data) {
-    const { identityData } = data
-    const downloadUrl = identityData['@microsoft.graph.downloadUrl']
-    const fileName = data.identityData.name
+  if ('file' in responses[0] && responses.length === 1) {
+    const { file } = responses[0]
+    const downloadUrl = file['@microsoft.graph.downloadUrl']
+    const fileName = file.name
     const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
 
     if (hasKey(extensions, fileExtension)) {
@@ -297,25 +355,25 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           )
 
         case preview.text:
-          return <TextPreview file={identityData} />
+          return <TextPreview file={file} />
 
         case preview.code:
-          return <CodePreview file={identityData} />
+          return <CodePreview file={file} />
 
         case preview.markdown:
-          return <MarkdownPreview file={identityData} path={path} />
+          return <MarkdownPreview file={file} path={path} />
 
         case preview.video:
-          return <VideoPreview file={identityData} />
+          return <VideoPreview file={file} />
 
         case preview.audio:
-          return <AudioPreview file={identityData} />
+          return <AudioPreview file={file} />
 
         case preview.pdf:
-          return <PDFPreview file={identityData} />
+          return <PDFPreview file={file} />
 
         case preview.office:
-          return <OfficePreview file={identityData} />
+          return <OfficePreview file={file} />
 
         default:
           return <div className="dark:bg-gray-900 bg-white rounded shadow">{fileName}</div>
@@ -326,7 +384,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       <>
         <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
           <FourOhFour
-            errorMsg={`Preview for file ${identityData.name} is not available, download directly with the button below.`}
+            errorMsg={`Preview for file ${fileName} is not available, download directly with the button below.`}
           />
         </div>
         <div className="mt-4">
@@ -338,9 +396,8 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
   return (
     <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
-      <FourOhFour errorMsg={`Cannot preview ${path}.`} />
+      <FourOhFour errorMsg={`Cannot preview ${path}`} />
     </div>
   )
 }
-
 export default FileListing

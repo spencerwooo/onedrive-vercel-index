@@ -1,6 +1,6 @@
 import axios from 'axios'
 import sha256 from 'crypto-js/sha256'
-import useSWR, { cache, Key } from 'swr'
+import useSWR, { cache, Key, useSWRInfinite } from 'swr'
 
 import siteConfig from '../config/site.json'
 
@@ -38,16 +38,53 @@ export const useStaleSWR = (url: Key, path: string = '') => {
     revalidateOnReconnect: true,
   }
 
-  const storedToken =
-    typeof window !== 'undefined' ? JSON.parse(localStorage.getItem(matchProtectedRoute(path)) as string) : ''
-  const hashedToken = storedToken ? encryptToken(storedToken) : null
-
+  const hashedToken = getStoredToken(path)
   return useSWR([url, hashedToken], fetcher, revalidationOptions)
+}
+
+/**
+ * Paging with useSWRInfinite + protected token support
+ * @param path Current query directory path
+ * @returns useSWRInfinite API
+ */
+export const useProtectedSWRInfinite = (path: string = '') => {
+  const hashedToken = getStoredToken(path)
+
+  /**
+   * Next page infinite loading for useSWR
+   * @param pageIdx The index of this paging collection
+   * @param prevPageData Previous page information
+   * @param path Directory path
+   * @returns API to the next page
+   */
+  const getNextKey = (pageIndex, previousPageData) => {
+    // Reached the end of the collection
+    if (previousPageData && !previousPageData.folder) return null
+
+    // First page with no prevPageData
+    if (pageIndex === 0) return [`/api?path=${path}`, hashedToken]
+
+    // Add nextPage token to API endpoint
+    return [`/api?path=${path}&next=${previousPageData.next}`, hashedToken]
+  }
+
+  const revalidationOptions = {
+    revalidateOnMount: !(cache.has(`arg@"/api?path=${path}"@null`) || cache.has(`/api?path=${path}`)),
+    revalidateOnFocus: false,
+    revalidateOnReconnect: true,
+  }
+  return useSWRInfinite(getNextKey, fetcher, revalidationOptions)
 }
 
 // Hash password token with SHA256
 const encryptToken = (token: string) => {
   return sha256(token).toString()
+}
+// Fetch stored token from localStorage and encrypt with SHA256
+const getStoredToken = (path: string) => {
+  const storedToken =
+    typeof window !== 'undefined' ? JSON.parse(localStorage.getItem(matchProtectedRoute(path)) as string) : ''
+  return storedToken ? encryptToken(storedToken) : null
 }
 /**
  * Compares the hash of .password and od-protected-token header
