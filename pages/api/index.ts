@@ -8,10 +8,11 @@ import { compareHashedToken } from '../../utils/tools'
 
 const basePath = pathPosix.resolve('/', apiConfig.base)
 const encodePath = (path: string) => {
-  const encodedPath = pathPosix.join(basePath, pathPosix.resolve('/', path))
+  let encodedPath = pathPosix.join(basePath, pathPosix.resolve('/', path))
   if (encodedPath === '/' || encodedPath === '') {
     return ''
   }
+  encodedPath = encodedPath.replace(/\/$/, '')
   return `:${encodeURIComponent(encodedPath)}`
 }
 
