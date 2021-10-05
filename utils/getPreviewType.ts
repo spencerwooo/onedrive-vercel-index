@@ -7,6 +7,7 @@ const preview = {
   video: 'video',
   audio: 'audio',
   office: 'ms-office',
+  epub: 'epub',
 }
 
 const extensions = {
@@ -61,6 +62,8 @@ const extensions = {
   oga: preview.audio,
   opus: preview.audio,
   flac: preview.audio,
+
+  epub: preview.epub,
 }
 
 export { extensions, preview }
