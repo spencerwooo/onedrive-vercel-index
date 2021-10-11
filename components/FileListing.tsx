@@ -28,6 +28,7 @@ import DownloadBtn from './DownloadBtn'
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
 const PDFPreview = dynamic(() => import('./previews/PDFPreview'), { ssr: false })
+const EPUBPreview = dynamic(() => import('./previews/EPUBPreview'), { ssr: false })
 
 /**
  * Convert raw bits file/folder size into a human readable string
@@ -374,6 +375,9 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
         case preview.office:
           return <OfficePreview file={file} />
+
+        case preview.epub:
+          return <EPUBPreview file={file} />
 
         default:
           return <div className="dark:bg-gray-900 bg-white rounded shadow">{fileName}</div>
