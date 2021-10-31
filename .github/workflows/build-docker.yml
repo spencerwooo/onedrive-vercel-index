@@ -1,0 +1,37 @@
+name: build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          buildx-version: latest
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Login Docker registry (ghcr.io)
+        run: |-
+          # login to Github ghcr.io
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+      - name: Build & push docker image
+        run: |-
+          # build docker image
+          docker buildx build \
+              --cache-from "type=local,src=/tmp/.buildx-cache" \
+              --cache-to "type=local,dest=/tmp/.buildx-cache" \
+              --platform linux/amd64 \
+              --tag ghcr.io/$GITHUB_ACTOR/onedrive-vercel-index \
+              --push .
