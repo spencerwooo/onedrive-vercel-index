@@ -91,8 +91,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
+    const requestPath = encodePath(path)
     // Handle response from OneDrive API
-    const requestUrl = `${apiConfig.driveApi}/root${encodePath(path)}`
+    const requestUrl = `${apiConfig.driveApi}/root${requestPath}`
+    // Whether path is root, which requires some special treatment
+    const isRoot = requestPath === ''
 
     // Go for file raw download link and query with only temporary link parameter
     if (raw) {
@@ -124,7 +127,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
     if ('folder' in identityData) {
-      const { data: folderData } = await axios.get(`${requestUrl}:/children`, {
+      const { data: folderData } = await axios.get(`${requestUrl}${isRoot ? '': ':'}/children`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         params: next
           ? {
