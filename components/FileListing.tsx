@@ -68,8 +68,8 @@ const FileListItem: FunctionComponent<{
   const renderEmoji = emojiIcon && !emojiIcon.index
 
   return (
-    <div className="grid items-center grid-cols-11 p-3 space-x-2 cursor-pointer">
-      <div className="md:col-span-7 flex items-center col-span-11 space-x-2 truncate">
+    <div className="grid items-center grid-cols-10 p-3 space-x-2 cursor-pointer">
+      <div className="md:col-span-6 flex items-center col-span-10 space-x-2 truncate">
         {/* <div>{c.file ? c.file.mimeType : 'folder'}</div> */}
         <div className="flex-shrink-0 w-5 text-center">
           {renderEmoji ? (
@@ -176,10 +176,32 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     return (
       <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded shadow">
         <div className="dark:border-gray-700 grid items-center grid-cols-12 p-3 space-x-2 border-b border-gray-200">
-          <div className="md:col-span-7 col-span-12 font-bold">Name</div>
+          <div className="md:col-span-6 col-span-12 font-bold">Name</div>
           <div className="md:block hidden col-span-3 font-bold">Last Modified</div>
           <div className="md:block hidden font-bold">Size</div>
           <div className="md:block hidden font-bold">Actions</div>
+          <div className="md:block hidden font-bold">
+            <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
+              <span
+                title="Select files"
+                className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded"
+              >
+                <input
+                  className="cursor-pointer form-check-input"
+                  type="checkbox"
+                  value=""
+                  // id="todo"
+                  aria-label="Select files"
+                />
+              </span>
+              <span
+                title="Download selected files"
+                className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
+              >
+                <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
+              </span>
+            </div>
+          </div>
         </div>
 
         <Toaster
@@ -231,7 +253,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
         {children.map((c: any) => (
           <div className="hover:bg-gray-100 dark:hover:bg-gray-850 grid grid-cols-12" key={c.id}>
             <div
-              className="col-span-11"
+              className="col-span-10"
               onClick={e => {
                 e.preventDefault()
 
@@ -279,6 +301,20 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 </a>
               </div>
             )}
+            <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
+              <span
+                title="Select file"
+                className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded"
+              >
+                <input
+                  className="cursor-pointer form-check-input"
+                  type="checkbox"
+                  value=""
+                  // id="todo"
+                  aria-label="Select file"
+                />
+              </span>
+            </div>
           </div>
         ))}
 
