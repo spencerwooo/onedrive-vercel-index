@@ -12,7 +12,7 @@ import dynamic from 'next/dynamic'
 
 import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
-import { getBaseUrl, useProtectedSWRInfinite } from '../utils/tools'
+import { getBaseUrl, saveFiles, useProtectedSWRInfinite } from '../utils/tools'
 
 import { VideoPreview } from './previews/VideoPreview'
 import { AudioPreview } from './previews/AudioPreview'
@@ -235,6 +235,15 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       }
     }
 
+    // Selected file download
+    const handleDownloadSelected = () => {
+      const folderName = path.substr(path.lastIndexOf('/') + 1)
+      const folder = folderName ? folderName : undefined
+      const files = children.filter((c: any) => selected[c.id])
+        .map((c: any) => ({ name: c.name, url: c['@microsoft.graph.downloadUrl'] }))
+      saveFiles(files, folder)
+    }
+
     return (
       <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded shadow">
         <div className="dark:border-gray-700 grid items-center grid-cols-12 p-3 space-x-2 border-b border-gray-200">
@@ -250,12 +259,15 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 indeterminate={true}
                 title={"Select files"}
               />
-              <span
-                title="Download selected files"
-                className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
-              >
-                <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
-              </span>
+              {totalSelected ? (
+                <span
+                  title="Download selected files"
+                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
+                  onClick={handleDownloadSelected}
+                >
+                  <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
+                </span>
+              ) : ''}
             </div>
           </div>
         </div>
