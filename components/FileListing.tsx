@@ -4,7 +4,7 @@ import emojiRegex from 'emoji-regex'
 import { useClipboard } from 'use-clipboard-copy'
 
 import { ParsedUrlQuery } from 'querystring'
-import { FunctionComponent, useState } from 'react'
+import { FunctionComponent, useEffect, useRef, useState } from 'react'
 import { ImageDecorator } from 'react-viewer/lib/ViewerProps'
 
 import { useRouter } from 'next/router'
@@ -99,9 +99,43 @@ const FileListItem: FunctionComponent<{
   )
 }
 
+const Checkbox: FunctionComponent<{
+  checked: 0|1|2, onChange: () => void, title: string, indeterminate?: boolean
+}> = ({ checked, onChange, title, indeterminate }) => {
+  const ref = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.checked = Boolean(checked)
+      if (indeterminate) {
+        ref.current.indeterminate = checked == 1
+      }
+    }
+  }, [ref, checked, indeterminate])
+  const handleClick = () => { ref.current ? ref.current.click() : null }
+
+  return (
+    <span
+      title={title}
+      className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
+      onClick={handleClick}
+    >
+      <input
+        className="form-check-input cursor-pointer"
+        type="checkbox"
+        value={checked ? '1' : ''}
+        ref={ref}
+        aria-label={title}
+        onChange={onChange}
+      />
+    </span>
+  )
+}
+
 const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => {
   const [imageViewerVisible, setImageViewerVisibility] = useState(false)
   const [activeImageIdx, setActiveImageIdx] = useState(0)
+  const [selected, setSelected] = useState<{[key: string]: boolean}>({})
+  const [totalSelected, setTotalSelected] = useState<0|1|2>(0)
 
   const router = useRouter()
   const clipboard = useClipboard()
@@ -173,6 +207,34 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       }
     })
 
+    // File selection
+    const genTotalSelected = (selected: {[key: string]: boolean}) => {
+      const selectInfo = children.map((c :any) => Boolean(selected[c.id]))
+      const [hasT, hasF] = [selectInfo.some(i => i), selectInfo.some(i => !i)]
+      console.log(hasT, hasF)
+      return hasT && hasF ? 1 : (!hasF ? 2 : 0)
+    }
+    const toggleItemSelected = (id: string) => {
+      let val
+      if (selected[id]) {
+        val = {...selected}
+        delete val[id]
+      } else {
+        val = {...selected, [id]: true}
+      }
+      setSelected(val)
+      setTotalSelected(genTotalSelected(val))
+    }
+    const toggleTotalSelected = () => {
+      if (genTotalSelected(selected) == 2) {
+        setSelected({})
+        setTotalSelected(0)
+      } else {
+        setSelected(Object.fromEntries(children.map((c :any) => [c.id, true])))
+        setTotalSelected(2)
+      }
+    }
+
     return (
       <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded shadow">
         <div className="dark:border-gray-700 grid items-center grid-cols-12 p-3 space-x-2 border-b border-gray-200">
@@ -182,18 +244,12 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           <div className="md:block hidden font-bold">Actions</div>
           <div className="md:block hidden font-bold">
             <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
-              <span
-                title="Select files"
-                className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded"
-              >
-                <input
-                  className="cursor-pointer form-check-input"
-                  type="checkbox"
-                  value=""
-                  // id="todo"
-                  aria-label="Select files"
-                />
-              </span>
+              <Checkbox
+                checked={totalSelected}
+                onChange={toggleTotalSelected}
+                indeterminate={true}
+                title={"Select files"}
+              />
               <span
                 title="Download selected files"
                 className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
@@ -302,18 +358,11 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
               </div>
             )}
             <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
-              <span
-                title="Select file"
-                className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded"
-              >
-                <input
-                  className="cursor-pointer form-check-input"
-                  type="checkbox"
-                  value=""
-                  // id="todo"
-                  aria-label="Select file"
-                />
-              </span>
+              <Checkbox
+                checked={selected[c.id] ? 2 : 0}
+                onChange={() => toggleItemSelected(c.id)}
+                title={"Select file"}
+              />
             </div>
           </div>
         ))}
