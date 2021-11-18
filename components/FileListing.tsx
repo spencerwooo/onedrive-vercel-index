@@ -209,7 +209,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
     // File selection
     const genTotalSelected = (selected: {[key: string]: boolean}) => {
-      const selectInfo = children.map((c :any) => Boolean(selected[c.id]))
+      const selectInfo = children.filter((c :any) => !c.folder).map((c :any) => Boolean(selected[c.id]))
       const [hasT, hasF] = [selectInfo.some(i => i), selectInfo.some(i => !i)]
       console.log(hasT, hasF)
       return hasT && hasF ? 1 : (!hasF ? 2 : 0)
@@ -230,7 +230,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
         setSelected({})
         setTotalSelected(0)
       } else {
-        setSelected(Object.fromEntries(children.map((c :any) => [c.id, true])))
+        setSelected(Object.fromEntries(children.filter((c :any) => !c.folder).map((c :any) => [c.id, true])))
         setTotalSelected(2)
       }
     }
@@ -239,7 +239,9 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     const handleDownloadSelected = () => {
       const folderName = path.substr(path.lastIndexOf('/') + 1)
       const folder = folderName ? folderName : undefined
-      const files = children.filter((c: any) => selected[c.id])
+      const files = children
+        .filter((c :any) => !c.folder)
+        .filter((c: any) => selected[c.id])
         .map((c: any) => ({ name: c.name, url: c['@microsoft.graph.downloadUrl'] }))
       saveFiles(files, folder)
     }
@@ -370,11 +372,13 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
               </div>
             )}
             <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
-              <Checkbox
-                checked={selected[c.id] ? 2 : 0}
-                onChange={() => toggleItemSelected(c.id)}
-                title={"Select file"}
-              />
+              {c.folder ? '' : (
+                <Checkbox
+                  checked={selected[c.id] ? 2 : 0}
+                  onChange={() => toggleItemSelected(c.id)}
+                  title="Select file"
+                />
+              )}
             </div>
           </div>
         ))}
