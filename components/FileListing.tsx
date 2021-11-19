@@ -136,6 +136,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
   const [activeImageIdx, setActiveImageIdx] = useState(0)
   const [selected, setSelected] = useState<{[key: string]: boolean}>({})
   const [totalSelected, setTotalSelected] = useState<0|1|2>(0)
+  const [totalGenerating, setTotalGenerating] = useState<boolean>(false)
 
   const router = useRouter()
   const clipboard = useClipboard()
@@ -237,13 +238,14 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
     // Selected file download
     const handleDownloadSelected = () => {
+      setTotalGenerating(true)
       const folderName = path.substr(path.lastIndexOf('/') + 1)
       const folder = folderName ? folderName : undefined
       const files = children
         .filter((c :any) => !c.folder)
         .filter((c: any) => selected[c.id])
         .map((c: any) => ({ name: c.name, url: c['@microsoft.graph.downloadUrl'] }))
-      saveFiles(files, folder)
+      saveFiles(files, folder, () => setTotalGenerating(false))
     }
 
     return (
@@ -261,7 +263,29 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 indeterminate={true}
                 title={"Select files"}
               />
-              {totalSelected ? (
+              {totalGenerating ? (
+                <span
+                  title="Downloading selected files, refresh page to cancel"
+                  className="p-2 rounded"
+                  role="status"
+                >
+                  <svg
+                    // Use fontawesome far theme via class `svg-inline--fa` to get style `vertical-align` only
+                    // for consistent icon alignment, as class `align-*` cannot satisfy it
+                    className="animate-spin w-4 h-4 inline-block svg-inline--fa"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                </span>
+              ) : (totalSelected ? (
                 <span
                   title="Download selected files"
                   className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
@@ -269,7 +293,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 >
                   <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
                 </span>
-              ) : ''}
+              ) : '')}
             </div>
           </div>
         </div>
