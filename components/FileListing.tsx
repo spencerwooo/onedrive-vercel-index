@@ -407,7 +407,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
               </div>
             )}
             <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
-              {c.folder ? '' : (
+              {c.folder || c.name === '.password' ? '' : (
                 <Checkbox
                   checked={selected[c.id] ? 2 : 0}
                   onChange={() => toggleItemSelected(c.id)}
