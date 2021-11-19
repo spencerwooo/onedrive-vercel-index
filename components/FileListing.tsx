@@ -238,14 +238,23 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
     // Selected file download
     const handleDownloadSelected = () => {
-      setTotalGenerating(true)
       const folderName = path.substr(path.lastIndexOf('/') + 1)
       const folder = folderName ? folderName : undefined
       const files = children
         .filter((c :any) => !c.folder)
         .filter((c: any) => selected[c.id])
         .map((c: any) => ({ name: c.name, url: c['@microsoft.graph.downloadUrl'] }))
-      saveFiles(files, folder, () => setTotalGenerating(false))
+      if (files.length == 1) {
+        const el = document.createElement('a')
+        el.style.display = 'none'
+        document.body.appendChild(el)
+        el.href = files[0].url
+        el.click()
+        el.remove()
+      } else if (files.length > 1) {
+        setTotalGenerating(true)
+        saveFiles(files, folder, () => setTotalGenerating(false))
+      }
     }
 
     return (
