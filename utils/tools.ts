@@ -156,3 +156,55 @@ export const downloadMultipleFiles = async (files: { name: string; url: string }
   window.URL.revokeObjectURL(bUrl)
   el.remove()
 }
+
+// One-shot recursive tree-like listing for the folder.
+// Due to react hook limit, we cannot reuse SWR utils for recursive listing.
+export async function* treeList(path: string) {
+  const hashedToken = getStoredToken(path)
+  const root = new PathNode(path)
+  const loader = async (path: string) => {
+    const data: any = await fetcher(`/api?path=${path}`, hashedToken ?? undefined)
+    if (data && data.folder) {
+      console.log(data.folder)
+      const children = data.folder.value.map(c => {
+        const p = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
+        return c.folder ? new PathNode(p) : new PathNode(p, false, c)
+      })
+      return { children }
+    } else {
+      throw new Error('Path is not folder')
+    }
+  }
+  for await (const { meta: c, path: p } of root.dfs(loader)) {
+    if (c) {
+      yield { meta: c, path: p }
+    }
+  }
+}
+
+// Traverse helper
+class PathNode {
+  private _path: string
+  private _meta: any
+  private _isFolder: boolean
+
+  constructor(path: string, isFolder?: boolean, meta?: any) {
+    this._path = path
+    this._meta = meta
+    this._isFolder = isFolder ?? true
+  }
+
+  async* dfs(loader: (path: string) => Promise<{ meta?: any, children: PathNode[] }>) {
+    const ancestors = [this as PathNode]
+    while (ancestors.length > 0) {
+      const next = ancestors.pop()!
+      if (next._isFolder) {
+        const { meta, children } = await loader(next._path)
+        ancestors.push(...children)
+        yield { path: next._path, meta: meta }
+      } else {
+        yield { path: next._path, meta: next._meta }
+      }
+    }
+  }
+}

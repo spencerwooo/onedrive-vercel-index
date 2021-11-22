@@ -12,7 +12,7 @@ import dynamic from 'next/dynamic'
 
 import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
-import { getBaseUrl, downloadMultipleFiles, useProtectedSWRInfinite } from '../utils/tools'
+import { getBaseUrl, treeList, downloadMultipleFiles, useProtectedSWRInfinite } from '../utils/tools'
 
 import { VideoPreview } from './previews/VideoPreview'
 import { AudioPreview } from './previews/AudioPreview'
@@ -285,6 +285,13 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       }
     }
 
+    // Folder recursive download
+    const handleFolderDownload = (path: string) => async () => {
+      for await (const { meta: c, path: p } of treeList(path)) {
+        console.log(p, c)
+      }
+    }
+
     return (
       <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded shadow">
         <div className="dark:border-gray-700 grid items-center grid-cols-12 px-3 space-x-2 border-b border-gray-200">
@@ -399,6 +406,13 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                   }}
                 >
                   <FontAwesomeIcon icon={['far', 'copy']} />
+                </span>
+                <span
+                  title="Download folder"
+                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
+                  onClick={handleFolderDownload(`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)}
+                >
+                  <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
                 </span>
               </div>
             ) : (
