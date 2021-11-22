@@ -264,7 +264,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                   title="Copy raw file permalink"
                   className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
                   onClick={() => {
-                    clipboard.copy(`${getBaseUrl()}/api?path=${path === '/' ? '' : path}/${c.name}&raw=true`)
+                    clipboard.copy(`${getBaseUrl()}/api?path=${path === '/' ? '' : path}/${encodeURIComponent(c.name)}&raw=true`)
                     toast.success('Copied raw file permalink.')
                   }}
                 >
