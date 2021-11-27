@@ -4,7 +4,7 @@ import emojiRegex from 'emoji-regex'
 import { useClipboard } from 'use-clipboard-copy'
 
 import { ParsedUrlQuery } from 'querystring'
-import { FunctionComponent, useEffect, useRef, useState } from 'react'
+import { FunctionComponent, MouseEventHandler, useEffect, useRef, useState } from 'react'
 import { ImageDecorator } from 'react-viewer/lib/ViewerProps'
 
 import { useRouter } from 'next/router'
@@ -111,8 +111,14 @@ const Checkbox: FunctionComponent<{
       }
     }
   }, [ref, checked, indeterminate])
-  const handleClick = () => {
-    if (ref.current) ref.current.click()
+  const handleClick: MouseEventHandler = (e) => {
+    if (ref.current) {
+      if (e.target === ref.current) {
+        e.stopPropagation()
+      } else {
+        ref.current.click()
+      }
+    }
   }
 
   return (
