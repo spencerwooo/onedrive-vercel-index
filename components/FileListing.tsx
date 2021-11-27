@@ -242,7 +242,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     }
 
     // Selected file download
-    const handleDownloadSelected = () => {
+    const handleSelectedDownload = () => {
       const folderName = path.substr(path.lastIndexOf('/') + 1)
       const folder = folderName ? folderName : undefined
       const files = getFiles()
@@ -257,7 +257,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
         el.remove()
       } else if (files.length > 1) {
         setTotalGenerating(true)
-        saveFiles(files, folder, () => setTotalGenerating(false))
+        saveFiles(files, folder).then(() => setTotalGenerating(false))
       }
     }
 
@@ -302,7 +302,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 <span
                   title="Download selected files"
                   className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
-                  onClick={handleDownloadSelected}
+                  onClick={handleSelectedDownload}
                 >
                   <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
                 </span>

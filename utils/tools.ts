@@ -129,26 +129,21 @@ export const matchProtectedRoute = (route: string) => {
  * Download multiple files after compressing them into a zip
  * @param files Files to be downloaded
  * @param folder Optional folder name to hold files, otherwise flatten files in the zip
- * @param onFinish Optional hook triggered after sending generated zip to browser to download
  */
-export const saveFiles = (files: { name: string, url: string }[], folder?: string, onFinish?: () => void) => {
+export const saveFiles = async (files: { name: string, url: string }[], folder?: string) => {
   const zip = new JSZip()
   const dir = folder ? zip.folder(folder)! : zip
   files.forEach(({ name, url }) => {
     dir.file(name, fetch(url).then(r => r.blob()))
   })
-  dir.generateAsync({ type: 'blob' }).then(b => {
-    const el = document.createElement('a')
-    el.style.display = 'none'
-    document.body.appendChild(el)
-    const bUrl = window.URL.createObjectURL(b)
-    el.href = bUrl
-    el.download = folder ? folder + '.zip' : 'download.zip'
-    el.click()
-    window.URL.revokeObjectURL(bUrl)
-    el.remove()
-    if (onFinish) {
-      onFinish()
-    }
-  })
+  const b = await dir.generateAsync({ type: 'blob' })
+  const el = document.createElement('a')
+  el.style.display = 'none'
+  document.body.appendChild(el)
+  const bUrl = window.URL.createObjectURL(b)
+  el.href = bUrl
+  el.download = folder ? folder + '.zip' : 'download.zip'
+  el.click()
+  window.URL.revokeObjectURL(bUrl)
+  el.remove()
 }
