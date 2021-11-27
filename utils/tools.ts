@@ -141,9 +141,12 @@ export const downloadMultipleFiles = async (files: { name: string; url: string }
       fetch(url).then(r => r.blob())
     )
   })
+  const b = await zip.generateAsync({ type: 'blob' })
+  downloadBlob(b, folder ? folder + '.zip' : 'download.zip')
+}
 
-  // Create zip file and prepare for download
-  const b = await dir.generateAsync({ type: 'blob' })
+// Blob download helper
+const downloadBlob = (b: Blob, name: string) => {
   const el = document.createElement('a')
   el.style.display = 'none'
   document.body.appendChild(el)
@@ -151,7 +154,7 @@ export const downloadMultipleFiles = async (files: { name: string; url: string }
   // Download zip file
   const bUrl = window.URL.createObjectURL(b)
   el.href = bUrl
-  el.download = folder ? folder + '.zip' : 'download.zip'
+  el.download = name
   el.click()
   window.URL.revokeObjectURL(bUrl)
   el.remove()
@@ -159,27 +162,23 @@ export const downloadMultipleFiles = async (files: { name: string; url: string }
 
 // One-shot recursive tree-like listing for the folder.
 // Due to react hook limit, we cannot reuse SWR utils for recursive listing.
+// Especially, root, which is the passed path arg, will have meta === undefined in returns.
 export async function* treeList(path: string) {
   const hashedToken = getStoredToken(path)
   const root = new PathNode(path)
   const loader = async (path: string) => {
     const data: any = await fetcher(`/api?path=${path}`, hashedToken ?? undefined)
     if (data && data.folder) {
-      console.log(data.folder)
       const children = data.folder.value.map(c => {
         const p = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
-        return c.folder ? new PathNode(p) : new PathNode(p, false, c)
+        return c.folder ? new PathNode(p, true, c) : new PathNode(p, false, c)
       })
       return { children }
     } else {
       throw new Error('Path is not folder')
     }
   }
-  for await (const { meta: c, path: p } of root.dfs(loader)) {
-    if (c) {
-      yield { meta: c, path: p }
-    }
-  }
+  yield* root.dfs(loader)
 }
 
 // Traverse helper
@@ -198,13 +197,49 @@ class PathNode {
     const ancestors = [this as PathNode]
     while (ancestors.length > 0) {
       const next = ancestors.pop()!
+      let meta = next._meta
       if (next._isFolder) {
-        const { meta, children } = await loader(next._path)
+        // Folder nodes created in loader from children do not have metadata
+        // One more loader call is required to load the folder metadata
+        const { meta: m, children } = await loader(next._path)
         ancestors.push(...children)
-        yield { path: next._path, meta: meta }
-      } else {
-        yield { path: next._path, meta: next._meta }
+        meta = m
       }
+      yield { path: next._path, meta: meta, isFolder: next._isFolder }
     }
   }
+}
+
+/**
+ * Download hieratical tree-like files after compressing them into a zip
+ * @param files Files to be downloaded. Folder should be in front of its children in the array.
+ * Use async generator because generation of entries in the list may be slow.
+ * When waiting for entry generation, we can also download bodies of got entries.
+ * The root dir should be the first element and has name, url === undefined
+ * @param folder Optional folder name to hold files, otherwise flatten files in the zip
+ */
+export const saveTreeFiles = async (
+  files: AsyncGenerator<{ name?: string, url?: string, path: string, isFolder: boolean }>, folder?: string,
+) => {
+  const zip = new JSZip()
+  const root = folder ? zip.folder(folder)! : zip
+  const map = [{ path: '/', dir: root }] // Root path will be set later in looping
+  for await (const { name, url, path, isFolder } of files) {
+    if (name === undefined) {
+      map[0].path = path
+      continue
+    }
+    const i = map.slice().reverse().findIndex(({ path: parent }) => (
+      path.substring(0, parent.length) === parent && path.substring(parent.length + 1).indexOf('/') === -1
+    ))
+    if (i === -1) throw new Error('File array does not satisfy requirement')
+    const dir = map[map.length - 1 - i].dir
+    if (isFolder) {
+      map.push({ path, dir: dir.folder(name)! })
+    } else {
+      dir.file(name, fetch(url!).then(r => r.blob()))
+    }
+  }
+  const b = await zip.generateAsync({ type: 'blob' })
+  downloadBlob(b, folder ? folder + '.zip' : 'download.zip')
 }

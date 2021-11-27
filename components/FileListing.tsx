@@ -12,7 +12,7 @@ import dynamic from 'next/dynamic'
 
 import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
-import { getBaseUrl, treeList, downloadMultipleFiles, useProtectedSWRInfinite } from '../utils/tools'
+import { getBaseUrl, treeList, downloadMultipleFiles, useProtectedSWRInfinite, saveTreeFiles } from '../utils/tools'
 
 import { VideoPreview } from './previews/VideoPreview'
 import { AudioPreview } from './previews/AudioPreview'
@@ -286,10 +286,18 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     }
 
     // Folder recursive download
-    const handleFolderDownload = (path: string) => async () => {
-      for await (const { meta: c, path: p } of treeList(path)) {
-        console.log(p, c)
-      }
+    const handleFolderDownload = (path: string, name?: string) => () => {
+      const files = (async function* () {
+        for await (const { meta: c, path: p, isFolder } of treeList(path)) {
+          yield {
+            name: c?.name,
+            url: c ? c['@microsoft.graph.downloadUrl'] : undefined,
+            path: p,
+            isFolder,
+          }
+        }
+      })()
+      saveTreeFiles(files, name)
     }
 
     return (
@@ -410,7 +418,9 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 <span
                   title="Download folder"
                   className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
-                  onClick={handleFolderDownload(`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)}
+                  onClick={() => {
+                    handleFolderDownload(`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`, c.name)()
+                  }}
                 >
                   <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
                 </span>
