@@ -217,7 +217,6 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     const genTotalSelected = (selected: { [key: string]: boolean }) => {
       const selectInfo = getFiles().map((c: any) => Boolean(selected[c.id]))
       const [hasT, hasF] = [selectInfo.some(i => i), selectInfo.some(i => !i)]
-      console.log(hasT, hasF)
       return hasT && hasF ? 1 : (!hasF ? 2 : 0)
     }
     const toggleItemSelected = (id: string) => {
