@@ -100,7 +100,7 @@ const FileListItem: FunctionComponent<{
 }
 
 const Checkbox: FunctionComponent<{
-  checked: 0|1|2, onChange: () => void, title: string, indeterminate?: boolean
+  checked: 0 | 1 | 2, onChange: () => void, title: string, indeterminate?: boolean
 }> = ({ checked, onChange, title, indeterminate }) => {
   const ref = useRef<HTMLInputElement>(null)
   useEffect(() => {
@@ -111,7 +111,9 @@ const Checkbox: FunctionComponent<{
       }
     }
   }, [ref, checked, indeterminate])
-  const handleClick = () => { ref.current ? ref.current.click() : null }
+  const handleClick = () => {
+    if (ref.current) ref.current.click()
+  }
 
   return (
     <span
@@ -134,8 +136,8 @@ const Checkbox: FunctionComponent<{
 const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => {
   const [imageViewerVisible, setImageViewerVisibility] = useState(false)
   const [activeImageIdx, setActiveImageIdx] = useState(0)
-  const [selected, setSelected] = useState<{[key: string]: boolean}>({})
-  const [totalSelected, setTotalSelected] = useState<0|1|2>(0)
+  const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
+  const [totalSelected, setTotalSelected] = useState<0 | 1 | 2>(0)
   const [totalGenerating, setTotalGenerating] = useState<boolean>(false)
 
   const router = useRouter()
@@ -209,11 +211,11 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     })
 
     // Filtered file list helper
-    const getFiles = () => children.filter((c :any) => !c.folder && c.name !== '.password')
+    const getFiles = () => children.filter((c: any) => !c.folder && c.name !== '.password')
 
     // File selection
-    const genTotalSelected = (selected: {[key: string]: boolean}) => {
-      const selectInfo = getFiles().map((c :any) => Boolean(selected[c.id]))
+    const genTotalSelected = (selected: { [key: string]: boolean }) => {
+      const selectInfo = getFiles().map((c: any) => Boolean(selected[c.id]))
       const [hasT, hasF] = [selectInfo.some(i => i), selectInfo.some(i => !i)]
       console.log(hasT, hasF)
       return hasT && hasF ? 1 : (!hasF ? 2 : 0)
@@ -221,10 +223,10 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     const toggleItemSelected = (id: string) => {
       let val
       if (selected[id]) {
-        val = {...selected}
+        val = { ...selected }
         delete val[id]
       } else {
-        val = {...selected, [id]: true}
+        val = { ...selected, [id]: true }
       }
       setSelected(val)
       setTotalSelected(genTotalSelected(val))
@@ -234,7 +236,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
         setSelected({})
         setTotalSelected(0)
       } else {
-        setSelected(Object.fromEntries(getFiles().map((c :any) => [c.id, true])))
+        setSelected(Object.fromEntries(getFiles().map((c: any) => [c.id, true])))
         setTotalSelected(2)
       }
     }
