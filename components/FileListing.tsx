@@ -304,7 +304,6 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
     // Folder recursive download
     const handleFolderDownload = (path: string, id: string, name?: string) => () => {
-      setFolderGenerating({ ...folderGenerating, [id]: true })
       const files = (async function* () {
         for await (const { meta: c, path: p, isFolder } of treeList(path)) {
           yield {
@@ -315,7 +314,17 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           }
         }
       })()
-      saveTreeFiles(files, name).then(() => setFolderGenerating({ ...folderGenerating, [id]: false }))
+      setFolderGenerating({ ...folderGenerating, [id]: true })
+      const toastId = toast.loading('Downloading folder. This may be slow...')
+      saveTreeFiles(files, name).then(() => {
+        setFolderGenerating({ ...folderGenerating, [id]: false })
+        toast.dismiss(toastId)
+        toast.success('Finished to download folder.')
+      }).catch(() => {
+        setFolderGenerating({ ...folderGenerating, [id]: false })
+        toast.dismiss(toastId)
+        toast.error('Failed to download folder.')
+      })
     }
 
     return (
