@@ -162,18 +162,17 @@ const downloadBlob = (b: Blob, name: string) => {
 
 // One-shot recursive tree-like listing for the folder.
 // Due to react hook limit, we cannot reuse SWR utils for recursive listing.
-// Especially, root, which is the passed path arg, will have meta === undefined in returns.
+// Only root dir meta, without returning from API, will be undefined.
 export async function* treeList(path: string) {
   const hashedToken = getStoredToken(path)
   const root = new PathNode(path)
   const loader = async (path: string) => {
     const data: any = await fetcher(`/api?path=${path}`, hashedToken ?? undefined)
     if (data && data.folder) {
-      const children = data.folder.value.map(c => {
+      return data.folder.value.map(c => {
         const p = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
-        return c.folder ? new PathNode(p, true, c) : new PathNode(p, false, c)
+        return new PathNode(p, Boolean(c.folder), c)
       })
-      return { children }
     } else {
       throw new Error('Path is not folder')
     }
@@ -193,19 +192,14 @@ class PathNode {
     this._isFolder = isFolder ?? true
   }
 
-  async* dfs(loader: (path: string) => Promise<{ meta?: any, children: PathNode[] }>) {
+  async* dfs(loader: (path: string) => Promise<PathNode[]>) {
     const ancestors = [this as PathNode]
     while (ancestors.length > 0) {
       const next = ancestors.pop()!
-      let meta = next._meta
       if (next._isFolder) {
-        // Folder nodes created in loader from children do not have metadata
-        // One more loader call is required to load the folder metadata
-        const { meta: m, children } = await loader(next._path)
-        ancestors.push(...children)
-        meta = m
+        ancestors.push(...await loader(next._path))
       }
-      yield { path: next._path, meta: meta, isFolder: next._isFolder }
+      yield { path: next._path, meta: next._meta, isFolder: next._isFolder }
     }
   }
 }
@@ -213,13 +207,15 @@ class PathNode {
 /**
  * Download hieratical tree-like files after compressing them into a zip
  * @param files Files to be downloaded. Folder should be in front of its children in the array.
- * Use async generator because generation of entries in the list may be slow.
- * When waiting for entry generation, we can also download bodies of got entries.
- * The root dir should be the first element and has name, url === undefined
- * @param folder Optional folder name to hold files, otherwise flatten files in the zip
+ * Use async generator because generation of elements may be slow.
+ * When waiting for generation, we can also download bodies of got element.
+ * The root dir should be the first element.
+ * Only folder elements have url param undefined. And only root dir of the folders have name param undefined.
+ * @param folder Optional folder name to hold files, otherwise flatten files in the zip.
+ * Root folder name passed in files param is not unused, on the contrary use this param as top-level folder name.
  */
 export const saveTreeFiles = async (
-  files: AsyncGenerator<{ name?: string, url?: string, path: string, isFolder: boolean }>, folder?: string,
+  files: AsyncGenerator<{ name: string, url?: string, path: string, isFolder: boolean }>, folder?: string,
 ) => {
   const zip = new JSZip()
   const root = folder ? zip.folder(folder)! : zip
