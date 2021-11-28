@@ -166,6 +166,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
   const [totalSelected, setTotalSelected] = useState<0 | 1 | 2>(0)
   const [totalGenerating, setTotalGenerating] = useState<boolean>(false)
+  const [folderGenerating, setFolderGenerating] = useState<{ [key: string]: boolean }>({})
 
   const router = useRouter()
   const clipboard = useClipboard()
@@ -302,7 +303,8 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     }
 
     // Folder recursive download
-    const handleFolderDownload = (path: string, name?: string) => () => {
+    const handleFolderDownload = (path: string, id: string, name?: string) => () => {
+      setFolderGenerating({ ...folderGenerating, [id]: true })
       const files = (async function* () {
         for await (const { meta: c, path: p, isFolder } of treeList(path)) {
           yield {
@@ -313,7 +315,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           }
         }
       })()
-      saveTreeFiles(files, name)
+      saveTreeFiles(files, name).then(() => setFolderGenerating({ ...folderGenerating, [id]: false }))
     }
 
     return (
@@ -415,15 +417,20 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 >
                   <FontAwesomeIcon icon={['far', 'copy']} />
                 </span>
-                <span
-                  title="Download folder"
-                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
-                  onClick={() => {
-                    handleFolderDownload(`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`, c.name)()
-                  }}
-                >
-                  <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
-                </span>
+                {folderGenerating[c.id] ? (
+                  <Downloading title="Downloading folder, refresh page to cancel" />
+                ) : (
+                  <span
+                    title="Download folder"
+                    className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
+                    onClick={() => {
+                      const p = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
+                      handleFolderDownload(p, c.id, c.name)()
+                    }}
+                  >
+                    <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
+                  </span>
+                )}
               </div>
             ) : (
               <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
