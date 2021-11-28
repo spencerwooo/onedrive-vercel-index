@@ -262,7 +262,16 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
         el.remove()
       } else if (files.length > 1) {
         setTotalGenerating(true)
-        saveFiles(files, folder).then(() => setTotalGenerating(false))
+        const toastId = toast.loading('Downloading selected files. This may be slow...')
+        saveFiles(files, folder).then(() => {
+          setTotalGenerating(false)
+          toast.dismiss(toastId)
+          toast.success('Finished to download selected files.')
+        }).catch(() => {
+          setTotalGenerating(false)
+          toast.dismiss(toastId)
+          toast.error('Failed to download selected files.')
+        })
       }
     }
 
