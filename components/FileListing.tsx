@@ -16,7 +16,7 @@ import { getBaseUrl, treeList, downloadMultipleFiles, useProtectedSWRInfinite, s
 
 import { VideoPreview } from './previews/VideoPreview'
 import { AudioPreview } from './previews/AudioPreview'
-import Loading from './Loading'
+import Loading, { LoadingIcon } from './Loading'
 import FourOhFour from './FourOhFour'
 import Auth from './Auth'
 import TextPreview from './previews/TextPreview'
@@ -139,6 +139,22 @@ const Checkbox: FunctionComponent<{
         ref={ref}
         aria-label={title}
         onChange={onChange}
+      />
+    </span>
+  )
+}
+
+const Downloading: FunctionComponent<{ title: string }> = ({ title }) => {
+  return (
+    <span
+      title={title}
+      className="p-2 rounded"
+      role="status"
+    >
+      <LoadingIcon
+        // Use fontawesome far theme via class `svg-inline--fa` to get style `vertical-align` only
+        // for consistent icon alignment, as class `align-*` cannot satisfy it
+        className="animate-spin w-4 h-4 inline-block svg-inline--fa"
       />
     </span>
   )
@@ -316,23 +332,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 title={'Select files'}
               />
               {totalGenerating ? (
-                <span title="Downloading selected files, refresh page to cancel" className="p-2 rounded" role="status">
-                  <svg
-                    // Use fontawesome far theme via class `svg-inline--fa` to get style `vertical-align` only
-                    // for consistent icon alignment, as class `align-*` cannot satisfy it
-                    className="animate-spin w-4 h-4 inline-block svg-inline--fa"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    />
-                  </svg>
-                </span>
+                <Downloading title="Downloading selected files, refresh page to cancel" />
               ) : (
                 <button
                   title="Download selected files"
