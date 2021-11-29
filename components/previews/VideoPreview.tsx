@@ -18,7 +18,7 @@ export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
         <div className="relative" style={{ paddingTop: '56.25%' }}>
           <ReactPlayer
             className="absolute top-0 left-0 w-full h-full"
-            url={file['@microsoft.graph.downloadUrl']}
+            url={file.url}
             controls
             width="100%"
             height="100%"
@@ -38,7 +38,7 @@ export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
         />
         <a
           className="w-36 focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-600 flex items-center justify-center flex-shrink-0 px-4 py-2 mb-2 space-x-4 text-white bg-blue-500 rounded"
-          href={file['@microsoft.graph.downloadUrl']}
+          href={file.url}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -59,7 +59,7 @@ export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
 
         <a
           className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-gray-600 flex items-center justify-center px-4 py-2 mb-2 space-x-2 text-white bg-gray-700 rounded"
-          href={`iina://weblink?url=${file['@microsoft.graph.downloadUrl']}`}
+          href={`iina://weblink?url=${file.url}`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -68,7 +68,7 @@ export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
         </a>
         <a
           className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-yellow-500 flex items-center justify-center px-4 py-2 mb-2 space-x-2 text-white bg-yellow-600 rounded"
-          href={`vlc://${file['@microsoft.graph.downloadUrl']}`}
+          href={`vlc://${file.url}`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -77,7 +77,7 @@ export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
         </a>
         <a
           className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-yellow-300 flex items-center justify-center px-4 py-2 mb-2 space-x-2 text-white bg-yellow-400 rounded"
-          href={`potplayer://${file['@microsoft.graph.downloadUrl']}`}
+          href={`potplayer://${file.url}`}
           target="_blank"
           rel="noopener noreferrer"
         >

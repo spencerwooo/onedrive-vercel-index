@@ -32,7 +32,7 @@ const PDFPreview: FunctionComponent<{ file: any }> = ({ file }) => {
         <div className="no-scrollbar flex-1 w-full overflow-scroll" ref={pdfContainter} style={{ maxHeight: '80vh' }}>
           <Document
             className="dark:bg-gray-800 bg-gray-100"
-            file={file['@microsoft.graph.downloadUrl']}
+            file={file.url}
             onLoadSuccess={onDocumentLoadSuccess}
             loading={<Loading loadingText={loadingText} />}
             onLoadProgress={({ loaded, total }) => {
@@ -85,7 +85,7 @@ const PDFPreview: FunctionComponent<{ file: any }> = ({ file }) => {
         </div>
       </div>
       <div className="mt-4">
-        <DownloadBtn downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadBtn downloadUrl={file.url} />
       </div>
     </>
   )

@@ -18,7 +18,7 @@ const MarkdownPreview: FunctionComponent<{ file: any; path: string; standalone?:
   path,
   standalone = true,
 }) => {
-  const { data, error } = useStaleSWR(file['@microsoft.graph.downloadUrl'])
+  const { data, error } = useStaleSWR(file.url)
 
   // The parent folder of the markdown file, which is also the relative image folder
   const parentPath = path.substring(0, path.lastIndexOf('/'))
@@ -100,7 +100,7 @@ const MarkdownPreview: FunctionComponent<{ file: any; path: string; standalone?:
       </div>
       {standalone && (
         <div className="mt-4">
-          <DownloadBtn downloadUrl={file['@microsoft.graph.downloadUrl']} />
+          <DownloadBtn downloadUrl={file.url} />
         </div>
       )}
     </>

@@ -40,7 +40,7 @@ const EPUBPreview: FunctionComponent<{file: any}> = ({ file }) => {
         <div className="no-scrollbar flex-1 w-full overflow-scroll" ref={epubContainer} style={{ minHeight: '70vh' }}>
           <div style={{ position: 'absolute', width: epubContainerWidth, height: '70vh' }}>
             <ReactReader
-              url={file['@microsoft.graph.downloadUrl']}
+              url={file.url}
               getRendition={(rendition) => fixEpub(rendition)}
               loadingView={<Loading loadingText="Loading EPUB ..." />}
               location={location}
@@ -52,7 +52,7 @@ const EPUBPreview: FunctionComponent<{file: any}> = ({ file }) => {
         </div>
       </div>
       <div className="mt-4">
-        <DownloadBtn downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadBtn downloadUrl={file.url} />
       </div>
     </>
   )

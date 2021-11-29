@@ -159,9 +159,9 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     children.forEach((c: any) => {
       if (fileIsImage(c.name)) {
         imagesInFolder.push({
-          src: c['@microsoft.graph.downloadUrl'],
+          src: c.url,
           alt: c.name,
-          downloadUrl: c['@microsoft.graph.downloadUrl'],
+          downloadUrl: c.url,
         })
         imageIndexDict[c.id] = imageIndex
         imageIndex += 1
@@ -273,7 +273,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 <a
                   title="Download file"
                   className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
-                  href={c['@microsoft.graph.downloadUrl']}
+                  href={c.url}
                 >
                   <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
                 </a>
@@ -341,7 +341,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
   if ('file' in responses[0] && responses.length === 1) {
     const { file } = responses[0]
-    const downloadUrl = file['@microsoft.graph.downloadUrl']
+    const downloadUrl = file.url
     const fileName = file.name
     const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
 

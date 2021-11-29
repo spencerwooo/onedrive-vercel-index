@@ -47,13 +47,13 @@ export const AudioPreview: FunctionComponent<{ file: any }> = ({ file }) => {
             <div>{file.name}</div>
             <div className="pb-4 text-sm text-gray-500">
               Last modified:{' '}
-              {new Date(file.lastModifiedDateTime).toLocaleString(undefined, {
+              {new Date(file.lastModified).toLocaleString(undefined, {
                 dateStyle: 'short',
                 timeStyle: 'short',
               })}
             </div>
             <ReactPlayer
-              url={file['@microsoft.graph.downloadUrl']}
+              url={file.url}
               controls
               width="100%"
               height="48px"
@@ -74,7 +74,7 @@ export const AudioPreview: FunctionComponent<{ file: any }> = ({ file }) => {
         </div>
       </div>
       <div className="mt-4">
-        <DownloadBtn downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadBtn downloadUrl={file.url} />
       </div>
     </>
   )

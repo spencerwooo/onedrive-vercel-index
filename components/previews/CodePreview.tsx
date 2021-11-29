@@ -8,7 +8,7 @@ import Loading from '../Loading'
 import DownloadBtn from '../DownloadBtn'
 
 const CodePreview: FunctionComponent<{ file: any }> = ({ file }) => {
-  const { data, error } = useStaleSWR(file['@microsoft.graph.downloadUrl'])
+  const { data, error } = useStaleSWR(file.url)
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -39,7 +39,7 @@ const CodePreview: FunctionComponent<{ file: any }> = ({ file }) => {
         </pre>
       </div>
       <div className="mt-4">
-        <DownloadBtn downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadBtn downloadUrl={file.url} />
       </div>
     </>
   )

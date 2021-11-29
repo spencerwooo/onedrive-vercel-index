@@ -44,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const data = await provider.query(authTokenPath, { assertFile: true })
 
         // Handle request and check for header 'od-protected-token'
-        const odProtectedToken = await axios.get(data['@microsoft.graph.downloadUrl'])
+        const odProtectedToken = await axios.get(data['file'].url)
         // console.log(req.headers['od-protected-token'], odProtectedToken.data.trim())
 
         if (!compareHashedToken(req.headers['od-protected-token'] as string, odProtectedToken.data)) {
@@ -73,7 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(400).json({ error: "Folders doesn't have raw download urls." })
         return
       }
-      res.redirect(data['@microsoft.graph.downloadUrl'])
+      res.redirect(data['file'].url)
       return
     }
 
