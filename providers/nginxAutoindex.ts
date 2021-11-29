@@ -31,7 +31,9 @@ export class NginxAutoindexProvider implements Provider {
     // nginx autoindex treats having trailing slash or not differently.
     // We use it to check path is folder or file.
     const folderUrl = url.endsWith('/') ? url : url + '/'
-    const folderRes = await axios.get(folderUrl)
+    const folderRes = await axios.get(folderUrl, {
+      validateStatus: status => (status >= 200 && status < 300) || status === 404,
+    })
     if (folderRes.status === 200) {
       isFolder = true
     }
@@ -56,7 +58,7 @@ export class NginxAutoindexProvider implements Provider {
           // Generate GUID from path
           c.id = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
           c.file = true
-          return c
+          return NginxAutoindexProvider.formatFileMeta(c)
         }),
         ...(nextPage === 0 ? {} : { next: nextPage.toString() }),
       }
@@ -73,6 +75,12 @@ export class NginxAutoindexProvider implements Provider {
       }
       return { file: meta }
     }
+  }
+
+  private static formatFileMeta(data: any) {
+    data.lastModified = data.mtime
+    delete data.mtime
+    return data
   }
 }
 
