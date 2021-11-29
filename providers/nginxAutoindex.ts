@@ -58,6 +58,7 @@ export class NginxAutoindexProvider implements Provider {
           // Generate GUID from path
           c.id = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
           c.file = true
+          c.url = url.endsWith('/') ? url + encodeURIComponent(c.name) : `${url}/${encodeURIComponent(c.name)}`
           return NginxAutoindexProvider.formatFileMeta(c)
         }),
         ...(nextPage === 0 ? {} : { next: nextPage.toString() }),
