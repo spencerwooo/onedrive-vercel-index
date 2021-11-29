@@ -7,11 +7,14 @@ import { compareHashedToken } from '../../utils/tools'
 
 import { Provider, QueryErrors } from '../../providers/interface'
 import onedrive from '../../providers/onedrive'
+import nginxAutoindex from '../../providers/nginxAutoindex'
 
 const provider: Provider = (() => {
   switch (apiConfig.provider) {
     case 'onedrive':
       return onedrive
+    case 'nginxAutoindex':
+      return nginxAutoindex
     default:
       throw new Error('Unsupported provider')
   }
