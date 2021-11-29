@@ -16,8 +16,12 @@ export const QueryErrors = {
 }
 
 export interface FileMeta {
-  id: string
-  name: string
+  id: string // ID should be GUID, e.g. UUID or path is acceptable
+  name: string // File name
+  size: number; // Byte size
+  lastModified: string // Datetime string with timezone which is parsable by js Date
+  url: string; // Raw url to the file
+  file: any; // Anything but should ne true
   [key: string]: any
 }
 

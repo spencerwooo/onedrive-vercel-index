@@ -64,8 +64,10 @@ export class NginxAutoindexProvider implements Provider {
       const fileRes = await axios.head(url)
       const meta = {
         id: path,
-        name: '', // No returned in headers
-        mtime: fileRes.headers['last-modified'],
+        name: decodeURIComponent(pathPosix.basename(path)), // Filename is not returned, so extract it from path
+        lastModified: fileRes.headers['Last-Modified'],
+        size: parseInt(fileRes.headers['Content-Length']),
+        file: true,
         url,
       }
       return { file: meta }

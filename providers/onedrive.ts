@@ -89,6 +89,8 @@ export class OnedriveProvider implements Provider {
         ? folderData['@odata.nextLink'].match(/&\$skiptoken=(.+)/i)[1]
         : null
 
+      folderData.children = folderData.children.map(c => OnedriveProvider.formatFileMeta(c))
+
       // Return paging token if specified
       if (nextPage) {
         return { folder: folderData, next: nextPage }
@@ -96,7 +98,15 @@ export class OnedriveProvider implements Provider {
         return { folder: folderData }
       }
     }
-    return { file: identityData }
+    return { file: OnedriveProvider.formatFileMeta(identityData) }
+  }
+
+  private static formatFileMeta(data: any) {
+    data.url = data['@microsoft.graph.downloadUrl']
+    delete data['@microsoft.graph.downloadUrl']
+    data.lastModified = data.lastModifiedDateTime
+    delete data.lastModifiedDateTime
+    return data
   }
 }
 

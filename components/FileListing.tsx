@@ -62,7 +62,7 @@ const queryToPath = (query?: ParsedUrlQuery) => {
 }
 
 const FileListItem: FunctionComponent<{
-  fileContent: { id: string; name: string; size: number; file: Object; lastModifiedDateTime: string }
+  fileContent: { id: string; name: string; size: number; file: Object; lastModified: string }
 }> = ({ fileContent: c }) => {
   const emojiIcon = emojiRegex().exec(c.name)
   const renderEmoji = emojiIcon && !emojiIcon.index
@@ -83,7 +83,7 @@ const FileListItem: FunctionComponent<{
         </div>
       </div>
       <div className="md:block dark:text-gray-500 flex-shrink-0 hidden col-span-3 font-mono text-sm text-gray-700">
-        {new Date(c.lastModifiedDateTime).toLocaleString('en-US', {
+        {new Date(c.lastModified).toLocaleString('en-US', {
           year: 'numeric',
           month: '2-digit',
           day: '2-digit',
