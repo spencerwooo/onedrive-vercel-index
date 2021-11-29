@@ -26,6 +26,6 @@ export interface FileMeta {
 }
 
 export type FolderMeta = {
-  children: FileMeta[]
+  value: FileMeta[]
   [key: string]: any
 }

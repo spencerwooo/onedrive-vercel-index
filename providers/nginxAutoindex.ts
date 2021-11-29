@@ -52,9 +52,10 @@ export class NginxAutoindexProvider implements Provider {
       }
 
       const folderData = {
-        children: items.map(c => {
+        value: items.map(c => {
           // Generate GUID from path
           c.id = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
+          c.file = true
           return c
         }),
         ...(nextPage === 0 ? {} : { next: nextPage.toString() }),
