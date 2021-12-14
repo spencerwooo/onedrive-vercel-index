@@ -38,6 +38,10 @@ const PDFPreview: FunctionComponent<{ file: any }> = ({ file }) => {
             onLoadProgress={({ loaded, total }) => {
               setLoadingText(`Loading PDF ${Math.round((loaded / total) * 100)}%`)
             }}
+            options={{
+              cMapUrl: `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/cmaps/`,
+              cMapPacked: true,
+            }}
           >
             <Page
               pageNumber={pageNumber}
