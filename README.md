@@ -10,13 +10,13 @@
 
 ---
 
-<h5>This is <a href="https://github.com/spencerwooo/onedrive-cf-index">onedrive-cf-index</a>'s little brother, basically the same, but powered by Next.js and Vercel.</h5>
+> 🩺 *Under quarantine.* PR, issue response, and development is **temporarily on hold.**
 
 ## Features
 
 🚧 **_This is currently a work in progress._**
 
-- [x] File preview (PDF, markdown, code, plain text, ...)
+- [x] File preview (PDF, EPUB, markdown, code, plain text, ...)
 - [x] Image preview in gallery mode
 - [x] Video and audio preview (mp4, mp3, ...)
 - [x] Office documents preview (docx, pptx, xlsx, ...)
@@ -25,6 +25,7 @@
 - [x] Dark mode
 - [x] Protected routes (password protection and authentication) through `.password` files
 - [x] Pagination for folders with more than 200 items
+- [ ] Documentation for deployment and FAQs
 
 ## Discussion
 
