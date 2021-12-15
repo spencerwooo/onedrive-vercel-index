@@ -130,16 +130,25 @@ export const matchProtectedRoute = (route: string) => {
  * @param files Files to be downloaded
  * @param folder Optional folder name to hold files, otherwise flatten files in the zip
  */
-export const saveFiles = async (files: { name: string, url: string }[], folder?: string) => {
+export const downloadMultipleFiles = async (files: { name: string; url: string }[], folder?: string) => {
   const zip = new JSZip()
   const dir = folder ? zip.folder(folder)! : zip
+
+  // Add selected file blobs to zip
   files.forEach(({ name, url }) => {
-    dir.file(name, fetch(url).then(r => r.blob()))
+    dir.file(
+      name,
+      fetch(url).then(r => r.blob())
+    )
   })
+
+  // Create zip file and prepare for download
   const b = await dir.generateAsync({ type: 'blob' })
   const el = document.createElement('a')
   el.style.display = 'none'
   document.body.appendChild(el)
+
+  // Download zip file
   const bUrl = window.URL.createObjectURL(b)
   el.href = bUrl
   el.download = folder ? folder + '.zip' : 'download.zip'

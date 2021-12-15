@@ -4,7 +4,7 @@ import emojiRegex from 'emoji-regex'
 import { useClipboard } from 'use-clipboard-copy'
 
 import { ParsedUrlQuery } from 'querystring'
-import { FunctionComponent, MouseEventHandler, useEffect, useRef, useState } from 'react'
+import { FunctionComponent, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
 import { ImageDecorator } from 'react-viewer/lib/ViewerProps'
 
 import { useRouter } from 'next/router'
@@ -12,7 +12,7 @@ import dynamic from 'next/dynamic'
 
 import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
-import { getBaseUrl, saveFiles, useProtectedSWRInfinite } from '../utils/tools'
+import { getBaseUrl, downloadMultipleFiles, useProtectedSWRInfinite } from '../utils/tools'
 
 import { VideoPreview } from './previews/VideoPreview'
 import { AudioPreview } from './previews/AudioPreview'
@@ -100,9 +100,13 @@ const FileListItem: FunctionComponent<{
 }
 
 const Checkbox: FunctionComponent<{
-  checked: 0 | 1 | 2, onChange: () => void, title: string, indeterminate?: boolean
+  checked: 0 | 1 | 2
+  onChange: () => void
+  title: string
+  indeterminate?: boolean
 }> = ({ checked, onChange, title, indeterminate }) => {
   const ref = useRef<HTMLInputElement>(null)
+
   useEffect(() => {
     if (ref.current) {
       ref.current.checked = Boolean(checked)
@@ -111,7 +115,8 @@ const Checkbox: FunctionComponent<{
       }
     }
   }, [ref, checked, indeterminate])
-  const handleClick: MouseEventHandler = (e) => {
+
+  const handleClick: MouseEventHandler = e => {
     if (ref.current) {
       if (e.target === ref.current) {
         e.stopPropagation()
@@ -223,10 +228,11 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     const genTotalSelected = (selected: { [key: string]: boolean }) => {
       const selectInfo = getFiles().map((c: any) => Boolean(selected[c.id]))
       const [hasT, hasF] = [selectInfo.some(i => i), selectInfo.some(i => !i)]
-      return hasT && hasF ? 1 : (!hasF ? 2 : 0)
+      return hasT && hasF ? 1 : !hasF ? 2 : 0
     }
+
     const toggleItemSelected = (id: string) => {
-      let val
+      let val: SetStateAction<{ [key: string]: boolean }>
       if (selected[id]) {
         val = { ...selected }
         delete val[id]
@@ -236,6 +242,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       setSelected(val)
       setTotalSelected(genTotalSelected(val))
     }
+
     const toggleTotalSelected = () => {
       if (genTotalSelected(selected) == 2) {
         setSelected({})
@@ -248,11 +255,12 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
     // Selected file download
     const handleSelectedDownload = () => {
-      const folderName = path.substr(path.lastIndexOf('/') + 1)
-      const folder = folderName ? folderName : undefined
+      const folderName = path.substring(path.lastIndexOf('/') + 1)
+      const folder = folderName ? decodeURIComponent(folderName) : undefined
       const files = getFiles()
         .filter((c: any) => selected[c.id])
         .map((c: any) => ({ name: c.name, url: c['@microsoft.graph.downloadUrl'] }))
+
       if (files.length == 1) {
         const el = document.createElement('a')
         el.style.display = 'none'
@@ -262,22 +270,24 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
         el.remove()
       } else if (files.length > 1) {
         setTotalGenerating(true)
-        const toastId = toast.loading('Downloading selected files. This may be slow...')
-        saveFiles(files, folder).then(() => {
-          setTotalGenerating(false)
-          toast.dismiss(toastId)
-          toast.success('Finished to download selected files.')
-        }).catch(() => {
-          setTotalGenerating(false)
-          toast.dismiss(toastId)
-          toast.error('Failed to download selected files.')
-        })
+        const toastId = toast.loading('Downloading selected files. Refresh to cancle, this may take some time...')
+        downloadMultipleFiles(files, folder)
+          .then(() => {
+            setTotalGenerating(false)
+            toast.dismiss(toastId)
+            toast.success('Finished downloading selected files.')
+          })
+          .catch(() => {
+            setTotalGenerating(false)
+            toast.dismiss(toastId)
+            toast.error('Failed to download selected files.')
+          })
       }
     }
 
     return (
       <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded shadow">
-        <div className="dark:border-gray-700 grid items-center grid-cols-12 p-3 space-x-2 border-b border-gray-200">
+        <div className="dark:border-gray-700 grid items-center grid-cols-12 px-3 space-x-2 border-b border-gray-200">
           <div className="md:col-span-6 col-span-12 font-bold">Name</div>
           <div className="md:block hidden col-span-3 font-bold">Last Modified</div>
           <div className="md:block hidden font-bold">Size</div>
@@ -288,14 +298,10 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 checked={totalSelected}
                 onChange={toggleTotalSelected}
                 indeterminate={true}
-                title={"Select files"}
+                title={'Select files'}
               />
               {totalGenerating ? (
-                <span
-                  title="Downloading selected files, refresh page to cancel"
-                  className="p-2 rounded"
-                  role="status"
-                >
+                <span title="Downloading selected files, refresh page to cancel" className="p-2 rounded" role="status">
                   <svg
                     // Use fontawesome far theme via class `svg-inline--fa` to get style `vertical-align` only
                     // for consistent icon alignment, as class `align-*` cannot satisfy it
@@ -312,7 +318,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                     />
                   </svg>
                 </span>
-              ) : (totalSelected ? (
+              ) : totalSelected ? (
                 <span
                   title="Download selected files"
                   className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
@@ -320,19 +326,14 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 >
                   <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
                 </span>
-              ) : '')}
+              ) : (
+                ''
+              )}
             </div>
           </div>
         </div>
 
-        <Toaster
-          toastOptions={{
-            style: {
-              background: '#316C23',
-              color: '#ffffff',
-            },
-          }}
-        />
+        <Toaster />
 
         {imagesInFolder.length !== 0 && (
           <ReactViewer
@@ -363,7 +364,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                   render: <FontAwesomeIcon icon={['fas', 'copy']} />,
                   onClick: i => {
                     clipboard.copy(i.alt ? `${getBaseUrl()}/api?path=${path + '/' + i.alt}&raw=true` : '')
-                    toast.success('Copied image permanent link to clipboard.')
+                    toast('Copied image permanent link to clipboard.', { icon: '👌' })
                   },
                 },
               ])
@@ -395,7 +396,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                   className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
                   onClick={() => {
                     clipboard.copy(`${getBaseUrl()}${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)
-                    toast.success('Copied folder permalink.')
+                    toast('Copied folder permalink.', { icon: '👌' })
                   }}
                 >
                   <FontAwesomeIcon icon={['far', 'copy']} />
@@ -407,7 +408,9 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                   title="Copy raw file permalink"
                   className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
                   onClick={() => {
-                    clipboard.copy(`${getBaseUrl()}/api?path=${path === '/' ? '' : path}/${encodeURIComponent(c.name)}&raw=true`)
+                    clipboard.copy(
+                      `${getBaseUrl()}/api?path=${path === '/' ? '' : path}/${encodeURIComponent(c.name)}&raw=true`
+                    )
                     toast.success('Copied raw file permalink.')
                   }}
                 >
@@ -423,7 +426,9 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
               </div>
             )}
             <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
-              {c.folder || c.name === '.password' ? '' : (
+              {c.folder || c.name === '.password' ? (
+                ''
+              ) : (
                 <Checkbox
                   checked={selected[c.id] ? 2 : 0}
                   onChange={() => toggleItemSelected(c.id)}
