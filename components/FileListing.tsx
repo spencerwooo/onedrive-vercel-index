@@ -270,7 +270,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
         el.remove()
       } else if (files.length > 1) {
         setTotalGenerating(true)
-        const toastId = toast.loading('Downloading selected files. Refresh to cancle, this may take some time...')
+        const toastId = toast.loading('Downloading selected files. Refresh to cancel, this may take some time...')
         downloadMultipleFiles(files, folder)
           .then(() => {
             setTotalGenerating(false)
@@ -318,16 +318,15 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                     />
                   </svg>
                 </span>
-              ) : totalSelected ? (
-                <span
+              ) : (
+                <button
                   title="Download selected files"
-                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
+                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer disabled:text-gray-400 disabled:dark:text-gray-600 disabled:hover:bg-white disabled:hover:dark:bg-gray-900"
+                  disabled={totalSelected === 0}
                   onClick={handleSelectedDownload}
                 >
                   <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
-                </span>
-              ) : (
-                ''
+                </button>
               )}
             </div>
           </div>
