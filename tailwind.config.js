@@ -4,8 +4,7 @@ const siteConfig = require('./config/site.json')
 
 module.exports = {
   mode: 'jit',
-  purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
-  darkMode: 'media',
+  content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
   theme: {
     colors: {
       transparent: 'transparent',
@@ -31,9 +30,6 @@ module.exports = {
         }
       }
     }
-  },
-  variants: {
-    extend: {},
   },
   plugins: [],
 }

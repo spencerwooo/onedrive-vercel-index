@@ -46,11 +46,11 @@
     "@types/react-dom": "^17.0.8",
     "@types/react-pdf": "^5.0.4",
     "@types/react-syntax-highlighter": "^13.5.1",
-    "autoprefixer": "^10.2.6",
+    "autoprefixer": "^10.4.0",
     "eslint": "7.29.0",
     "eslint-config-next": "11.0.0",
-    "postcss": "^8.3.5",
-    "tailwindcss": "^2.2.2",
+    "postcss": "^8.4.5",
+    "tailwindcss": "^3.0.5",
     "typescript": "4.3.4"
   }
 }
