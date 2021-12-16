@@ -318,7 +318,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       })()
       setFolderGenerating({ ...folderGenerating, [id]: true })
       const toastId = toast.loading('Downloading folder. Refresh to cancel, this may take some time...')
-      downloadTreelikeMultipleFiles(files, name).then(() => {
+      downloadTreelikeMultipleFiles(files, path, name).then(() => {
         setFolderGenerating({ ...folderGenerating, [id]: false })
         toast.dismiss(toastId)
         toast.success('Finished to download folder.')

@@ -163,77 +163,69 @@ const downloadBlob = (b: Blob, name: string) => {
   el.remove()
 }
 
-// One-shot DFS file traversing for the folder.
-// Due to react hook limit, we cannot reuse SWR utils for recursive actions.
-// Only root dir meta, without returning from API, will be undefined.
-export async function* traverseFolder(path: string) {
+/**
+ * One-shot concurrent BFS file traversing for the folder.
+ * Due to react hook limit, we cannot reuse SWR utils for recursive actions.
+ * We will directly fetch API and arrange responses instead.
+ * In folder tree, we visit folders with same level concurrently.
+ * Every time we visit a folder, we fetch and return meta of all its children.
+ * @param path Folder to be traversed
+ * @returns Array of items representing folders and files of traversed folder in BFS order and excluding root folder.
+ * Due to BFS, folder items are ALWAYS in front of its children items.
+ */
+export async function* traverseFolder(path: string): AsyncGenerator<{
+  path: string, meta: any, isFolder: boolean
+}, void, undefined> {
   const hashedToken = getStoredToken(path)
-  const root = new PathNode(path)
-  const loader = async (path: string) => {
-    const data: any = await fetcher(`/api?path=${path}`, hashedToken ?? undefined)
-    if (data && data.folder) {
-      return data.folder.value.map(c => {
-        const p = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
-        return new PathNode(p, Boolean(c.folder), c)
-      })
-    } else {
-      throw new Error('Path is not folder')
-    }
-  }
-  yield* root.dfs(loader)
-}
-
-// Traverse helper
-class PathNode {
-  private _path: string
-  private _meta: any
-  private _isFolder: boolean
-
-  constructor(path: string, isFolder?: boolean, meta?: any) {
-    this._path = path
-    this._meta = meta
-    this._isFolder = isFolder ?? true
-  }
-
-  async* dfs(loader: (path: string) => Promise<PathNode[]>) {
-    const ancestors = [this as PathNode]
-    while (ancestors.length > 0) {
-      const next = ancestors.pop()!
-      if (next._isFolder) {
-        ancestors.push(...await loader(next._path))
+  let folderPaths = [path]
+  while (folderPaths.length > 0) {
+    const itemLists = await Promise.all(folderPaths.map(fp => (async (fp) => {
+      const data = await fetcher(`/api?path=${fp}`, hashedToken ?? undefined)
+      if (data && data.folder) {
+        return data.folder.value.map((c: any) => {
+          const p = `${fp === '/' ? '' : fp}/${encodeURIComponent(c.name)}`
+          return { path: p, meta: c, isFolder: Boolean(c.folder) }
+        })
+      } else {
+        throw new Error('Path is not folder')
       }
-      yield { path: next._path, meta: next._meta, isFolder: next._isFolder }
-    }
+    })(fp)))
+    const items = itemLists.flat() as { path: string, meta: any, isFolder: boolean }[]
+    yield* items
+    folderPaths = items.filter(i => i.isFolder).map(i => i.path)
   }
 }
 
 /**
  * Download hieratical tree-like files after compressing them into a zip
- * @param files Files to be downloaded. Folder should be in front of its children in the array.
- * Use async generator because generation of elements may be slow.
- * When waiting for generation, we can also download bodies of got element.
- * The root dir should be the first element.
- * Only folder elements have url param undefined. And only root dir of the folders have name param undefined.
- * @param folder Optional folder name to hold files, otherwise flatten files in the zip.
- * Root folder name passed in files param is not unused, on the contrary use this param as top-level folder name.
+ * @param files Files to be downloaded. Array of file and folder items excluding root folder.
+ * Folder items MUST be in front of its children items in the array.
+ * Use async generator because generation of the array may be slow.
+ * When waiting for its generation, we can meanwhile download bodies of already got items.
+ * Only folder items can have url undefined.
+ * @param basePath Root dir path of files to be downloaded
+ * @param folder Optional folder name to hold files, otherwise flatten files in the zip
  */
 export const downloadTreelikeMultipleFiles = async (
-  files: AsyncGenerator<{ name: string, url?: string, path: string, isFolder: boolean }>, folder?: string,
+  files: AsyncGenerator<{
+    name: string, url?: string, path: string, isFolder: boolean
+  }>, basePath: string, folder?: string,
 ) => {
   const zip = new JSZip()
   const root = folder ? zip.folder(folder)! : zip
-  const map = [{ path: '/', dir: root }] // Root path will be set later in looping
+  const map = [{ path: basePath, dir: root }]
 
   // Add selected file blobs to zip according to its path
   for await (const { name, url, path, isFolder } of files) {
-    if (name === undefined) {
-      map[0].path = path
-      continue
-    }
+    // Search parent dir in map
     const i = map.slice().reverse().findIndex(({ path: parent }) => (
       path.substring(0, parent.length) === parent && path.substring(parent.length + 1).indexOf('/') === -1
     ))
-    if (i === -1) throw new Error('File array does not satisfy requirement')
+    if (i === -1) {
+      throw new Error('File array does not satisfy requirement')
+    }
+
+    // Add file or folder to zip
     const dir = map[map.length - 1 - i].dir
     if (isFolder) {
       map.push({ path, dir: dir.folder(name)! })
