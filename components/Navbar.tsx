@@ -42,7 +42,7 @@ const Navbar = () => {
 
   return (
     <div className="text-left p-1 bg-white dark:bg-gray-900 sticky top-0 bg-opacity-80 backdrop-blur-md shadow-sm z-[100]">
-      <div className="flex items-center justify-between w-full max-w-4xl mx-auto">
+      <div className="flex items-center justify-between w-full max-w-5xl mx-auto">
         <Toaster />
 
         <Link href="/">

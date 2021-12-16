@@ -1,6 +1,7 @@
 import axios from 'axios'
 import sha256 from 'crypto-js/sha256'
 import useSWR, { cache, Key, useSWRInfinite } from 'swr'
+import JSZip from 'jszip'
 
 import siteConfig from '../config/site.json'
 
@@ -122,4 +123,36 @@ export const matchProtectedRoute = (route: string) => {
     }
   }
   return authTokenPath
+}
+
+/**
+ * Download multiple files after compressing them into a zip
+ * @param files Files to be downloaded
+ * @param folder Optional folder name to hold files, otherwise flatten files in the zip
+ */
+export const downloadMultipleFiles = async (files: { name: string; url: string }[], folder?: string) => {
+  const zip = new JSZip()
+  const dir = folder ? zip.folder(folder)! : zip
+
+  // Add selected file blobs to zip
+  files.forEach(({ name, url }) => {
+    dir.file(
+      name,
+      fetch(url).then(r => r.blob())
+    )
+  })
+
+  // Create zip file and prepare for download
+  const b = await dir.generateAsync({ type: 'blob' })
+  const el = document.createElement('a')
+  el.style.display = 'none'
+  document.body.appendChild(el)
+
+  // Download zip file
+  const bUrl = window.URL.createObjectURL(b)
+  el.href = bUrl
+  el.download = folder ? folder + '.zip' : 'download.zip'
+  el.click()
+  window.URL.revokeObjectURL(bUrl)
+  el.remove()
 }
