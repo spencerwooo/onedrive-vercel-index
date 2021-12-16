@@ -12,7 +12,9 @@ import dynamic from 'next/dynamic'
 
 import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
-import { getBaseUrl, treeList, downloadMultipleFiles, useProtectedSWRInfinite, saveTreeFiles } from '../utils/tools'
+import {
+  getBaseUrl, traverseFolder, downloadMultipleFiles, useProtectedSWRInfinite, downloadTreelikeMultipleFiles
+} from '../utils/tools'
 
 import { VideoPreview } from './previews/VideoPreview'
 import { AudioPreview } from './previews/AudioPreview'
@@ -305,7 +307,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     // Folder recursive download
     const handleFolderDownload = (path: string, id: string, name?: string) => () => {
       const files = (async function* () {
-        for await (const { meta: c, path: p, isFolder } of treeList(path)) {
+        for await (const { meta: c, path: p, isFolder } of traverseFolder(path)) {
           yield {
             name: c?.name,
             url: c ? c['@microsoft.graph.downloadUrl'] : undefined,
@@ -315,8 +317,8 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
         }
       })()
       setFolderGenerating({ ...folderGenerating, [id]: true })
-      const toastId = toast.loading('Downloading folder. This may be slow...')
-      saveTreeFiles(files, name).then(() => {
+      const toastId = toast.loading('Downloading folder. Refresh to cancel, this may take some time...')
+      downloadTreelikeMultipleFiles(files, name).then(() => {
         setFolderGenerating({ ...folderGenerating, [id]: false })
         toast.dismiss(toastId)
         toast.success('Finished to download folder.')

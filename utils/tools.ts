@@ -141,12 +141,15 @@ export const downloadMultipleFiles = async (files: { name: string; url: string }
       fetch(url).then(r => r.blob())
     )
   })
+
+  // Create zip file and download it
   const b = await zip.generateAsync({ type: 'blob' })
   downloadBlob(b, folder ? folder + '.zip' : 'download.zip')
 }
 
 // Blob download helper
 const downloadBlob = (b: Blob, name: string) => {
+  // Prepare for download
   const el = document.createElement('a')
   el.style.display = 'none'
   document.body.appendChild(el)
@@ -160,10 +163,10 @@ const downloadBlob = (b: Blob, name: string) => {
   el.remove()
 }
 
-// One-shot recursive tree-like listing for the folder.
-// Due to react hook limit, we cannot reuse SWR utils for recursive listing.
+// One-shot DFS file traversing for the folder.
+// Due to react hook limit, we cannot reuse SWR utils for recursive actions.
 // Only root dir meta, without returning from API, will be undefined.
-export async function* treeList(path: string) {
+export async function* traverseFolder(path: string) {
   const hashedToken = getStoredToken(path)
   const root = new PathNode(path)
   const loader = async (path: string) => {
@@ -214,12 +217,14 @@ class PathNode {
  * @param folder Optional folder name to hold files, otherwise flatten files in the zip.
  * Root folder name passed in files param is not unused, on the contrary use this param as top-level folder name.
  */
-export const saveTreeFiles = async (
+export const downloadTreelikeMultipleFiles = async (
   files: AsyncGenerator<{ name: string, url?: string, path: string, isFolder: boolean }>, folder?: string,
 ) => {
   const zip = new JSZip()
   const root = folder ? zip.folder(folder)! : zip
   const map = [{ path: '/', dir: root }] // Root path will be set later in looping
+
+  // Add selected file blobs to zip according to its path
   for await (const { name, url, path, isFolder } of files) {
     if (name === undefined) {
       map[0].path = path
@@ -236,6 +241,8 @@ export const saveTreeFiles = async (
       dir.file(name, fetch(url!).then(r => r.blob()))
     }
   }
+
+  // Create zip file and download it
   const b = await zip.generateAsync({ type: 'blob' })
   downloadBlob(b, folder ? folder + '.zip' : 'download.zip')
 }
