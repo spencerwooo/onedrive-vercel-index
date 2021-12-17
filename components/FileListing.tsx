@@ -12,11 +12,17 @@ import dynamic from 'next/dynamic'
 
 import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
-import { getBaseUrl, downloadMultipleFiles, useProtectedSWRInfinite } from '../utils/tools'
+import {
+  getBaseUrl,
+  traverseFolder,
+  downloadMultipleFiles,
+  useProtectedSWRInfinite,
+  downloadTreelikeMultipleFiles,
+} from '../utils/tools'
 
 import { VideoPreview } from './previews/VideoPreview'
 import { AudioPreview } from './previews/AudioPreview'
-import Loading from './Loading'
+import Loading, { LoadingIcon } from './Loading'
 import FourOhFour from './FourOhFour'
 import Auth from './Auth'
 import TextPreview from './previews/TextPreview'
@@ -144,12 +150,25 @@ const Checkbox: FunctionComponent<{
   )
 }
 
+const Downloading: FunctionComponent<{ title: string }> = ({ title }) => {
+  return (
+    <span title={title} className="p-2 rounded" role="status">
+      <LoadingIcon
+        // Use fontawesome far theme via class `svg-inline--fa` to get style `vertical-align` only
+        // for consistent icon alignment, as class `align-*` cannot satisfy it
+        className="animate-spin w-4 h-4 inline-block svg-inline--fa"
+      />
+    </span>
+  )
+}
+
 const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => {
   const [imageViewerVisible, setImageViewerVisibility] = useState(false)
   const [activeImageIdx, setActiveImageIdx] = useState(0)
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
   const [totalSelected, setTotalSelected] = useState<0 | 1 | 2>(0)
   const [totalGenerating, setTotalGenerating] = useState<boolean>(false)
+  const [folderGenerating, setFolderGenerating] = useState<{ [key: string]: boolean }>({})
 
   const router = useRouter()
   const clipboard = useClipboard()
@@ -285,6 +304,35 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       }
     }
 
+    // Folder recursive download
+    const handleFolderDownload = (path: string, id: string, name?: string) => () => {
+      const files = (async function* () {
+        for await (const { meta: c, path: p, isFolder } of traverseFolder(path)) {
+          yield {
+            name: c?.name,
+            url: c ? c['@microsoft.graph.downloadUrl'] : undefined,
+            path: p,
+            isFolder,
+          }
+        }
+      })()
+
+      setFolderGenerating({ ...folderGenerating, [id]: true })
+      const toastId = toast.loading('Downloading folder. Refresh to cancel, this may take some time...')
+
+      downloadTreelikeMultipleFiles(files, path, name)
+        .then(() => {
+          setFolderGenerating({ ...folderGenerating, [id]: false })
+          toast.dismiss(toastId)
+          toast.success('Finished downloading folder.')
+        })
+        .catch(() => {
+          setFolderGenerating({ ...folderGenerating, [id]: false })
+          toast.dismiss(toastId)
+          toast.error('Failed to download folder.')
+        })
+    }
+
     return (
       <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded shadow">
         <div className="dark:border-gray-700 grid items-center grid-cols-12 px-3 space-x-2 border-b border-gray-200">
@@ -301,23 +349,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 title={'Select files'}
               />
               {totalGenerating ? (
-                <span title="Downloading selected files, refresh page to cancel" className="p-2 rounded" role="status">
-                  <svg
-                    // Use fontawesome far theme via class `svg-inline--fa` to get style `vertical-align` only
-                    // for consistent icon alignment, as class `align-*` cannot satisfy it
-                    className="animate-spin w-4 h-4 inline-block svg-inline--fa"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    />
-                  </svg>
-                </span>
+                <Downloading title="Downloading selected files, refresh page to cancel" />
               ) : (
                 <button
                   title="Download selected files"
@@ -400,6 +432,20 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
                 >
                   <FontAwesomeIcon icon={['far', 'copy']} />
                 </span>
+                {folderGenerating[c.id] ? (
+                  <Downloading title="Downloading folder, refresh page to cancel" />
+                ) : (
+                  <span
+                    title="Download folder"
+                    className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
+                    onClick={() => {
+                      const p = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
+                      handleFolderDownload(p, c.id, c.name)()
+                    }}
+                  >
+                    <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
+                  </span>
+                )}
               </div>
             ) : (
               <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
