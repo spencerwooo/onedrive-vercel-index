@@ -34,7 +34,7 @@ const EPUBPreview: FunctionComponent<{file: any}> = ({ file }) => {
   return (
     <>
       <div
-        className="dark:bg-gray-900 md:p-3 no-scrollbar flex flex-col w-full overflow-scroll bg-white rounded shadow"
+        className="dark:bg-gray-900 md:p-3 no-scrollbar flex flex-col w-full overflow-scroll bg-white rounded"
         style={{ maxHeight: '90vh' }}
       >
         <div className="no-scrollbar flex-1 w-full overflow-scroll" ref={epubContainer} style={{ minHeight: '70vh' }}>

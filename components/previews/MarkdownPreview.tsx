@@ -85,7 +85,7 @@ const MarkdownPreview: FunctionComponent<{ file: any; path: string; standalone?:
       <div
         className={
           standalone
-            ? 'markdown-body shadow bg-white dark:bg-gray-900 rounded p-3 dark:text-white'
+            ? 'markdown-body bg-white dark:bg-gray-900 rounded p-3 dark:text-white'
             : 'markdown-body p-3 dark:text-white'
         }
       >

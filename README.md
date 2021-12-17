@@ -10,11 +10,7 @@
 
 ---
 
-> 🩺 *Under quarantine.* PR, issue response, and development is **temporarily on hold.**
-
 ## Features
-
-🚧 **_This is currently a work in progress._**
 
 - [x] File preview (PDF, EPUB, markdown, code, plain text, ...)
 - [x] Image preview in gallery mode
@@ -25,7 +21,7 @@
 - [x] Dark mode
 - [x] Protected routes (password protection and authentication) through `.password` files
 - [x] Pagination for folders with more than 200 items
-- [ ] Documentation for deployment and FAQs
+- [x] In browser folder download and multiple file download
 
 ## Discussion
 

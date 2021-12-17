@@ -13,7 +13,7 @@ const OfficePreview: FunctionComponent<{ file: any }> = ({ file }) => {
 
   return (
     <>
-      <div className="overflow-scroll shadow" ref={docContainer} style={{ maxHeight: '90vh' }}>
+      <div className="overflow-scroll" ref={docContainer} style={{ maxHeight: '90vh' }}>
         <Preview url={encodeURIComponent(file['@microsoft.graph.downloadUrl'])} width={docContainerWidth.toString()} height="800" />
       </div>
       <div className="mt-4">

@@ -179,14 +179,14 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
 
   if (error) {
     return (
-      <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
+      <div className="dark:bg-gray-900 p-3 bg-white rounded">
         {error.message.includes('401') ? <Auth redirect={path} /> : <FourOhFour errorMsg={error.message} />}
       </div>
     )
   }
   if (!data) {
     return (
-      <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
+      <div className="dark:bg-gray-900 p-3 bg-white rounded">
         <Loading loadingText="Loading ..." />
       </div>
     )
@@ -334,7 +334,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     }
 
     return (
-      <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded shadow">
+      <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded">
         <div className="dark:border-gray-700 grid items-center grid-cols-12 px-3 space-x-2 border-b border-gray-200">
           <div className="md:col-span-6 col-span-12 font-bold">Name</div>
           <div className="md:block hidden col-span-3 font-bold">Last Modified</div>
@@ -551,7 +551,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       switch (extensions[fileExtension]) {
         case preview.image:
           return (
-            <div className="w-full p-3 bg-white rounded shadow">
+            <div className="w-full p-3 bg-white rounded">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img className="mx-auto" src={downloadUrl} alt={fileName} />
             </div>
@@ -582,13 +582,13 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           return <EPUBPreview file={file} />
 
         default:
-          return <div className="dark:bg-gray-900 bg-white rounded shadow">{fileName}</div>
+          return <div className="dark:bg-gray-900 bg-white rounded">{fileName}</div>
       }
     }
 
     return (
       <>
-        <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
+        <div className="dark:bg-gray-900 p-3 bg-white rounded">
           <FourOhFour
             errorMsg={`Preview for file ${fileName} is not available, download directly with the button below.`}
           />
@@ -601,7 +601,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
   }
 
   return (
-    <div className="dark:bg-gray-900 p-3 bg-white rounded shadow">
+    <div className="dark:bg-gray-900 p-3 bg-white rounded">
       <FourOhFour errorMsg={`Cannot preview ${path}`} />
     </div>
   )
