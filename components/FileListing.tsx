@@ -14,10 +14,13 @@ import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
 import { useProtectedSWRInfinite } from '../utils/fetchWithSWR'
 import { getBaseUrl } from '../utils/getBaseUrl'
-import { downloadMultipleFiles, downloadTreelikeMultipleFiles, traverseFolder } from '../utils/downloadMultipleFiles'
+import {
+  DownloadingToast,
+  downloadMultipleFiles,
+  downloadTreelikeMultipleFiles,
+  traverseFolder,
+} from './MultiFileDownloader'
 
-import { VideoPreview } from './previews/VideoPreview'
-import { AudioPreview } from './previews/AudioPreview'
 import Loading, { LoadingIcon } from './Loading'
 import FourOhFour from './FourOhFour'
 import Auth from './Auth'
@@ -25,6 +28,8 @@ import TextPreview from './previews/TextPreview'
 import MarkdownPreview from './previews/MarkdownPreview'
 import CodePreview from './previews/CodePreview'
 import OfficePreview from './previews/OfficePreview'
+import AudioPreview from './previews/AudioPreview'
+import VideoPreview from './previews/VideoPreview'
 import DownloadBtn from './DownloadBtn'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
@@ -285,17 +290,16 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
         el.remove()
       } else if (files.length > 1) {
         setTotalGenerating(true)
-        const toastId = toast.loading('Downloading selected files. Refresh to cancel, this may take some time...')
-        downloadMultipleFiles({ toastId, files, folder })
+
+        const toastId = toast.loading(DownloadingToast(router))
+        downloadMultipleFiles({ toastId, router, files, folder })
           .then(() => {
             setTotalGenerating(false)
-            toast.dismiss(toastId)
-            toast.success('Finished downloading selected files.')
+            toast.success('Finished downloading selected files.', { id: toastId })
           })
           .catch(() => {
             setTotalGenerating(false)
-            toast.dismiss(toastId)
-            toast.error('Failed to download selected files.')
+            toast.error('Failed to download selected files.', { id: toastId })
           })
       }
     }
@@ -314,18 +318,16 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       })()
 
       setFolderGenerating({ ...folderGenerating, [id]: true })
-      const toastId = toast.loading('Downloading folder. Refresh to cancel, this may take some time...')
+      const toastId = toast.loading(DownloadingToast(router))
 
-      downloadTreelikeMultipleFiles({ toastId, files, basePath: path, folder: name })
+      downloadTreelikeMultipleFiles({ toastId, router, files, basePath: path, folder: name })
         .then(() => {
           setFolderGenerating({ ...folderGenerating, [id]: false })
-          toast.dismiss(toastId)
-          toast.success('Finished downloading folder.')
+          toast.success('Finished downloading folder.', { id: toastId })
         })
         .catch(() => {
           setFolderGenerating({ ...folderGenerating, [id]: false })
-          toast.dismiss(toastId)
-          toast.error('Failed to download folder.')
+          toast.error('Failed to download folder.', { id: toastId })
         })
     }
 

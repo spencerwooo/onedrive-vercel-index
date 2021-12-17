@@ -11,7 +11,7 @@ enum PlayerState {
   Paused,
 }
 
-export const AudioPreview: FunctionComponent<{ file: any }> = ({ file }) => {
+const AudioPreview: FunctionComponent<{ file: any }> = ({ file }) => {
   const [playerStatus, setPlayerStatus] = useState(PlayerState.Loading)
 
   return (
@@ -79,3 +79,5 @@ export const AudioPreview: FunctionComponent<{ file: any }> = ({ file }) => {
     </>
   )
 }
+
+export default AudioPreview
