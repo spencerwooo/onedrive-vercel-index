@@ -290,7 +290,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       } else if (files.length > 1) {
         setTotalGenerating(true)
         const toastId = toast.loading('Downloading selected files. Refresh to cancel, this may take some time...')
-        downloadMultipleFiles(files, folder)
+        downloadMultipleFiles(toastId, files, folder)
           .then(() => {
             setTotalGenerating(false)
             toast.dismiss(toastId)
@@ -320,7 +320,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       setFolderGenerating({ ...folderGenerating, [id]: true })
       const toastId = toast.loading('Downloading folder. Refresh to cancel, this may take some time...')
 
-      downloadTreelikeMultipleFiles(files, path, name)
+      downloadTreelikeMultipleFiles(toastId, files, path, name)
         .then(() => {
           setFolderGenerating({ ...folderGenerating, [id]: false })
           toast.dismiss(toastId)

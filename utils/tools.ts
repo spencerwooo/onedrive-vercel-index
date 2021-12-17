@@ -1,6 +1,7 @@
 import axios from 'axios'
 import sha256 from 'crypto-js/sha256'
 import useSWR, { cache, Key, useSWRInfinite } from 'swr'
+import toast from 'react-hot-toast'
 import JSZip from 'jszip'
 
 import siteConfig from '../config/site.json'
@@ -130,7 +131,11 @@ export const matchProtectedRoute = (route: string) => {
  * @param files Files to be downloaded
  * @param folder Optional folder name to hold files, otherwise flatten files in the zip
  */
-export const downloadMultipleFiles = async (files: { name: string; url: string }[], folder?: string) => {
+export const downloadMultipleFiles = async (
+  toastId: string,
+  files: { name: string; url: string }[],
+  folder?: string
+) => {
   const zip = new JSZip()
   const dir = folder ? zip.folder(folder)! : zip
 
@@ -138,12 +143,18 @@ export const downloadMultipleFiles = async (files: { name: string; url: string }
   files.forEach(({ name, url }) => {
     dir.file(
       name,
-      fetch(url).then(r => r.blob())
+      fetch(url).then(r => {
+        return r.blob()
+      })
     )
   })
 
   // Create zip file and download it
-  const b = await zip.generateAsync({ type: 'blob' })
+  const b = await zip.generateAsync({ type: 'blob' }, metadata => {
+    toast.loading(`Downloading ${metadata.percent.toFixed(0)}%. Refresh to cancel...`, {
+      id: toastId,
+    })
+  })
   downloadBlob(b, folder ? folder + '.zip' : 'download.zip')
 }
 
@@ -219,6 +230,7 @@ export async function* traverseFolder(path: string): AsyncGenerator<
  * @param folder Optional folder name to hold files, otherwise flatten files in the zip
  */
 export const downloadTreelikeMultipleFiles = async (
+  toastId: string,
   files: AsyncGenerator<{
     name: string
     url?: string
@@ -259,6 +271,10 @@ export const downloadTreelikeMultipleFiles = async (
   }
 
   // Create zip file and download it
-  const b = await zip.generateAsync({ type: 'blob' })
+  const b = await zip.generateAsync({ type: 'blob' }, metadata => {
+    toast.loading(`Downloading ${metadata.percent.toFixed(0)}%. Refresh to cancel...`, {
+      id: toastId,
+    })
+  })
   downloadBlob(b, folder ? folder + '.zip' : 'download.zip')
 }
