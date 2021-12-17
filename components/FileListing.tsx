@@ -13,7 +13,11 @@ import dynamic from 'next/dynamic'
 import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
 import {
-  getBaseUrl, traverseFolder, downloadMultipleFiles, useProtectedSWRInfinite, downloadTreelikeMultipleFiles
+  getBaseUrl,
+  traverseFolder,
+  downloadMultipleFiles,
+  useProtectedSWRInfinite,
+  downloadTreelikeMultipleFiles,
 } from '../utils/tools'
 
 import { VideoPreview } from './previews/VideoPreview'
@@ -148,11 +152,7 @@ const Checkbox: FunctionComponent<{
 
 const Downloading: FunctionComponent<{ title: string }> = ({ title }) => {
   return (
-    <span
-      title={title}
-      className="p-2 rounded"
-      role="status"
-    >
+    <span title={title} className="p-2 rounded" role="status">
       <LoadingIcon
         // Use fontawesome far theme via class `svg-inline--fa` to get style `vertical-align` only
         // for consistent icon alignment, as class `align-*` cannot satisfy it
@@ -316,17 +316,21 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           }
         }
       })()
+
       setFolderGenerating({ ...folderGenerating, [id]: true })
       const toastId = toast.loading('Downloading folder. Refresh to cancel, this may take some time...')
-      downloadTreelikeMultipleFiles(files, path, name).then(() => {
-        setFolderGenerating({ ...folderGenerating, [id]: false })
-        toast.dismiss(toastId)
-        toast.success('Finished to download folder.')
-      }).catch(() => {
-        setFolderGenerating({ ...folderGenerating, [id]: false })
-        toast.dismiss(toastId)
-        toast.error('Failed to download folder.')
-      })
+
+      downloadTreelikeMultipleFiles(files, path, name)
+        .then(() => {
+          setFolderGenerating({ ...folderGenerating, [id]: false })
+          toast.dismiss(toastId)
+          toast.success('Finished downloading folder.')
+        })
+        .catch(() => {
+          setFolderGenerating({ ...folderGenerating, [id]: false })
+          toast.dismiss(toastId)
+          toast.error('Failed to download folder.')
+        })
     }
 
     return (

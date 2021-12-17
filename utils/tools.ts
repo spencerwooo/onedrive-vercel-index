@@ -173,31 +173,43 @@ const downloadBlob = (b: Blob, name: string) => {
  * @returns Array of items representing folders and files of traversed folder in BFS order and excluding root folder.
  * Due to BFS, folder items are ALWAYS in front of its children items.
  */
-export async function* traverseFolder(path: string): AsyncGenerator<{
-  path: string, meta: any, isFolder: boolean
-}, void, undefined> {
+export async function* traverseFolder(path: string): AsyncGenerator<
+  {
+    path: string
+    meta: any
+    isFolder: boolean
+  },
+  void,
+  undefined
+> {
   const hashedToken = getStoredToken(path)
   let folderPaths = [path]
+
   while (folderPaths.length > 0) {
-    const itemLists = await Promise.all(folderPaths.map(fp => (async (fp) => {
-      const data = await fetcher(`/api?path=${fp}`, hashedToken ?? undefined)
-      if (data && data.folder) {
-        return data.folder.value.map((c: any) => {
-          const p = `${fp === '/' ? '' : fp}/${encodeURIComponent(c.name)}`
-          return { path: p, meta: c, isFolder: Boolean(c.folder) }
-        })
-      } else {
-        throw new Error('Path is not folder')
-      }
-    })(fp)))
-    const items = itemLists.flat() as { path: string, meta: any, isFolder: boolean }[]
+    const itemLists = await Promise.all(
+      folderPaths.map(fp =>
+        (async fp => {
+          const data = await fetcher(`/api?path=${fp}`, hashedToken ?? undefined)
+          if (data && data.folder) {
+            return data.folder.value.map((c: any) => {
+              const p = `${fp === '/' ? '' : fp}/${encodeURIComponent(c.name)}`
+              return { path: p, meta: c, isFolder: Boolean(c.folder) }
+            })
+          } else {
+            throw new Error('Path is not folder')
+          }
+        })(fp)
+      )
+    )
+
+    const items = itemLists.flat() as { path: string; meta: any; isFolder: boolean }[]
     yield* items
     folderPaths = items.filter(i => i.isFolder).map(i => i.path)
   }
 }
 
 /**
- * Download hieratical tree-like files after compressing them into a zip
+ * Download hierarchical tree-like files after compressing them into a zip
  * @param files Files to be downloaded. Array of file and folder items excluding root folder.
  * Folder items MUST be in front of its children items in the array.
  * Use async generator because generation of the array may be slow.
@@ -208,8 +220,13 @@ export async function* traverseFolder(path: string): AsyncGenerator<{
  */
 export const downloadTreelikeMultipleFiles = async (
   files: AsyncGenerator<{
-    name: string, url?: string, path: string, isFolder: boolean
-  }>, basePath: string, folder?: string,
+    name: string
+    url?: string
+    path: string
+    isFolder: boolean
+  }>,
+  basePath: string,
+  folder?: string
 ) => {
   const zip = new JSZip()
   const root = folder ? zip.folder(folder)! : zip
@@ -218,9 +235,13 @@ export const downloadTreelikeMultipleFiles = async (
   // Add selected file blobs to zip according to its path
   for await (const { name, url, path, isFolder } of files) {
     // Search parent dir in map
-    const i = map.slice().reverse().findIndex(({ path: parent }) => (
-      path.substring(0, parent.length) === parent && path.substring(parent.length + 1).indexOf('/') === -1
-    ))
+    const i = map
+      .slice()
+      .reverse()
+      .findIndex(
+        ({ path: parent }) =>
+          path.substring(0, parent.length) === parent && path.substring(parent.length + 1).indexOf('/') === -1
+      )
     if (i === -1) {
       throw new Error('File array does not satisfy requirement')
     }
@@ -230,7 +251,10 @@ export const downloadTreelikeMultipleFiles = async (
     if (isFolder) {
       map.push({ path, dir: dir.folder(name)! })
     } else {
-      dir.file(name, fetch(url!).then(r => r.blob()))
+      dir.file(
+        name,
+        fetch(url!).then(r => r.blob())
+      )
     }
   }
 
