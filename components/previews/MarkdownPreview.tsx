@@ -11,14 +11,14 @@ import 'katex/dist/katex.min.css'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import DownloadBtn from '../DownloadBtn'
-import { useStaleSWR } from '../../utils/tools'
+import { useStaleSWR } from '../../utils/fetchWithSWR'
 
 const MarkdownPreview: FunctionComponent<{ file: any; path: string; standalone?: boolean }> = ({
   file,
   path,
   standalone = true,
 }) => {
-  const { data, error } = useStaleSWR(file['@microsoft.graph.downloadUrl'])
+  const { data, error } = useStaleSWR({ url: file['@microsoft.graph.downloadUrl'] })
 
   // The parent folder of the markdown file, which is also the relative image folder
   const parentPath = path.substring(0, path.lastIndexOf('/'))

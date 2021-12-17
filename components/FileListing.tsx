@@ -12,13 +12,9 @@ import dynamic from 'next/dynamic'
 
 import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
-import {
-  getBaseUrl,
-  traverseFolder,
-  downloadMultipleFiles,
-  useProtectedSWRInfinite,
-  downloadTreelikeMultipleFiles,
-} from '../utils/tools'
+import { useProtectedSWRInfinite } from '../utils/fetchWithSWR'
+import { getBaseUrl } from '../utils/getBaseUrl'
+import { downloadMultipleFiles, downloadTreelikeMultipleFiles, traverseFolder } from '../utils/downloadMultipleFiles'
 
 import { VideoPreview } from './previews/VideoPreview'
 import { AudioPreview } from './previews/AudioPreview'
@@ -290,7 +286,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       } else if (files.length > 1) {
         setTotalGenerating(true)
         const toastId = toast.loading('Downloading selected files. Refresh to cancel, this may take some time...')
-        downloadMultipleFiles(toastId, files, folder)
+        downloadMultipleFiles({ toastId, files, folder })
           .then(() => {
             setTotalGenerating(false)
             toast.dismiss(toastId)
@@ -320,7 +316,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       setFolderGenerating({ ...folderGenerating, [id]: true })
       const toastId = toast.loading('Downloading folder. Refresh to cancel, this may take some time...')
 
-      downloadTreelikeMultipleFiles(toastId, files, path, name)
+      downloadTreelikeMultipleFiles({ toastId, files, basePath: path, folder: name })
         .then(() => {
           setFolderGenerating({ ...folderGenerating, [id]: false })
           toast.dismiss(toastId)

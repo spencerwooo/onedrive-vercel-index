@@ -6,7 +6,7 @@ import { useClipboard } from 'use-clipboard-copy'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import toast, { Toaster } from 'react-hot-toast'
 
-import { getBaseUrl } from '../../utils/tools'
+import { getBaseUrl } from "../../utils/getBaseUrl"
 
 export const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
   const { asPath } = useRouter()

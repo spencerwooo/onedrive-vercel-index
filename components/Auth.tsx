@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { FunctionComponent } from 'react'
 
-import { matchProtectedRoute } from '../utils/tools'
+import { matchProtectedRoute } from '../utils/protectedRouteHandler'
 import useLocalStorage from '../utils/useLocalStorage'
 
 const Auth: FunctionComponent<{ redirect: string }> = ({ redirect }) => {

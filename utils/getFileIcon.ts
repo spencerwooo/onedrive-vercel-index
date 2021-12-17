@@ -83,15 +83,15 @@ const extensions = {
  * @param key The index key
  * @returns Whether or not the key exists inside the object
  */
-export const hasKey = <O>(obj: O, key: PropertyKey): key is keyof O => {
+export function hasKey<O>(obj: O, key: PropertyKey): key is keyof O {
   return key in obj
 }
 
-export const getExtension = (fileName: string) => {
+export function getExtension(fileName: string): string {
   return fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
 }
 
-export const getFileIcon = (fileName: string) => {
+export function getFileIcon(fileName: string): [IconPrefix, IconName] {
   const extension = getExtension(fileName)
   return hasKey(extensions, extension) ? extensions[extension] : icons.file
 }

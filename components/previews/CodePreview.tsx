@@ -2,13 +2,13 @@ import { useEffect, FunctionComponent } from 'react'
 import Prism from 'prismjs'
 
 import { getExtension } from '../../utils/getFileIcon'
-import { useStaleSWR } from '../../utils/tools'
+import { useStaleSWR } from '../../utils/fetchWithSWR'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import DownloadBtn from '../DownloadBtn'
 
 const CodePreview: FunctionComponent<{ file: any }> = ({ file }) => {
-  const { data, error } = useStaleSWR(file['@microsoft.graph.downloadUrl'])
+  const { data, error } = useStaleSWR({ url: file['@microsoft.graph.downloadUrl'] })
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

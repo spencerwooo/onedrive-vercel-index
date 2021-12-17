@@ -4,7 +4,7 @@ import { posix as pathPosix } from 'path'
 
 import apiConfig from '../../config/api.json'
 import siteConfig from '../../config/site.json'
-import { compareHashedToken } from '../../utils/tools'
+import { compareHashedToken } from '../../utils/protectedRouteHandler'
 
 const basePath = pathPosix.resolve('/', apiConfig.base)
 const encodePath = (path: string) => {
@@ -77,7 +77,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const odProtectedToken = await axios.get(token.data['@microsoft.graph.downloadUrl'])
         // console.log(req.headers['od-protected-token'], odProtectedToken.data.trim())
 
-        if (!compareHashedToken(req.headers['od-protected-token'] as string, odProtectedToken.data)) {
+        if (
+          !compareHashedToken({
+            odTokenHeader: req.headers['od-protected-token'] as string,
+            dotPassword: odProtectedToken.data,
+          })
+        ) {
           res.status(401).json({ error: 'Password required for this folder.' })
           return
         }
@@ -127,7 +132,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
     if ('folder' in identityData) {
-      const { data: folderData } = await axios.get(`${requestUrl}${isRoot ? '': ':'}/children`, {
+      const { data: folderData } = await axios.get(`${requestUrl}${isRoot ? '' : ':'}/children`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         params: next
           ? {

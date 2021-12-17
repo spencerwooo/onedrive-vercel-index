@@ -4,7 +4,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import { useClipboard } from 'use-clipboard-copy'
 
-import { getBaseUrl } from '../utils/tools'
+import { getBaseUrl } from "../utils/getBaseUrl"
 
 const DownloadBtn: FunctionComponent<{ downloadUrl: string }> = ({ downloadUrl }) => {
   const { asPath } = useRouter()

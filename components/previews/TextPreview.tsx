@@ -3,10 +3,10 @@ import { FunctionComponent } from 'react'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import DownloadBtn from '../DownloadBtn'
-import { useStaleSWR } from '../../utils/tools'
+import { useStaleSWR } from '../../utils/fetchWithSWR'
 
 const TextPreview: FunctionComponent<{ file: any }> = ({ file }) => {
-  const { data, error } = useStaleSWR(file['@microsoft.graph.downloadUrl'])
+  const { data, error } = useStaleSWR({ url: file['@microsoft.graph.downloadUrl'] })
   if (error) {
     return (
       <div className="dark:bg-gray-900 p-3 bg-white rounded">
