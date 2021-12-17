@@ -137,7 +137,7 @@ const Navbar = () => {
 
                 <div className="flex items-center justify-end mt-8">
                   <button
-                    className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-600 inline-flex items-center justify-center px-4 py-2 mr-3 space-x-2 text-white bg-blue-500 rounded"
+                    className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-400 inline-flex items-center justify-center px-4 py-2 mr-3 space-x-2 text-white bg-blue-500 rounded"
                     onClick={() => setIsOpen(false)}
                   >
                     Cancel

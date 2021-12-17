@@ -25,30 +25,31 @@ const Auth: FunctionComponent<{ redirect: string }> = ({ redirect }) => {
         enter it below.
       </p>
 
-      <input
-        className="bg-blue-50 dark:bg-gray-600 dark:text-white focus:ring focus:ring-blue-300 dark:focus:ring-blue-700 focus:outline-none p-2 font-mono rounded"
-        autoFocus
-        type="text"
-        placeholder="************"
-        value={token}
-        onChange={e => {
-          setToken(e.target.value)
-        }}
-        onKeyPress={e => {
-          if (e.key === 'Enter' || e.key === 'NumpadEnter') {
+      <div className="flex items-center space-x-2">
+        <input
+          className="flex-1 border border-gray-600/10 dark:bg-gray-600 dark:text-white focus:ring focus:ring-blue-300 dark:focus:ring-blue-700 focus:outline-none p-2 font-mono rounded"
+          autoFocus
+          type="text"
+          placeholder="************"
+          value={token}
+          onChange={e => {
+            setToken(e.target.value)
+          }}
+          onKeyPress={e => {
+            if (e.key === 'Enter' || e.key === 'NumpadEnter') {
+              router.reload()
+            }
+          }}
+        />
+        <button
+          className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-400 px-4 py-2 text-white bg-blue-500 rounded"
+          onClick={() => {
             router.reload()
-          }
-        }}
-      />
-      <button
-        className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-600 inline-flex items-center justify-center px-4 py-2 space-x-2 text-white bg-blue-500 rounded"
-        onClick={() => {
-          router.reload()
-        }}
-      >
-        <span>Lemme in</span>
-        <FontAwesomeIcon icon="arrow-right" />
-      </button>
+          }}
+        >
+          <FontAwesomeIcon icon="arrow-right" />
+        </button>
+      </div>
     </div>
   )
 }
