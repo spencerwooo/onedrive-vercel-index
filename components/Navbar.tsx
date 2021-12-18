@@ -40,18 +40,18 @@ const Navbar = () => {
   }
 
   return (
-    <div className="text-left p-1 bg-white dark:bg-gray-900 sticky top-0 bg-opacity-80 border-b border-gray-900/10 backdrop-blur-md z-[100]">
-      <div className="flex items-center justify-between w-full max-w-5xl mx-auto">
+    <div className="text-left py-1 bg-white dark:bg-gray-900 sticky top-0 bg-opacity-80 border-b border-gray-900/10 backdrop-blur-md z-[100]">
+      <div className="flex items-center justify-between w-full max-w-5xl mx-auto px-2">
         <Toaster />
 
         <Link href="/">
-          <a className="dark:text-white hover:opacity-80 flex items-center p-2 space-x-2 text-xl font-bold">
-            <Image src={siteConfig.icon} alt="icon" width="32" height="32" />
-            <span className="sm:block hidden">{siteConfig.title}</span>
+          <a className="dark:text-white hover:opacity-80 flex items-center p-2 space-x-2">
+            <Image src={siteConfig.icon} alt="icon" width="28" height="28" />
+            <span className="sm:block hidden text-xl font-bold">{siteConfig.title}</span>
           </a>
         </Link>
 
-        <div className="flex items-center">
+        <div className="flex items-center text-gray-700">
           <a
             href={siteConfig.contact.github}
             target="_blank"

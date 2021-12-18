@@ -40,6 +40,7 @@ import {
 import { faGithub, faMarkdown, faTelegramPlane } from '@fortawesome/free-brands-svg-icons'
 
 import type { AppProps } from 'next/app'
+import NextNProgress from 'nextjs-progressbar'
 
 library.add(
   faFileImage,
@@ -78,6 +79,11 @@ library.add(
 )
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <>
+      <NextNProgress height={1} color="rgb(63,63,70,0.9)" options={{ showSpinner: false }} />
+      <Component {...pageProps} />
+    </>
+  )
 }
 export default MyApp
