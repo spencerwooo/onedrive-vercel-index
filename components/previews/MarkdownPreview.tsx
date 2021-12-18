@@ -67,14 +67,14 @@ const MarkdownPreview: FunctionComponent<{ file: any; path: string; standalone?:
 
   if (error) {
     return (
-      <div className={`${standalone ? 'shadow bg-white dark:bg-gray-900 rounded p-3' : ''}`}>
+      <div className={`${standalone ? 'bg-white dark:bg-gray-900 rounded p-3' : ''}`}>
         <FourOhFour errorMsg={error.message} />
       </div>
     )
   }
   if (!data) {
     return (
-      <div className={standalone ? 'shadow bg-white dark:bg-gray-900 rounded p-3' : ''}>
+      <div className={standalone ? 'bg-white dark:bg-gray-900 rounded p-3' : ''}>
         <Loading loadingText="Loading file content..." />
       </div>
     )

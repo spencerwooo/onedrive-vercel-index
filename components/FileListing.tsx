@@ -334,7 +334,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     return (
       <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded">
         <div className="dark:border-gray-700 grid items-center grid-cols-12 px-3 space-x-2 border-b border-gray-200">
-          <div className="md:col-span-6 col-span-12 font-bold">Name</div>
+          <div className="md:col-span-6 col-span-12 font-bold py-3">Name</div>
           <div className="md:block hidden col-span-3 font-bold">Last Modified</div>
           <div className="md:block hidden font-bold">Size</div>
           <div className="md:block hidden font-bold">Actions</div>

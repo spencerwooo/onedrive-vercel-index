@@ -15,16 +15,14 @@ const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
   return (
     <>
       <div className="dark:bg-gray-900 p-3 bg-white rounded">
-        <div className="relative" style={{ paddingTop: '56.25%' }}>
-          <ReactPlayer
-            className="absolute top-0 left-0 w-full h-full"
-            url={file['@microsoft.graph.downloadUrl']}
-            controls
-            width="100%"
-            height="100%"
-            config={{ file: { forceVideo: true } }}
-          />
-        </div>
+        <ReactPlayer
+          className="aspect-video"
+          url={file['@microsoft.graph.downloadUrl']}
+          controls
+          width="100%"
+          height="100%"
+          config={{ file: { forceVideo: true } }}
+        />
       </div>
 
       <div className="flex flex-wrap justify-center mt-4 space-x-2">

@@ -18,7 +18,7 @@ const AudioPreview: FunctionComponent<{ file: any }> = ({ file }) => {
     <>
       <div className="dark:bg-gray-900 dark:text-white w-full p-3 bg-white rounded">
         <div className="md:flex-row md:space-x-4 flex flex-col space-y-4">
-          <div className="dark:bg-gray-700 h-72 md:w-40 md:h-36 flex items-center justify-center w-full transition-all duration-75 bg-gray-100 rounded">
+          <div className="dark:bg-gray-700 aspect-square flex items-center justify-center w-full md:w-40 transition-all duration-75 bg-gray-100 rounded">
             {playerStatus === PlayerState.Loading ? (
               <div>
                 <svg
