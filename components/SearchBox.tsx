@@ -15,7 +15,7 @@ const SearchBox: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => 
 
   const handleSearch = () => {
     if (q) {
-      console.log(search(path, q))
+      search(path, q).then(res => console.log(res))
     }
   }
 
@@ -81,11 +81,12 @@ async function searchShipped(path: string, q: string) {
   const res: [number, { name: string; path: string }][] = []
   for await (const { meta: c, path: p } of traverseFolder(path)) {
     const name: string = c.name
-    if (name.includes(q)) {
-      res.push([getStrSimilarity(name, q), { name, path: p }])
+    const sim = getStrSimilarity(name, q)
+    if (sim > 0) {
+      res.push([sim, { name, path: p }])
     }
   }
-  res.sort((a, b) => a[0] - b[0])
+  res.sort((a, b) => b[0] - a[0])
   return res.slice(0, siteConfig.maxSearchItems).map(r => r[1])
 }
 
