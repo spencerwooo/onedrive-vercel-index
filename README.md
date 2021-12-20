@@ -43,6 +43,8 @@ The authentication tokens and variables are the same as what you configured in t
 
 ### Password protected folders
 
+https://user-images.githubusercontent.com/32114380/146787150-fb30c5fe-7fdf-4de6-bd43-1bd0a98547b0.mp4
+
 You can now specify a `.password` under a folder, declare the directory's absolute path, to password-protect the route and all files inside.
 
 - Declare protected route inside `config/site.json` under `protectedRoutes`, for instance:
@@ -65,11 +67,13 @@ However, there are some caveats:
 
 ### Multi-file and folder download
 
+https://user-images.githubusercontent.com/32114380/146787219-0d546eb6-71dc-4c3c-8871-86dde1d98ffb.mp4
+
 We use JSZip to download all files in-browser and compress them into file blobs, which are then downloaded to your device as a `zip` file. This is extremely useful if a series of small files are to be downloaded, but it could be time consuming if used for bulk-downloading a few large files.
 
 Folders are traversed and recursively fetched into the compressed zip. Multiple files or folders can be selected and downloaded side-by-side.
 
-*PR #177 and #169.*
+*PR [#177](https://github.com/spencerwooo/onedrive-vercel-index/pull/177) and [#169](https://github.com/spencerwooo/onedrive-vercel-index/pull/169).*
 
 ### OneDrive as your website's image storage
 
