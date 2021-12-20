@@ -6,6 +6,8 @@ import siteConfig from '../config/site.json'
 import apiConfig from '../config/api.json'
 import { fetcher } from '../utils/fetchWithSWR'
 import { getStoredToken } from '../utils/protectedRouteHandler'
+import { traverseFolder } from './MultiFileDownloader'
+import getStrSimilarity from '../utils/getStrSimilarity'
 
 const SearchBox: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => {
   const path = queryToPath(query)
@@ -76,7 +78,15 @@ const searchProvided = async (path: string, q: string) => {
 
 // Search shipped by the app which supports Chinese
 const searchShipped = async (path: string, q: string) => {
-  // TODO
+  const res: [number, { name: string; path: string }][] = []
+  for await (const { meta: c, path: p } of traverseFolder(path)) {
+    const name: string = c.name
+    if (name.includes(q)) {
+      res.push([getStrSimilarity(name, q), { name, path: p }])
+    }
+  }
+  res.sort((a, b) => a[0] - b[0])
+  return res.slice(0, siteConfig.maxSearchItems).map(r => r[1])
 }
 
 // Helper to extract path from webUrl
