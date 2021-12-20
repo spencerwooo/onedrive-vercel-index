@@ -58,7 +58,7 @@ const humanFileSize = (size: number) => {
  * @param query Url query property
  * @returns Path string
  */
-const queryToPath = (query?: ParsedUrlQuery) => {
+export const queryToPath = (query?: ParsedUrlQuery) => {
   if (query) {
     const { path } = query
     if (!path) return '/'

@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'
 import FileListing from '../components/FileListing'
 import Footer from '../components/Footer'
 import Breadcrumb from '../components/Breadcrumb'
+import SearchBox from '../components/SearchBox'
 
 export default function Home() {
   return (
@@ -16,7 +17,10 @@ export default function Home() {
       <main className="bg-gray-50 dark:bg-gray-800 flex flex-col flex-1 w-full">
         <Navbar />
         <div className="w-full max-w-5xl p-4 mx-auto">
-          <Breadcrumb />
+          <div className='flex flex-wrap justify-between items-center'>
+            <Breadcrumb />
+            <SearchBox />
+          </div>
           <FileListing />
         </div>
       </main>
