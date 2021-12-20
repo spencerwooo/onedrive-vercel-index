@@ -46,6 +46,7 @@ const Auth: FunctionComponent<{ redirect: string }> = ({ redirect }) => {
         <button
           className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-400 px-4 py-2 text-white bg-blue-500 rounded"
           onClick={() => {
+            setPersistedToken(token)
             router.reload()
           }}
         >
