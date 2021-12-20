@@ -1,20 +1,26 @@
 {
   "icon": "/icons/128.png",
-  "title": "spencer's onedrive index",
+  "title": "Spencer's OneDrive",
   "maxItems": 100,
-  "googleFontSans": "Overpass",
-  "googleFontMono": "Overpass Mono",
+  "googleFontSans": "Inter",
+  "googleFontMono": "Fira Mono",
   "googleFontLinks": [
-    "https://fonts.googleapis.com/css2?family=Overpass+Mono&family=Overpass:wght@400;700&display=swap"
+    "https://fonts.googleapis.com/css2?family=Fira+Mono&family=Inter:wght@400;700&display=swap"
   ],
   "footer": "Powered by <a href=\"https://github.com/spencerwooo/onedrive-vercel-index\" target=\"_blank\" rel=\"noopener noreferrer\">onedrive-vercel-index</a>. Made with ❤ by SpencerWoo.",
   "protectedRoutes": [
     "/🌞 Private folder/u-need-a-password",
     "/🥟 Some test files/Protected route"
   ],
-  "contact": {
-    "email": "mailto:spencer.wushangbo@gmail.com",
-    "telegram": "https://t.me/realSpencerWoo",
-    "github": "https://github.com/spencerwooo/onedrive-vercel-index"
-  }
+  "email": "mailto:spencer.wushangbo@gmail.com",
+  "links": [
+    {
+      "name": "GitHub",
+      "link": "https://github.com/spencerwooo/onedrive-vercel-index"
+    },
+    {
+      "name": "Telegram",
+      "link": "https://t.me/realSpencerWoo"
+    }
+  ]
 }
