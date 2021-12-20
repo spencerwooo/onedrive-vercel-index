@@ -86,7 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // If method is GET, then the API is a normal request to the OneDrive API for files or folders
-  const { path = '/', raw = false, next = '' } = req.query
+  const { path = '/', raw = false, next = '', q = '' } = req.query
 
   // Sometimes the path parameter is defaulted to '[...path]' which we need to handle
   if (path === '[...path]') {
@@ -173,6 +173,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.redirect(data['@microsoft.graph.downloadUrl'])
       return
     }
+  }
+
+  // Go for file searching provided by OneDrive API
+  if (q) {
+    let qs = typeof q === 'string' ? q : q.join(' ')
+    // q can nots contain single quote, even urlencoded, but double quote is ok
+    qs.replaceAll('\'', '')
+
+    const { data } = await axios.get(`${requestUrl}${isRoot ? '' : ':'}/search(q='${encodeURIComponent(qs)}')`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      params: {
+        select: 'name,webUrl',
+      },
+    })
+    res.status(200).json(data)
   }
 
   // Querying current path identity (file or folder) and follow up query childrens in folder
