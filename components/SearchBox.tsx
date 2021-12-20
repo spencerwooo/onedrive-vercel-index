@@ -70,14 +70,14 @@ async function search(path: string, q: string): Promise<{ name: string; path: st
 }
 
 // OneDrive API provided search
-const searchProvided = async (path: string, q: string) => {
+async function searchProvided(path: string, q: string) {
   const hashedToken = getStoredToken(path)
   const data = await fetcher(`/api?path=${path}&q=${q}`, hashedToken ?? undefined)
   return data.value.map((c: any) => ({ name: c.name, path: getPathFromWebUrl(c.webUrl) }))
 }
 
 // Search shipped by the app which supports Chinese
-const searchShipped = async (path: string, q: string) => {
+async function searchShipped(path: string, q: string) {
   const res: [number, { name: string; path: string }][] = []
   for await (const { meta: c, path: p } of traverseFolder(path)) {
     const name: string = c.name
@@ -91,7 +91,7 @@ const searchShipped = async (path: string, q: string) => {
 
 // Helper to extract path from webUrl
 // as OneDrive API does not provide an easy way to convert ID to path
-const getPathFromWebUrl = (webUrl: string) => {
+function getPathFromWebUrl(webUrl: string): string {
   const url = new URL(webUrl)
   const ps = url.pathname.split('/').filter(p => p)
 
