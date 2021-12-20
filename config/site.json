@@ -23,5 +23,6 @@
       "name": "Telegram",
       "link": "https://t.me/realSpencerWoo"
     }
-  ]
+  ],
+  "searchPolicy": "ascii-provided"
 }

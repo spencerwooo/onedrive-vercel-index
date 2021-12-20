@@ -3,6 +3,7 @@ import { ParsedUrlQuery } from 'querystring'
 
 import { queryToPath } from './FileListing'
 import siteConfig from '../config/site.json'
+import apiConfig from '../config/api.json'
 import { fetcher } from '../utils/fetchWithSWR'
 import { getStoredToken } from '../utils/protectedRouteHandler'
 
@@ -12,10 +13,7 @@ const SearchBox: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => 
 
   const handleSearch = () => {
     if (q) {
-      const hashedToken = getStoredToken(path)
-      fetcher(`/api?path=${path}&q=${q}`, hashedToken ?? undefined).then(data => {
-        console.log(data)
-      })
+      console.log(search(path, q))
     }
   }
 
@@ -45,6 +43,62 @@ const SearchBox: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => 
   )
 }
 export default SearchBox
+
+/**
+ * Search according to searchPolicy in site config
+ * @param path Root path to search its descendants
+ * @param q Query string. Should be not empty.
+ * @returns Results ordered by relevance
+ */
+async function search(path: string, q: string): Promise<{ name: string; path: string }[]> {
+  switch (siteConfig.searchPolicy) {
+    case 'provided':
+      return await searchProvided(path, q)
+    case 'shipped':
+      return await searchShipped(path, q)
+    case 'ascii-provided':
+    default:
+      // If all ASCII, use provided search; else use shipped search
+      if (q.match(/^[\x00-\x7f]+$/)) {
+        return await searchProvided(path, q)
+      } else {
+        return await searchShipped(path, q)
+      }
+  }
+}
+
+// OneDrive API provided search
+const searchProvided = async (path: string, q: string) => {
+  const hashedToken = getStoredToken(path)
+  const data = await fetcher(`/api?path=${path}&q=${q}`, hashedToken ?? undefined)
+  return data.value.map((c: any) => ({ name: c.name, path: getPathFromWebUrl(c.webUrl) }))
+}
+
+// Search shipped by the app which supports Chinese
+const searchShipped = async (path: string, q: string) => {
+  // TODO
+}
+
+// Helper to extract path from webUrl
+// as OneDrive API does not provide an easy way to convert ID to path
+const getPathFromWebUrl = (webUrl: string) => {
+  const url = new URL(webUrl)
+  const ps = url.pathname.split('/').filter(p => p)
+
+  // Remove meaningless segments to get full path
+  ps.splice(0, 3)
+
+  // Remove base segments set in api config
+  const basePs = apiConfig.base.split('/').filter(p => p)
+  for (let i = 0; i < basePs.length; i++) {
+    if (basePs[i] != ps[i]) {
+      throw new Error('Path does not match base')
+    }
+  }
+  ps.splice(0, basePs.length)
+
+  return ps.join('/')
+}
 
 // Material design search icon licensed under Apache 2.0,
 // wrapped into a React component without essential code changes.
