@@ -76,7 +76,7 @@ const Navbar = () => {
               className="hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700 flex items-center p-2 space-x-2 rounded"
               onClick={() => setIsOpen(true)}
             >
-              <span>Logout</span>
+              <span className="text-sm">Logout</span>
               <FontAwesomeIcon icon="sign-out-alt" />
             </button>
           )}
@@ -139,7 +139,7 @@ const Navbar = () => {
                     Cancel
                   </button>
                   <button
-                    className="focus:outline-none focus:ring focus:ring-red-300 hover:bg-red-600 inline-flex items-center justify-center px-4 py-2 space-x-2 text-white bg-red-500 rounded"
+                    className="focus:outline-none focus:ring focus:ring-red-300 hover:bg-red-400 inline-flex items-center justify-center px-4 py-2 space-x-2 text-white bg-red-500 rounded"
                     onClick={() => clearTokens()}
                   >
                     <FontAwesomeIcon icon={['far', 'trash-alt']} />
