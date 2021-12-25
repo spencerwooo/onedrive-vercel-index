@@ -37,10 +37,15 @@ import {
   faCloud,
   faChevronCircleDown,
 } from '@fortawesome/free-solid-svg-icons'
-import { faGithub, faMarkdown, faTelegramPlane } from '@fortawesome/free-brands-svg-icons'
+import * as Icons from '@fortawesome/free-brands-svg-icons'
 
 import type { AppProps } from 'next/app'
 import NextNProgress from 'nextjs-progressbar'
+
+// import all brand icons with tree-shaking so all icons can be referenced in the app
+const iconList = Object.keys(Icons)
+  .filter(k => k !== 'fab' && k !== 'prefix')
+  .map(icon => Icons[icon])
 
 library.add(
   faFileImage,
@@ -55,8 +60,6 @@ library.add(
   faFileAlt,
   faFile,
   faFolder,
-  faGithub,
-  faMarkdown,
   faMusic,
   faArrowLeft,
   faArrowRight,
@@ -74,8 +77,8 @@ library.add(
   faSignOutAlt,
   faEnvelope,
   faCloud,
-  faTelegramPlane,
-  faChevronCircleDown
+  faChevronCircleDown,
+  ...iconList,
 )
 
 function MyApp({ Component, pageProps }: AppProps) {

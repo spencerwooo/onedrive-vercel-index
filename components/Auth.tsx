@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useState } from 'react'
 
 import { matchProtectedRoute } from '../utils/protectedRouteHandler'
 import useLocalStorage from '../utils/useLocalStorage'
@@ -11,7 +11,8 @@ const Auth: FunctionComponent<{ redirect: string }> = ({ redirect }) => {
   const authTokenPath = matchProtectedRoute(redirect)
 
   const router = useRouter()
-  const [token, setToken] = useLocalStorage(authTokenPath, '')
+  const [token, setToken] = useState('')
+  const [persistedToken, setPersistedToken] = useLocalStorage(authTokenPath, '')
 
   return (
     <div className="md:my-10 flex flex-col max-w-sm mx-auto space-y-4">
@@ -37,6 +38,7 @@ const Auth: FunctionComponent<{ redirect: string }> = ({ redirect }) => {
           }}
           onKeyPress={e => {
             if (e.key === 'Enter' || e.key === 'NumpadEnter') {
+              setPersistedToken(token)
               router.reload()
             }
           }}
@@ -44,6 +46,7 @@ const Auth: FunctionComponent<{ redirect: string }> = ({ redirect }) => {
         <button
           className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-400 px-4 py-2 text-white bg-blue-500 rounded"
           onClick={() => {
+            setPersistedToken(token)
             router.reload()
           }}
         >

@@ -67,7 +67,7 @@ const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
           <span>VLC</span>
         </a>
         <a
-          className="focus:outline-none focus:ring focus:ring-yellow-100 hover:bg-yellow-400 flex items-center justify-center px-4 py-2 mb-2 space-x-2 text-white bg-yellow-400 rounded"
+          className="focus:outline-none focus:ring focus:ring-yellow-100 hover:bg-yellow-300 flex items-center justify-center px-4 py-2 mb-2 space-x-2 text-white bg-yellow-400 rounded"
           href={`potplayer://${file['@microsoft.graph.downloadUrl']}`}
           target="_blank"
           rel="noopener noreferrer"
