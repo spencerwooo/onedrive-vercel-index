@@ -31,10 +31,10 @@ import OfficePreview from './previews/OfficePreview'
 import AudioPreview from './previews/AudioPreview'
 import VideoPreview from './previews/VideoPreview'
 import DownloadBtn from './DownloadBtn'
+import PDFPreview from './previews/PDFEmbedPreview'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
-const PDFPreview = dynamic(() => import('./previews/PDFPreview'), { ssr: false })
 const EPUBPreview = dynamic(() => import('./previews/EPUBPreview'), { ssr: false })
 
 /**
