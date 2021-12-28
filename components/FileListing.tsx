@@ -31,7 +31,7 @@ import OfficePreview from './previews/OfficePreview'
 import AudioPreview from './previews/AudioPreview'
 import VideoPreview from './previews/VideoPreview'
 import DownloadBtn from './DownloadBtn'
-import PDFPreview from './previews/PDFEmbedPreview'
+import PDFPreview from './previews/PDFPreview'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
