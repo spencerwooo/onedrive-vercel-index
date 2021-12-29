@@ -1,9 +1,7 @@
 import { FunctionComponent } from 'react'
 import ReactPlayer from 'react-player'
-import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useClipboard } from 'use-clipboard-copy'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import toast, { Toaster } from 'react-hot-toast'
 
 import { getBaseUrl } from '../../utils/getBaseUrl'

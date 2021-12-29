@@ -32,16 +32,16 @@ const CodePreview: FunctionComponent<{ file: any }> = ({ file }) => {
   }
 
   return (
-    <>
+    <div>
       <div className="markdown-body p-3 bg-gray-900 rounded">
         <pre className={`language-${getExtension(file.name)}`}>
           <code>{data}</code>
         </pre>
       </div>
-      <div className="mt-4">
+      <div className="border-t-gray-200 dark:border-t-gray-700 border-t p-2 sticky bottom-0 left-0 right-0 z-10 bg-white bg-opacity-80 backdrop-blur-md dark:bg-gray-900">
         <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
       </div>
-    </>
+    </div>
   )
 }
 
