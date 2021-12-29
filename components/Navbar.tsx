@@ -47,7 +47,7 @@ const Navbar = () => {
       <div className="flex items-center justify-between w-full max-w-5xl mx-auto pr-4 py-1">
         <Link href="/">
           <a className="dark:text-white hover:opacity-80 flex items-center p-2 space-x-2">
-            <Image src={siteConfig.icon} alt="icon" width="28" height="28" />
+            <Image src={siteConfig.icon} alt="icon" width="28" height="28" priority />
             <span className="sm:block hidden text-lg font-bold">{siteConfig.title}</span>
           </a>
         </Link>

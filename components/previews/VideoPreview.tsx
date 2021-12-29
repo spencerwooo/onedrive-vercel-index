@@ -39,7 +39,7 @@ const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
           onClickCallback={() =>
             window.open(`/api/proxy?url=${encodeURIComponent(file['@microsoft.graph.downloadUrl'])}`)
           }
-          btnColor="pink"
+          btnColor="teal"
           btnText="Proxy download"
           btnIcon="download"
         />
