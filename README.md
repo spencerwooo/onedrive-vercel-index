@@ -96,11 +96,31 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
 > No time to write deployment documentation! Here are some quick hints, play around with caution! (I promise detailed docs are on the way.)
 
 - Fork the project to your own account, as you will be maintaining your custom version of this project with your own configurations.
-- Change configuration file [`config/api.json`](config/api.json) and [`config/site.json`](config/site.json) according to your configs.
+- Change configuration file [`config/api.json`](config/api.json) and [`config/site.json`](config/site.json) according to your configs (see [Configurations](#configurations) ↓).
 - Define environment variables inside Vercel: `REFRESH_TOKEN`, `ACCESS_TOKEN`, `CLIENT_SECRET`.
 - Deploy inside Vercel, profit.
 
 The authentication tokens and variables are the same as what you configured in the [`onedrive-cf-index`](https://github.com/spencerwooo/onedrive-cf-index) project. Detailed documentations can also be found there (for now). This project is at its early stages, for discussions *please, please, please* post to the [discussion forum](https://github.com/spencerwooo/onedrive-vercel-index/discussions).
+
+## Configurations
+
+> These configurations are subject to change before `v1.0` milestone.
+
+Two configuration files are used for customisations - `config/api.json` and `config/site.json`.
+
+- `config/api.json` - is used to define your API endpoints and tokens, and the path for your shared OneDrive folder.
+- `config/site.json` - is used for customising the website, such as the title, used Google fonts, site icons, contact info, etc.
+
+A few things to keep in mind for `config/site.json`:
+
+- `icon` - is the website icon to the left of the title inside the navigation bar. It should be placed under `/public/` and referenced here by its relative path.
+- `maxItems` - represents the maximum number of items that one directory lists, pagination supported. This is limited up to 200 items by the upstream OneDrive API.
+- `email` - is optional, and can be removed should you wish. However, I suggest adding some form of contact for your website.
+- `links` - is an array of `{ "name": "xxx", "link": "xxx" }`. In the latest update, all brand icons inside font awesome is supported and the icon to render is based on the `name` you provide. See the demo screen recording below. _(The additional links in the demo video are generated automatically by GitHub Copilot and may not be my personal account.)_
+
+https://user-images.githubusercontent.com/32114380/147660565-1fc66ea4-35cd-47f8-8070-2e641aed5184.mp4
+
+The rest of the configuration fields are self-explanatory.
 
 ## These may interest you ...
 
