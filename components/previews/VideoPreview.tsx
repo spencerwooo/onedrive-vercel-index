@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react'
 import ReactPlayer from 'react-player'
 import { useRouter } from 'next/router'
 import { useClipboard } from 'use-clipboard-copy'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 
 import { getBaseUrl } from '../../utils/getBaseUrl'
 import { DownloadButton } from '../DownloadBtnGtoup'
@@ -25,8 +25,6 @@ const VideoPreview: FunctionComponent<{ file: any }> = ({ file }) => {
       </div>
 
       <div className="flex flex-wrap justify-center mt-4 gap-2">
-        <Toaster />
-
         <DownloadButton
           onClickCallback={() => window.open(file['@microsoft.graph.downloadUrl'])}
           btnColor="blue"

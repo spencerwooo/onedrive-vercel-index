@@ -1,7 +1,7 @@
 import { MouseEventHandler } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import { useClipboard } from 'use-clipboard-copy'
 
 import Image from 'next/image'
@@ -62,8 +62,6 @@ const DownloadButtonGroup: React.FC<{ downloadUrl: string }> = ({ downloadUrl })
 
   return (
     <div className="flex flex-wrap justify-center gap-2">
-      <Toaster />
-
       <DownloadButton
         onClickCallback={() => window.open(downloadUrl)}
         btnColor="blue"
