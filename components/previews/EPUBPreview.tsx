@@ -3,7 +3,7 @@ import { ReactReader } from 'react-reader'
 import type { Rendition } from 'epubjs'
 
 import Loading from '../Loading'
-import DownloadBtn from '../DownloadBtn'
+import DownloadButtonGroup from '../DownloadBtnGtoup'
 
 const EPUBPreview: FunctionComponent<{file: any}> = ({ file }) => {
   const [epubContainerWidth, setEpubContainerWidth] = useState(400)
@@ -32,7 +32,7 @@ const EPUBPreview: FunctionComponent<{file: any}> = ({ file }) => {
   }
 
   return (
-    <>
+    <div>
       <div
         className="dark:bg-gray-900 md:p-3 no-scrollbar flex flex-col w-full overflow-scroll bg-white rounded"
         style={{ maxHeight: '90vh' }}
@@ -51,10 +51,10 @@ const EPUBPreview: FunctionComponent<{file: any}> = ({ file }) => {
           </div>
         </div>
       </div>
-      <div className="mt-4">
-        <DownloadBtn downloadUrl={file['@microsoft.graph.downloadUrl']} />
+      <div className="border-t-gray-200 dark:border-t-gray-700 border-t p-2 sticky bottom-0 left-0 right-0 z-10 bg-white bg-opacity-80 backdrop-blur-md dark:bg-gray-900">
+        <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
       </div>
-    </>
+    </div>
   )
 }
 

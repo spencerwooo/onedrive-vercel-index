@@ -47,7 +47,7 @@ const Navbar = () => {
       <div className="flex items-center justify-between w-full max-w-5xl mx-auto pr-4 py-1">
         <Link href="/">
           <a className="dark:text-white hover:opacity-80 flex items-center p-2 space-x-2">
-            <Image src={siteConfig.icon} alt="icon" width="28" height="28" />
+            <Image src={siteConfig.icon} alt="icon" width="28" height="28" priority />
             <span className="sm:block hidden text-lg font-bold">{siteConfig.title}</span>
           </a>
         </Link>
@@ -62,21 +62,23 @@ const Navbar = () => {
               className="flex items-center space-x-2 dark:text-white hover:opacity-80"
             >
               <FontAwesomeIcon icon={['fab', l.name.toLowerCase() as IconName]} />
-              <span className="text-sm hidden md:inline-block">{l.name}</span>
+              <span className="text-sm font-medium hidden md:inline-block">{l.name}</span>
             </a>
           ))}
 
-          <a href={siteConfig.email} className="flex items-center space-x-2 dark:text-white hover:opacity-80">
-            <FontAwesomeIcon icon={['far', 'envelope']} />
-            <span className="text-sm hidden md:inline-block">Email</span>
-          </a>
+          {siteConfig.email && (
+            <a href={siteConfig.email} className="flex items-center space-x-2 dark:text-white hover:opacity-80">
+              <FontAwesomeIcon icon={['far', 'envelope']} />
+              <span className="text-sm font-medium hidden md:inline-block">Email</span>
+            </a>
+          )}
 
           {tokenPresent && (
             <button
               className="hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700 flex items-center p-2 space-x-2 rounded"
               onClick={() => setIsOpen(true)}
             >
-              <span className="text-sm">Logout</span>
+              <span className="text-sm font-medium">Logout</span>
               <FontAwesomeIcon icon="sign-out-alt" />
             </button>
           )}
