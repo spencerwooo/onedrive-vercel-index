@@ -2,7 +2,7 @@ import { FunctionComponent, useState } from 'react'
 import ReactPlayer from 'react-player'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import DownloadBtn from '../DownloadBtn'
+import DownloadButtonGroup from '../DownloadBtnGtoup'
 
 enum PlayerState {
   Loading,
@@ -74,7 +74,7 @@ const AudioPreview: FunctionComponent<{ file: any }> = ({ file }) => {
         </div>
       </div>
       <div className="mt-4">
-        <DownloadBtn downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
       </div>
     </>
   )

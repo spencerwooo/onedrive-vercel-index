@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react'
 
-import DownloadBtn from '../DownloadBtn'
+import DownloadButtonGroup from '../DownloadBtnGtoup'
 
 const PDFEmbedPreview: FunctionComponent<{ file: any }> = ({ file }) => {
   // const url = `/api/proxy?url=${encodeURIComponent(file['@microsoft.graph.downloadUrl'])}&inline=true`
@@ -14,7 +14,7 @@ const PDFEmbedPreview: FunctionComponent<{ file: any }> = ({ file }) => {
         <iframe src={url} frameBorder="0" width="100%" height="100%"></iframe>
       </div>
       <div className="mt-4">
-        <DownloadBtn downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
       </div>
     </>
   )

@@ -5,7 +5,7 @@ import { getExtension } from '../../utils/getFileIcon'
 import { useStaleSWR } from '../../utils/fetchWithSWR'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
-import DownloadBtn from '../DownloadBtn'
+import DownloadButtonGroup from '../DownloadBtnGtoup'
 
 const CodePreview: FunctionComponent<{ file: any }> = ({ file }) => {
   const { data, error } = useStaleSWR({ url: file['@microsoft.graph.downloadUrl'] })
@@ -39,7 +39,7 @@ const CodePreview: FunctionComponent<{ file: any }> = ({ file }) => {
         </pre>
       </div>
       <div className="mt-4">
-        <DownloadBtn downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
       </div>
     </>
   )

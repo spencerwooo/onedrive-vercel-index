@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react'
 
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
-import DownloadBtn from '../DownloadBtn'
+import DownloadButtonGroup from '../DownloadBtnGtoup'
 import { useStaleSWR } from '../../utils/fetchWithSWR'
 
 const TextPreview: FunctionComponent<{ file: any }> = ({ file }) => {
@@ -28,7 +28,7 @@ const TextPreview: FunctionComponent<{ file: any }> = ({ file }) => {
         <pre className="md:p-3 p-0 overflow-scroll">{data}</pre>
       </div>
       <div className="mt-4">
-        <DownloadBtn downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
       </div>
     </>
   )

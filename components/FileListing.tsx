@@ -30,7 +30,7 @@ import CodePreview from './previews/CodePreview'
 import OfficePreview from './previews/OfficePreview'
 import AudioPreview from './previews/AudioPreview'
 import VideoPreview from './previews/VideoPreview'
-import DownloadBtn from './DownloadBtn'
+import DownloadButtonGroup from './DownloadBtnGtoup'
 import PDFPreview from './previews/PDFPreview'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
@@ -592,7 +592,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           />
         </div>
         <div className="mt-4">
-          <DownloadBtn downloadUrl={downloadUrl} />
+          <DownloadButtonGroup downloadUrl={downloadUrl} />
         </div>
       </>
     )

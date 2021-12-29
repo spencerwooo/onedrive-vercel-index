@@ -10,7 +10,7 @@ import 'katex/dist/katex.min.css'
 
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
-import DownloadBtn from '../DownloadBtn'
+import DownloadButtonGroup from '../DownloadBtnGtoup'
 import { useStaleSWR } from '../../utils/fetchWithSWR'
 
 const MarkdownPreview: FunctionComponent<{ file: any; path: string; standalone?: boolean }> = ({
@@ -100,7 +100,7 @@ const MarkdownPreview: FunctionComponent<{ file: any; path: string; standalone?:
       </div>
       {standalone && (
         <div className="mt-4">
-          <DownloadBtn downloadUrl={file['@microsoft.graph.downloadUrl']} />
+          <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
         </div>
       )}
     </>
