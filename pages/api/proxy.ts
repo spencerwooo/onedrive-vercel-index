@@ -12,15 +12,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // Check if requested file is PDF based on content-type
   if (headers['content-type'] === 'application/pdf' && inline) {
-    console.log(headers['content-disposition'])
-
     // Get filename from content-disposition header
     const filename = headers['content-disposition'].split('filename*=')[1]
     // Remove original content-disposition header
     delete headers['content-disposition']
     // Add new inline content-disposition header along with filename
     headers['content-disposition'] = `inline; filename*=UTF-8''${filename}`
-    console.log(headers['content-disposition'])
   }
 
   // Send data stream as response
