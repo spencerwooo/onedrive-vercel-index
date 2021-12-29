@@ -8,8 +8,6 @@
   <a href="https://github.com/spencerwooo/onedrive-vercel-index/discussions"><img src="https://img.shields.io/github/discussions/spencerwooo/onedrive-vercel-index?color=CF2B5B&labelColor=black&logo=github" alt="GitHub Discussions" /></a>
 </div>
 
----
-
 ## Discussion
 
 Please go to our [discussion forum](https://github.com/spencerwooo/onedrive-vercel-index/discussions) for general questions and FAQs, **issues are for bug reports and bug reports only.** Feature requests may or may not be ignored, as [I (@spencerwooo)](https://spencerwoo.com) am the only one maintaining the project, so **I only prioritise features that I use.**
@@ -89,7 +87,7 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
 
 - Direct raw-file serving, proxied file serving ...
 - Permalink copy, proxied download link copy ...
-- Full dark mode support, style and website customisations...
+- Full dark mode support, style and website customisations ...
 
 🍌 More importantly, it's pretty (●'◡'●)
 

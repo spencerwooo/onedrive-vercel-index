@@ -35,18 +35,21 @@ export const DownloadButton = ({
   btnText,
   btnIcon,
   btnImage,
+  btnTitle,
 }: {
   onClickCallback: MouseEventHandler<HTMLButtonElement>
   btnColor?: string
   btnText: string
   btnIcon?: IconProp
   btnImage?: string
+  btnTitle?: string
 }) => {
   return (
     <button
       className={`flex items-center space-x-2 py-2 px-4 text-sm font-medium text-gray-900 bg-white rounded-lg border hover:bg-gray-100/10 focus:z-10 focus:ring-2 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-900 ${btnStyleMap(
         btnColor
       )}`}
+      title={btnTitle}
       onClick={onClickCallback}
     >
       {btnIcon && <FontAwesomeIcon icon={btnIcon} />}
@@ -67,12 +70,14 @@ const DownloadButtonGroup: React.FC<{ downloadUrl: string }> = ({ downloadUrl })
         btnColor="blue"
         btnText="Download"
         btnIcon="file-download"
+        btnTitle="Download the file directly through OneDrive"
       />
       <DownloadButton
         onClickCallback={() => window.open(`/api/proxy?url=${encodeURIComponent(downloadUrl)}`)}
         btnColor="teal"
         btnText="Proxy download"
         btnIcon="download"
+        btnTitle="Download the file with the stream proxied through Vercel Serverless"
       />
       <DownloadButton
         onClickCallback={() => {
@@ -82,6 +87,7 @@ const DownloadButtonGroup: React.FC<{ downloadUrl: string }> = ({ downloadUrl })
         btnColor="yellow"
         btnText="Copy direct link"
         btnIcon="copy"
+        btnTitle="Copy the permalink to the file to the clipboard"
       />
     </div>
   )
