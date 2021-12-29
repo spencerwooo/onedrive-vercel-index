@@ -85,6 +85,29 @@ Yes, it can be used as an image (or any kind of file) online storage, where the 
 
 ![nyan cat](https://drive.spencerwoo.com/api?path=/%F0%9F%A5%9F%20Some%20test%20files/nyancat.gif&raw=true)
 
+### Proxied download
+
+In order to speed up (I doubt it would?) download speed when files are directly served on OneDrive servers, we can leverage a proxied download which relays the file download stream through Vercel Serverless first, then back to our own device.
+
+You can download a file via this method by either clicking on the `Proxy download` button beside the normal `Download` button in file preview pages ...
+
+
+... or craft the API request yourself:
+
+```http
+GET /api/proxy?url=<URL_ENCODED_DIRECT_FILE_LINK>
+```
+
+Only thing to keep in mind is that the parameter `url` should be a direct OneDrive file link that is URL encoded. An example is shown below:
+
+```
+https://drive.spencerwoo.com/api/proxy?url=https%3A%2F%2Fpublic.dm.files.1drv.com%2Fy4myMMSl7_RbMnKGsEh63emSTxRqfK74Ove5_k-zuKFv7Y_uet4FeuwI5X3NW8IjdkOlvoIRfq64XICJeHeZiRDBcnJuH-lfjZUQykrMM11xO9H3Z8GPRA9lfjjjdYXQAcMc2XYAr1Pnmod3PeEYoAKAArFEyLKvwk19iypsEDhXbl6L8-f1QxMGGlf6tboO0XijBdxtmV4oQJLmutVk44kETDC-16Sfj2--9erJfsH_W1EEddXUB-vEtpRoBM20srt
+```
+
+> An `&inline=true` parameter is also accepted here, where the response header `content-disposition` of the direct file stream from OneDrive is replaced from `attachment, filename*=...` to `inline, filename*=...`. This only applied to PDF files with a header `content-type` of `application/pdf`, so that the PDF returned can be viewed inside the browser, instead of being force downloaded.
+
+*Feature parity with original project: [Proxied / raw file download](https://github.com/spencerwooo/onedrive-cf-index#%EF%B8%8F-proxied--raw-file-download).*
+
 ### Server-*less*?
 
 Yes! Completely free with no backend server what-so-ever.
