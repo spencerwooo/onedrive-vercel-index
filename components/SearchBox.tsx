@@ -54,30 +54,30 @@ export default SearchBox
  */
 async function search(path: string, q: string): Promise<{ name: string; path: string }[]> {
   switch (siteConfig.searchPolicy) {
-    case 'provided':
-      return await searchProvided(path, q)
-    case 'shipped':
-      return await searchShipped(path, q)
-    case 'ascii-provided':
+    case 'onedrive':
+      return await searchViaOnedriveApi(path, q)
+    case 'bultin':
+      return await searchViaBuiltinAlgo(path, q)
+    case 'ascii-onedrive-other-builtin':
     default:
-      // If all ASCII, use provided search; else use shipped search
+      // If all ASCII, use OneDrive API provided search; else use builtin search
       if (q.match(/^[\x00-\x7f]+$/)) {
-        return await searchProvided(path, q)
+        return await searchViaOnedriveApi(path, q)
       } else {
-        return await searchShipped(path, q)
+        return await searchViaBuiltinAlgo(path, q)
       }
   }
 }
 
 // OneDrive API provided search
-async function searchProvided(path: string, q: string) {
+async function searchViaOnedriveApi(path: string, q: string) {
   const hashedToken = getStoredToken(path)
   const data = await fetcher(`/api?path=${path}&q=${q}`, hashedToken ?? undefined)
   return data.value.map((c: any) => ({ name: c.name, path: getPathFromWebUrl(c.webUrl) }))
 }
 
-// Search shipped by the app which supports Chinese
-async function searchShipped(path: string, q: string) {
+// Builtin search shipped by the app which supports Chinese
+async function searchViaBuiltinAlgo(path: string, q: string) {
   const res: [number, { name: string; path: string }][] = []
   for await (const { meta: c, path: p } of traverseFolder(path)) {
     const name: string = c.name
