@@ -179,6 +179,14 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
   const { data, error, size, setSize } = useProtectedSWRInfinite(path)
 
   if (error) {
+    console.log(error)
+
+    // If error includes 403 which means the user has not completed initial setup, redirect to OAuth page
+    if (error.message.includes('403')) {
+      router.push('/onedrive-vercel-index-oauth/step-1')
+      return <div></div>
+    }
+
     return (
       <div className="dark:bg-gray-900 p-3 bg-white rounded">
         {error.message.includes('401') ? <Auth redirect={path} /> : <FourOhFour errorMsg={error.message} />}
