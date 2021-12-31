@@ -2,13 +2,12 @@ import { posix as pathPosix } from 'path'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import Keyv from 'keyv'
-import { KeyvFile } from 'keyv-file'
 
 import apiConfig from '../../config/api.json'
 import siteConfig from '../../config/site.json'
 import { revealObfuscatedToken } from '../../utils/accessTokenHandler'
 import { compareHashedToken } from '../../utils/protectedRouteHandler'
+import { getOdAuthTokens, storeOdAuthTokens } from '../../utils/odAuthTokenStore'
 
 const basePath = pathPosix.resolve('/', apiConfig.base)
 const encodePath = (path: string) => {
@@ -22,26 +21,27 @@ const encodePath = (path: string) => {
 
 const clientSecret = revealObfuscatedToken(apiConfig.obfuscatedClientSecret)
 
-// Store access token in memory, cuz Vercel doesn't provide key-value storage natively
-let _access_token = ''
-let _refresh_token = ''
-const getAccessToken = async () => {
-  if (_access_token) {
-    console.log('Fetch access token from memory.')
-    return _access_token
+async function getAccessToken(): Promise<any> {
+  const { accessToken, refreshToken } = await getOdAuthTokens()
+
+  // Return in storage access token if it is still valid
+  if (typeof accessToken === 'string') {
+    console.log('Fetch access token from storage.')
+    return accessToken
   }
 
-  // Return if refresh_token is empty
-  if (!_refresh_token) {
+  // Return empty string if no refresh token is stored, which requires the application to be re-authenticated
+  if (typeof refreshToken !== 'string') {
     console.log('No refresh token, return empty access token.')
     return ''
   }
 
+  // Fetch new access token with in storage refresh token
   const body = new URLSearchParams()
   body.append('client_id', apiConfig.clientId)
   body.append('redirect_uri', apiConfig.redirectUri)
   body.append('client_secret', clientSecret)
-  body.append('refresh_token', _refresh_token)
+  body.append('refresh_token', refreshToken)
   body.append('grant_type', 'refresh_token')
 
   const resp = await axios.post(apiConfig.authApi, body, {
@@ -50,10 +50,18 @@ const getAccessToken = async () => {
     },
   })
 
-  if (resp.data.access_token) {
-    _access_token = resp.data.access_token
-    return _access_token
+  if ('access_token' in resp.data && 'refresh_token' in resp.data) {
+    const { expires_in, access_token, refresh_token } = resp.data
+    await storeOdAuthTokens({
+      accessToken: access_token,
+      accessTokenExpiry: parseInt(expires_in),
+      refreshToken: refresh_token,
+    })
+    console.log('Fetch new access token with stored refresh token.')
+    return access_token
   }
+
+  return ''
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

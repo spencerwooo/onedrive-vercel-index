@@ -5,7 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import siteConfig from '../../config/site.json'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
+
 import { requestTokenWithAuthCode } from '../../utils/accessTokenHandler'
+import { storeOdAuthTokens } from '../../utils/odAuthTokenStore'
 
 export default function OAuthStep3({ accessToken, refreshToken, error, description, errorUri }) {
   return (
@@ -118,7 +120,7 @@ export async function getServerSideProps({ query }) {
     return {
       props: {
         error: 'No auth code present',
-        description: 'Where is the auth code??? Did you follow step 2 you silly donut?',
+        description: 'Where is the auth code? Did you follow step 2 you silly donut?',
       },
     }
   }
@@ -137,6 +139,10 @@ export async function getServerSideProps({ query }) {
   }
 
   const { expiryTime, accessToken, refreshToken } = response
+
+  // We can safely leverage Vercel's /tmp directory, and persist the tokens with file-system based KV storage
+  await storeOdAuthTokens({ accessToken, accessTokenExpiry: parseInt(expiryTime), refreshToken })
+
   return {
     props: {
       error: null,
