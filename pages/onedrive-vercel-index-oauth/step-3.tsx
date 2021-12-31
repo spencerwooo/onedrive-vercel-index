@@ -1,5 +1,7 @@
+import axios from 'axios'
 import Head from 'next/head'
 import router from 'next/router'
+import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import siteConfig from '../../config/site.json'
@@ -7,9 +9,49 @@ import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 
 import { obfuscateToken, requestTokenWithAuthCode } from '../../utils/oAuthHandler'
-import axios from 'axios'
+import { LoadingIcon } from '../../components/Loading'
 
-export default function OAuthStep3({ accessToken, refreshToken, error, description, errorUri }) {
+export default function OAuthStep3({ accessToken, expiryTime, refreshToken, error, description, errorUri }) {
+  const [buttonContent, setButtonContent] = useState(
+    <>
+      <span>Store tokens</span> <FontAwesomeIcon icon="key" />
+    </>
+  )
+
+  const sendAuthTokensToServer = async () => {
+    setButtonContent(
+      <>
+        <span>Store tokens</span> <LoadingIcon className="animate-spin w-4 h-4 ml-1 inline" />
+      </>
+    )
+
+    await axios
+      .post(
+        '/api',
+        {
+          obfuscatedAccessToken: obfuscateToken(accessToken),
+          accessTokenExpiry: parseInt(expiryTime),
+          obfuscatedRefreshToken: obfuscateToken(refreshToken),
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      .then(_ => {
+        console.log('Tokens sent to server')
+        setButtonContent(
+          <>
+            <span>Stored! Going home...</span> <FontAwesomeIcon icon="check" />
+          </>
+        )
+        setTimeout(() => {
+          router.push('/')
+        }, 2000)
+      })
+  }
+
   return (
     <div className="dark:bg-gray-900 flex flex-col items-center justify-center min-h-screen bg-white">
       <Head>
@@ -89,16 +131,16 @@ export default function OAuthStep3({ accessToken, refreshToken, error, descripti
                   )}
                 </ol>
 
-                <p className="py-1">Your onedrive-vercel-index should be up and running. Go back home to find out.</p>
+                <p className="py-1">
+                  Click the button below to save these tokens securely on Vercel before they expire.
+                </p>
 
                 <div className="text-right mb-2 mt-6">
                   <button
-                    className="text-white bg-gradient-to-br from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-bl focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center disabled:cursor-not-allowed disabled:grayscale"
-                    onClick={() => {
-                      router.push('/')
-                    }}
+                    className="text-white bg-gradient-to-br from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-bl focus:ring-4 focus:ring-teal-200 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center disabled:cursor-not-allowed disabled:grayscale"
+                    onClick={sendAuthTokensToServer}
                   >
-                    <FontAwesomeIcon icon="home" /> <span>Back home</span>
+                    {buttonContent}
                   </button>
                 </div>
               </div>
@@ -139,24 +181,6 @@ export async function getServerSideProps({ query }) {
   }
 
   const { expiryTime, accessToken, refreshToken } = response
-
-  // await tokenStore.storeOdAuthTokens({ accessToken, accessTokenExpiry: parseInt(expiryTime), refreshToken })
-
-  // We perform a POST request to the default API route to store the tokens inside the main route memory
-  // This is a bit of a hack, but it's the only way to get the tokens to the main route
-  await axios.post(
-    '/api',
-    {
-      obfuscatedAccessToken: obfuscateToken(accessToken),
-      accessTokenExpiry: parseInt(expiryTime),
-      obfuscatedRefreshToken: obfuscateToken(refreshToken),
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
 
   return {
     props: {
