@@ -1,6 +1,7 @@
 import Head from 'next/head'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import siteConfig from '../../config/site.json'
@@ -29,17 +30,23 @@ export default function OAuthStep2() {
 
         <div className="w-full max-w-5xl p-4 mx-auto">
           <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded p-3">
-            <h3 className="font-medium text-xl mb-4">Welcome to your new onedrive-vercel-index 🎉</h3>
-
-            <p className="py-1">
-              Authorisation is required as no valid{' '}
-              <code className="text-sm font-mono underline decoration-wavy decoration-pink-600">access_token</code> or{' '}
-              <code className="text-sm font-mono underline decoration-wavy decoration-green-600">refresh_token</code> is
-              present on this deployed instance.
-            </p>
+            <div className="mx-auto w-52">
+              <Image
+                src="/images/fabulous-come-back-later.png"
+                width={912}
+                height={912}
+                alt="fabulous come back later"
+              />
+            </div>
+            <h3 className="font-medium text-xl mb-4 text-center">Welcome to your new onedrive-vercel-index 🎉</h3>
 
             <h3 className="font-medium text-lg mt-4 mb-2">Step 2/3: Get authorisation code</h3>
-            <p className="py-1">The OAuth URL has been generated for you:</p>
+
+            <p className="py-1 text-red-400 font-medium text-sm">
+              <FontAwesomeIcon icon="exclamation-circle" className="mr-1" /> If you are not the owner of this website,
+              stop now, as continuing with this process may expose your personal files in OneDrive.
+            </p>
+
             <div
               className="relative my-2 font-mono border border-gray-500/50 rounded text-sm bg-gray-50 dark:bg-gray-800 cursor-pointer hover:opacity-80"
               onClick={() => {
@@ -53,12 +60,18 @@ export default function OAuthStep2() {
                 <code>{oAuthUrl}</code>
               </pre>
             </div>
+
             <p className="py-1">
-              Click on the link to get the{' '}
+              The OAuth link for getting the authorisation code has been created. Click on the link above to get the{' '}
               <b className="underline decoration-wavy decoration-yellow-400">authorisation code</b>. Your browser will
-              open a new tab to Microsoft&apos;s account login page. Authenticate with your Microsoft account and copy
-              the redirected URL down below.
+              open a new tab to Microsoft&apos;s account login page. After logging in and authenticating with your
+              Microsoft account, you will be redirected to a blank page on localhost. Paste{' '}
+              <b className="underline decoration-wavy decoration-teal-500">the entire redirected URL</b> down below.
             </p>
+
+            <div className="my-4 rounded overflow-hidden w-2/3 mx-auto">
+              <Image src="/images/step-2-screenshot.png" width={1466} height={607} alt="step 2 screenshot" />
+            </div>
 
             <input
               className={`w-full flex-1 border bg-gray-50 dark:bg-gray-800 dark:text-white focus:ring focus:outline-none p-2 font-mono rounded my-2 font-medium text-sm ${

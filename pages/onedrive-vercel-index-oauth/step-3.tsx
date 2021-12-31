@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Head from 'next/head'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -13,6 +14,17 @@ import { LoadingIcon } from '../../components/Loading'
 
 export default function OAuthStep3({ accessToken, expiryTime, refreshToken, error, description, errorUri }) {
   const router = useRouter()
+  const [expiryTimeLeft, setExpiryTimeLeft] = useState(expiryTime)
+
+  useEffect(() => {
+    if (!expiryTimeLeft) return
+
+    const intervalId = setInterval(() => {
+      setExpiryTimeLeft(expiryTimeLeft - 1)
+    }, 1000)
+
+    return () => clearInterval(intervalId)
+  }, [expiryTimeLeft])
 
   const [buttonContent, setButtonContent] = useState(
     <>
@@ -72,14 +84,10 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
 
         <div className="w-full max-w-5xl p-4 mx-auto">
           <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded p-3">
-            <h3 className="font-medium text-xl mb-4">Welcome to your new onedrive-vercel-index 🎉</h3>
-
-            <p className="py-1">
-              Authorisation is required as no valid{' '}
-              <code className="text-sm font-mono underline decoration-wavy decoration-pink-600">access_token</code> or{' '}
-              <code className="text-sm font-mono underline decoration-wavy decoration-green-600">refresh_token</code> is
-              present on this deployed instance.
-            </p>
+            <div className="mx-auto w-52">
+              <Image src="/images/fabulous-celebration.png" width={912} height={912} alt="fabulous celebration" />
+            </div>
+            <h3 className="font-medium text-xl mb-4 text-center">Welcome to your new onedrive-vercel-index 🎉</h3>
 
             <h3 className="font-medium text-lg mt-4 mb-2">Step 3/3: Get access and refresh tokens</h3>
             {error ? (
@@ -118,14 +126,14 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
               </div>
             ) : (
               <div>
-                <p className="py-1 font-medium">Success, the API returned what we needed.</p>
+                <p className="py-1 font-medium">Success! The API returned what we needed.</p>
                 <ol className="py-1">
                   {accessToken && (
                     <li>
                       <FontAwesomeIcon icon={['far', 'check-circle']} className="text-green-500" />{' '}
                       <span>
                         Acquired access_token:{' '}
-                        <code className="text-sm font-mono opacity-80">{`${accessToken.substring(0, 30)}...`}</code>.
+                        <code className="text-sm font-mono opacity-80">{`${accessToken.substring(0, 60)}...`}</code>
                       </span>
                     </li>
                   )}
@@ -134,21 +142,27 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
                       <FontAwesomeIcon icon={['far', 'check-circle']} className="text-green-500" />{' '}
                       <span>
                         Acquired refresh_token:{' '}
-                        <code className="text-sm font-mono opacity-80">{`${refreshToken.substring(0, 50)}...`}</code>.
+                        <code className="text-sm font-mono opacity-80">{`${refreshToken.substring(0, 60)}...`}</code>
                       </span>
                     </li>
                   )}
                 </ol>
 
+                <p className="py-1 font-medium text-sm text-teal-500">
+                  <FontAwesomeIcon icon="exclamation-circle" className="mr-1" /> These tokens may take a few seconds to
+                  populate after you click the button below. If you go back home and still see the welcome page telling
+                  you to re-authenticate, revisit home and do a hard refresh.
+                </p>
                 <p className="py-1">
-                  Click the button below to save these tokens securely on Vercel before they expire. These tokens may
-                  take a few seconds to populate, if you go back home and still see the welcome page telling you to
-                  re-authenticate, go back home and do a hard refresh.
+                  Final step, click the button below to store these tokens persistently before they expire after{' '}
+                  {Math.floor(expiryTimeLeft / 60)} minutes {expiryTimeLeft - Math.floor(expiryTimeLeft / 60) * 60}{' '}
+                  seconds. Don&apos;t worry, after storing them, onedrive-vercel-index will take care of token refreshes
+                  and updates after your site goes live.
                 </p>
 
                 <div className="text-right mb-2 mt-6">
                   <button
-                    className="text-white bg-gradient-to-br from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-bl focus:ring-4 focus:ring-teal-200 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center disabled:cursor-not-allowed disabled:grayscale"
+                    className="text-white bg-gradient-to-br from-green-500 to-teal-300 hover:bg-gradient-to-bl focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center disabled:cursor-not-allowed disabled:grayscale"
                     onClick={sendAuthTokensToServer}
                   >
                     {buttonContent}
