@@ -25,31 +25,29 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
       </>
     )
 
-    await axios
-      .post(
-        '/api',
-        {
-          obfuscatedAccessToken: obfuscateToken(accessToken),
-          accessTokenExpiry: parseInt(expiryTime),
-          obfuscatedRefreshToken: obfuscateToken(refreshToken),
+    await axios.post(
+      '/api',
+      {
+        obfuscatedAccessToken: obfuscateToken(accessToken),
+        accessTokenExpiry: parseInt(expiryTime),
+        obfuscatedRefreshToken: obfuscateToken(refreshToken),
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
         },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-      .then(_ => {
-        console.log('Tokens sent to server')
-        setButtonContent(
-          <>
-            <span>Stored! Going home...</span> <FontAwesomeIcon icon="check" />
-          </>
-        )
-        setTimeout(() => {
-          router.push('/')
-        }, 2000)
-      })
+      }
+    )
+
+    setButtonContent(
+      <>
+        <span>Stored! Going home...</span> <FontAwesomeIcon icon="check" />
+      </>
+    )
+
+    setTimeout(() => {
+      router.push('/')
+    }, 3000)
   }
 
   return (
@@ -132,7 +130,9 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
                 </ol>
 
                 <p className="py-1">
-                  Click the button below to save these tokens securely on Vercel before they expire.
+                  Click the button below to save these tokens securely on Vercel before they expire. These tokens may
+                  take a few seconds to populate, if you go back home and still see the welcome page telling you to
+                  re-authenticate, go back home and do a hard refresh.
                 </p>
 
                 <div className="text-right mb-2 mt-6">
