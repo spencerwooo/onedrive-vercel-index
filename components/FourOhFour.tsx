@@ -4,8 +4,8 @@ import { FunctionComponent } from 'react'
 const FourOhFour: FunctionComponent<{ errorMsg: string }> = ({ errorMsg }) => {
   return (
     <div className="my-12">
-      <div className="md:w-1/4 w-1/3 mx-auto">
-        <Image src={'/images/empty.png'} alt="404" width={912} height={912} />
+      <div className="w-1/3 mx-auto">
+        <Image src='/images/fabulous-rip-2.png' alt="404" width={912} height={912} />
       </div>
       <div className="mt-6 text-gray-500 max-w-xl mx-auto">
         <div className="text-xl font-bold mb-8">
