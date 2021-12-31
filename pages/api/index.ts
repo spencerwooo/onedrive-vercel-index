@@ -24,6 +24,7 @@ const encodePath = (path: string) => {
 
 async function getAccessToken(): Promise<any> {
   const { accessToken, refreshToken } = await tokenStore.getOdAuthTokens()
+  console.log(accessToken, refreshToken)
 
   // Return in storage access token if it is still valid
   if (typeof accessToken === 'string') {

@@ -144,11 +144,19 @@ export async function getServerSideProps({ query }) {
 
   // We perform a POST request to the default API route to store the tokens inside the main route memory
   // This is a bit of a hack, but it's the only way to get the tokens to the main route
-  await axios.post('/api', {
-    obfuscatedAccessToken: obfuscateToken(accessToken),
-    accessTokenExpiry: parseInt(expiryTime),
-    obfuscatedRefreshToken: obfuscateToken(refreshToken),
-  })
+  await axios.post(
+    '/api',
+    {
+      obfuscatedAccessToken: obfuscateToken(accessToken),
+      accessTokenExpiry: parseInt(expiryTime),
+      obfuscatedRefreshToken: obfuscateToken(refreshToken),
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
 
   return {
     props: {

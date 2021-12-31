@@ -1,9 +1,9 @@
 // This should be only used on the server side, where the tokens are stored with KV store using
 // a file system based storage. The tokens are stored in the file system as JSON at /tmp path.
-// import os from 'os'
+import os from 'os'
 
 import Keyv from 'keyv'
-// import { KeyvFile } from 'keyv-file'
+import { KeyvFile } from 'keyv-file'
 
 // console.log(`${os.tmpdir()}/od-auth-token.json`)
 
@@ -12,7 +12,6 @@ export default class TokenStore {
 
   constructor() {
     this.kv = new Keyv()
-
     // this.kv = new Keyv({
     //   store: new KeyvFile({
     //     filename: `${os.tmpdir()}/od-auth-token.json`,
