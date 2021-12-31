@@ -3,15 +3,16 @@
 import os from 'os'
 
 import Keyv from 'keyv'
-import { KeyvFile } from 'keyv-file'
+// import { KeyvFile } from 'keyv-file'
 
 console.log(`${os.tmpdir()}/od-auth-token.json`)
 
-const kv = new Keyv({
-  store: new KeyvFile({
-    filename: `${os.tmpdir()}/od-auth-token.json`,
-  }),
-})
+// const kv = new Keyv({
+//   store: new KeyvFile({
+//     filename: `${os.tmpdir()}/od-auth-token.json`,
+//   }),
+// })
+const kv = new Keyv({})
 
 export async function storeOdAuthTokens({
   accessToken,
