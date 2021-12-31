@@ -3,9 +3,10 @@ import CryptoJS from 'crypto-js'
 
 import apiConfig from '../config/api.json'
 
-// Just a disguise to obfuscate the client secret, used along with the following two functions
+// Just a disguise to obfuscate required tokens (including but not limited to client secret,
+// access tokens, and refresh tokens), used along with the following two functions
 const AES_SECRET_KEY = 'onedrive-vercel-index'
-function obfuscateToken(token: string): string {
+export function obfuscateToken(token: string): string {
   // Encrypt token with AES
   const encrypted = CryptoJS.AES.encrypt(token, AES_SECRET_KEY)
   return encrypted.toString()

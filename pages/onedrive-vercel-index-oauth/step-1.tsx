@@ -28,7 +28,7 @@ export default function OAuthStep1() {
               present on this deployed instance.
             </p>
 
-            <h3 className="font-medium text-lg mt-4 mb-2">Step 1: Preparations</h3>
+            <h3 className="font-medium text-lg mt-4 mb-2">Step 1/3: Preparations</h3>
             <p className="py-1">
               Check the following configurations (especially <code className="text-sm font-mono">client_id</code> and{' '}
               <code className="text-sm font-mono">client_secret</code> (obfuscated)) and see if they match the official

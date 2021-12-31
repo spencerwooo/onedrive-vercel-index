@@ -1,6 +1,7 @@
 {
   "icon": "/icons/128.png",
   "title": "Spencer's OneDrive",
+  "baseDirectory": "/Public",
   "maxItems": 100,
   "googleFontSans": "Inter",
   "googleFontMono": "Fira Mono",

@@ -1,16 +1,19 @@
 import Head from 'next/head'
 import router from 'next/router'
 import { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import siteConfig from '../../config/site.json'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { extractAuthCodeFromRedirected, generateAuthorisationUrl } from '../../utils/accessTokenHandler'
+import { LoadingIcon } from '../../components/Loading'
+import { extractAuthCodeFromRedirected, generateAuthorisationUrl } from '../../utils/oAuthHandler'
 
 export default function OAuthStep2() {
   const [oAuthRedirectedUrl, setOAuthRedirectedUrl] = useState('')
   const [authCode, setAuthCode] = useState('')
+  const [buttonLoading, setButtonLoading] = useState(false)
+
   const oAuthUrl = generateAuthorisationUrl()
 
   return (
@@ -33,10 +36,10 @@ export default function OAuthStep2() {
               present on this deployed instance.
             </p>
 
-            <h3 className="font-medium text-lg mt-4 mb-2">Step 2: Get authorisation code</h3>
+            <h3 className="font-medium text-lg mt-4 mb-2">Step 2/3: Get authorisation code</h3>
             <p className="py-1">The OAuth URL has been generated for you:</p>
             <div
-              className="relative my-2 font-mono border border-gray-400/20 rounded text-sm bg-gray-50 dark:bg-gray-800 cursor-pointer hover:opacity-80"
+              className="relative my-2 font-mono border border-gray-500/50 rounded text-sm bg-gray-50 dark:bg-gray-800 cursor-pointer hover:opacity-80"
               onClick={() => {
                 window.open(oAuthUrl)
               }}
@@ -87,10 +90,19 @@ export default function OAuthStep2() {
                 className="text-white bg-gradient-to-br from-green-500 to-cyan-400 hover:bg-gradient-to-bl focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center disabled:cursor-not-allowed disabled:grayscale"
                 disabled={authCode === ''}
                 onClick={() => {
+                  setButtonLoading(true)
                   router.push({ pathname: '/onedrive-vercel-index-oauth/step-3', query: { authCode } })
                 }}
               >
-                <span>Get tokens</span> <FontAwesomeIcon icon="arrow-right" />
+                {buttonLoading ? (
+                  <>
+                    <span>Requesting tokens</span> <LoadingIcon className="animate-spin w-4 h-4 ml-1 inline" />
+                  </>
+                ) : (
+                  <>
+                    <span>Get tokens</span> <FontAwesomeIcon icon="arrow-right" />
+                  </>
+                )}
               </button>
             </div>
           </div>

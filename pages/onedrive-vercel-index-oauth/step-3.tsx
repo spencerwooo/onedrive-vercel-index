@@ -6,8 +6,8 @@ import siteConfig from '../../config/site.json'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 
-import { requestTokenWithAuthCode } from '../../utils/accessTokenHandler'
-import { storeOdAuthTokens } from '../../utils/odAuthTokenStore'
+import { obfuscateToken, requestTokenWithAuthCode } from '../../utils/oAuthHandler'
+import axios from 'axios'
 
 export default function OAuthStep3({ accessToken, refreshToken, error, description, errorUri }) {
   return (
@@ -30,7 +30,7 @@ export default function OAuthStep3({ accessToken, refreshToken, error, descripti
               present on this deployed instance.
             </p>
 
-            <h3 className="font-medium text-lg mt-4 mb-2">Step 3: Get access and refresh tokens</h3>
+            <h3 className="font-medium text-lg mt-4 mb-2">Step 3/3: Get access and refresh tokens</h3>
             {error ? (
               <div>
                 <p className="text-red-500 py-1 font-medium">
@@ -140,8 +140,15 @@ export async function getServerSideProps({ query }) {
 
   const { expiryTime, accessToken, refreshToken } = response
 
-  // We can safely leverage Vercel's /tmp directory, and persist the tokens with file-system based KV storage
-  await storeOdAuthTokens({ accessToken, accessTokenExpiry: parseInt(expiryTime), refreshToken })
+  // await tokenStore.storeOdAuthTokens({ accessToken, accessTokenExpiry: parseInt(expiryTime), refreshToken })
+
+  // We perform a POST request to the default API route to store the tokens inside the main route memory
+  // This is a bit of a hack, but it's the only way to get the tokens to the main route
+  await axios.post('/api', {
+    obfuscatedAccessToken: obfuscateToken(accessToken),
+    accessTokenExpiry: parseInt(expiryTime),
+    obfuscatedRefreshToken: obfuscateToken(refreshToken),
+  })
 
   return {
     props: {
