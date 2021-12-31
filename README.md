@@ -94,7 +94,7 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
 
 ## Deployment
 
-> Starting now, you don't have to manually acquire your tokens, and you don't need to register a client at Microsoft anymore (PR #210).
+> Starting now, you don't have to manually acquire your tokens, and you don't need to register a client at Microsoft anymore ([PR #210](https://github.com/spencerwooo/onedrive-vercel-index/pull/210) and [Discussion #215](https://github.com/spencerwooo/onedrive-vercel-index/discussions/215)).
 
 ### New users
 
@@ -217,7 +217,7 @@ https://drive.spencerwoo.com/api/proxy?url=https%3A%2F%2Fpublic.dm.files.1drv.co
 
 ### Server-*less*?
 
-Yes! Completely free with no backend server what-so-ever.
+Yes! Completely free with no backend server what-so-ever. (Well, we use Redis, but that's free to some extent also.)
 
 ---
 
