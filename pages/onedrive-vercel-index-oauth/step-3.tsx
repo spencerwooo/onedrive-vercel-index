@@ -50,7 +50,7 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
 
         setTimeout(() => {
           router.push('/')
-        }, 3000)
+        }, 2000)
       })
       .catch(_ => {
         setButtonContent(

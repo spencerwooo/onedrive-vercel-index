@@ -1,9 +1,7 @@
-import os from 'os'
 import { posix as pathPosix } from 'path'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import Keyv from 'keyv'
 
 import apiConfig from '../../config/api.json'
 import siteConfig from '../../config/site.json'
