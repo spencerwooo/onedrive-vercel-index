@@ -78,10 +78,13 @@ async function searchViaOnedriveApi(path: string, q: string) {
 
 // Builtin search shipped by the app which supports Chinese
 async function searchViaBuiltinAlgo(path: string, q: string) {
+  // Space-separated q is recoginzed as a list of keywords
+  const qs = q.split(' ').filter(q => q)
+
   const res: [number, { name: string; path: string }][] = []
   for await (const { meta: c, path: p } of traverseFolder(path)) {
     const name: string = c.name
-    const sim = getStrSimilarity(name, q)
+    const sim = qs.map(q => getStrSimilarity(name, q)).reduce((a, b) => a + b) / qs.length
     if (sim > 0) {
       res.push([sim, { name, path: p }])
     }
