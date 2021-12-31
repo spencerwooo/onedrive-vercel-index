@@ -85,6 +85,7 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
 
 ... and more:
 
+- Streamlined deployment, without having to get your tokens manually anymore!
 - Direct raw-file serving, proxied file serving ...
 - Permalink copy, proxied download link copy ...
 - Full dark mode support, style and website customisations ...
@@ -93,14 +94,36 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
 
 ## Deployment
 
-> No time to write deployment documentation! Here are some quick hints, play around with caution! (I promise detailed docs are on the way.)
+> Starting now, you don't have to manually acquire your tokens, and you don't need to register a client at Microsoft anymore (PR #210).
 
-- Fork the project to your own account, as you will be maintaining your custom version of this project with your own configurations.
-- Change configuration file [`config/api.json`](config/api.json) and [`config/site.json`](config/site.json) according to your configs (see [Configurations](#configurations) ↓).
-- Define environment variables inside Vercel: `REFRESH_TOKEN`, `ACCESS_TOKEN`, `CLIENT_SECRET`.
-- Deploy inside Vercel, profit.
+### New users
 
-The authentication tokens and variables are the same as what you configured in the [`onedrive-cf-index`](https://github.com/spencerwooo/onedrive-cf-index) project. Detailed documentations can also be found there (for now). This project is at its early stages, for discussions *please, please, please* post to the [discussion forum](https://github.com/spencerwooo/onedrive-vercel-index/discussions).
+- Fork the project to your own GitHub account, as you will be maintaining your custom version of this project with your own configurations.
+- Modify [`config/site.json`](config/site.json) according to your configs (see [Configurations](#configurations) ↓).
+- Only change [`config/api.json`](config/api.json) if you must (if you are not a OneDrive international user).
+  - SharePoint users need to define their own API endpoints.
+- Import your forked `onedrive-vercel-index` GitHub project to Vercel. Vercel will automatically build the Next.js project, so please wait for deployment to finish.
+- Create a Redis database, and set the URL of the Redis instance to environment variable `REDIS_URL` inside the Vercel project.
+  - You can use Upstash for this, completely free, full integration with Vercel, documentation here: [Vercel Integration
+](https://docs.upstash.com/redis/howto/vercelintegration).
+- Finally, trigger a redeployment on Vercel to use the new environment variable, navigate to the newly deployed page, and perform authorisation as guided by `onedrive-vercel-index`.
+
+### Migrating from an old project
+
+- You need to first create a Redis instance, and define the URL of the instance in the environment variable `REDIS_URL` in Vercel.
+  - Likewise, you can still use Upstash for this, same as above.
+- You need to change your custom `config/api.json` exactly like the new project, where specifically:
+
+  ```json
+  {
+    "clientId": "d87bcc39-1750-4ca0-ad54-f8d0efbb2735",
+    "obfuscatedClientSecret": "U2FsdGVkX1830zo3/pFDqaBCVBb37iLw3WnBDWGF9GIB2f4apzv0roemp8Y+iIxI3Ih5ecyukqELQEGzZlYiWg==",
+  }
+  ```
+
+- You can safely delete old environment variables such as your own `CLIENT_SECRET`, `ACCESS_TOKEN`, and `REFRESH_TOKEN`.
+
+Deployment issues *please, please, please* post to the [discussion forum](https://github.com/spencerwooo/onedrive-vercel-index/discussions) with tags `FAQ`.
 
 ## Configurations
 
@@ -108,8 +131,8 @@ The authentication tokens and variables are the same as what you configured in t
 
 Two configuration files are used for customisations - `config/api.json` and `config/site.json`.
 
-- `config/api.json` - is used to define your API endpoints and tokens, and the path for your shared OneDrive folder.
-- `config/site.json` - is used for customising the website, such as the title, used Google fonts, site icons, contact info, etc.
+- `config/api.json` - is used to define your API endpoints and tokens. **OneDrive international users don't have to change anything.**
+- `config/site.json` - is used for customising the website, such as the folder to share, the title, used Google fonts, site icons, contact info, etc.
 
 A few things to keep in mind for `config/site.json`:
 
