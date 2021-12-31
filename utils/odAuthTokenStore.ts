@@ -3,9 +3,16 @@
 
 import Keyv from 'keyv'
 
-export async function getOdAuthTokens(keyv: Keyv): Promise<{ accessToken: unknown; refreshToken: unknown }> {
-  const accessToken = await keyv.get('access_token')
-  const refreshToken = await keyv.get('refresh_token')
+// Persistent key-value store is provided by Redis, hosted on Upstash
+// https://vercel.com/integrations/upstash
+console.log(process.env.REDIS_URL)
+
+const kv = new Keyv(process.env.REDIS_URL)
+kv.on('error', err => console.log('Connection Error', err))
+
+export async function getOdAuthTokens(): Promise<{ accessToken: unknown; refreshToken: unknown }> {
+  const accessToken = await kv.get('access_token')
+  const refreshToken = await kv.get('refresh_token')
 
   return {
     accessToken,
@@ -17,13 +24,11 @@ export async function storeOdAuthTokens({
   accessToken,
   accessTokenExpiry,
   refreshToken,
-  keyv,
 }: {
   accessToken: string
   accessTokenExpiry: number
   refreshToken: string
-  keyv: Keyv
 }): Promise<void> {
-  await keyv.set('access_token', accessToken, accessTokenExpiry)
-  await keyv.set('refresh_token', refreshToken)
+  await kv.set('access_token', accessToken, accessTokenExpiry)
+  await kv.set('refresh_token', refreshToken)
 }

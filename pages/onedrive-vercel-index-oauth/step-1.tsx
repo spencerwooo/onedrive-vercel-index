@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import router from 'next/router'
+import { useRouter } from 'next/router'
 
 import siteConfig from '../../config/site.json'
 import apiConfig from '../../config/api.json'
@@ -8,6 +8,9 @@ import Footer from '../../components/Footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export default function OAuthStep1() {
+  const redis_url = process.env.REDIS_URL
+  const router = useRouter()
+
   return (
     <div className="dark:bg-gray-900 flex flex-col items-center justify-center min-h-screen bg-white">
       <Head>
@@ -29,6 +32,7 @@ export default function OAuthStep1() {
             </p>
 
             <h3 className="font-medium text-lg mt-4 mb-2">Step 1/3: Preparations</h3>
+
             <p className="py-1">
               Check the following configurations (especially <code className="text-sm font-mono">client_id</code> and{' '}
               <code className="text-sm font-mono">client_secret</code> (obfuscated)) and see if they match the official

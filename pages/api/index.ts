@@ -4,7 +4,6 @@ import { posix as pathPosix } from 'path'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
 import Keyv from 'keyv'
-import { KeyvFile } from 'keyv-file'
 
 import apiConfig from '../../config/api.json'
 import siteConfig from '../../config/site.json'
@@ -14,13 +13,6 @@ import { getOdAuthTokens, storeOdAuthTokens } from '../../utils/odAuthTokenStore
 
 const basePath = pathPosix.resolve('/', siteConfig.baseDirectory)
 const clientSecret = revealObfuscatedToken(apiConfig.obfuscatedClientSecret)
-
-const keyv = new Keyv({
-  store: new KeyvFile({
-    filename: `${os.tmpdir()}/od-auth-token.json`,
-  }),
-})
-console.log(`kv init - ${os.tmpdir()}/od-auth-token.json`)
 
 const encodePath = (path: string) => {
   let encodedPath = pathPosix.join(basePath, pathPosix.resolve('/', path))
@@ -32,7 +24,7 @@ const encodePath = (path: string) => {
 }
 
 async function getAccessToken(): Promise<any> {
-  const { accessToken, refreshToken } = await getOdAuthTokens(keyv)
+  const { accessToken, refreshToken } = await getOdAuthTokens()
 
   // Return in storage access token if it is still valid
   if (typeof accessToken === 'string') {
@@ -66,7 +58,6 @@ async function getAccessToken(): Promise<any> {
       accessToken: access_token,
       accessTokenExpiry: parseInt(expires_in),
       refreshToken: refresh_token,
-      keyv,
     })
     console.log('Fetch new access token with stored refresh token.')
     return access_token
@@ -91,7 +82,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       accessToken,
       accessTokenExpiry,
       refreshToken,
-      keyv,
     })
     res.status(200).send('OK')
     return

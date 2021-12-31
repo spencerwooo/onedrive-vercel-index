@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Head from 'next/head'
-import router from 'next/router'
-import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import siteConfig from '../../config/site.json'
@@ -12,6 +12,8 @@ import { obfuscateToken, requestTokenWithAuthCode } from '../../utils/oAuthHandl
 import { LoadingIcon } from '../../components/Loading'
 
 export default function OAuthStep3({ accessToken, expiryTime, refreshToken, error, description, errorUri }) {
+  const router = useRouter()
+
   const [buttonContent, setButtonContent] = useState(
     <>
       <span>Store tokens</span> <FontAwesomeIcon icon="key" />
@@ -21,33 +23,42 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
   const sendAuthTokensToServer = async () => {
     setButtonContent(
       <>
-        <span>Store tokens</span> <LoadingIcon className="animate-spin w-4 h-4 ml-1 inline" />
+        <span>Storing tokens</span> <LoadingIcon className="animate-spin w-4 h-4 ml-1 inline" />
       </>
     )
 
-    await axios.post(
-      '/api',
-      {
-        obfuscatedAccessToken: obfuscateToken(accessToken),
-        accessTokenExpiry: parseInt(expiryTime),
-        obfuscatedRefreshToken: obfuscateToken(refreshToken),
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
+    await axios
+      .post(
+        '/api',
+        {
+          obfuscatedAccessToken: obfuscateToken(accessToken),
+          accessTokenExpiry: parseInt(expiryTime),
+          obfuscatedRefreshToken: obfuscateToken(refreshToken),
         },
-      }
-    )
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      .then(_ => {
+        setButtonContent(
+          <>
+            <span>Stored! Going home...</span> <FontAwesomeIcon icon="check" />
+          </>
+        )
 
-    setButtonContent(
-      <>
-        <span>Stored! Going home...</span> <FontAwesomeIcon icon="check" />
-      </>
-    )
-
-    setTimeout(() => {
-      router.push('/')
-    }, 3000)
+        setTimeout(() => {
+          router.push('/')
+        }, 3000)
+      })
+      .catch(_ => {
+        setButtonContent(
+          <>
+            <span>Error storing the token</span> <FontAwesomeIcon icon="exclamation-circle" />
+          </>
+        )
+      })
   }
 
   return (
