@@ -112,7 +112,7 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
 
 - You need to first create a Redis instance, and define the URL of the instance in the environment variable `REDIS_URL` in Vercel.
   - Likewise, you can still use Upstash for this, same as above.
-- You need to change your custom `config/api.json` exactly like the new project, where specifically:
+- You need to revert some fields of your customised `config/api.json` back, where specifically the `clientId` and `obfuscatedClientSecret` should exactly match:
 
   ```json
   {
