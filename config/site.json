@@ -1,5 +1,5 @@
 {
-  "icon": "duoliveslogo.jpeg",
+  "icon": /duoliveslogo.jpeg",
   "title": "繁鲜网盘",
   "baseDirectory": "/duolives",
   "maxItems": 100,
