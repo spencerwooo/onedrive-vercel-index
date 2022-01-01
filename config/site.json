@@ -1,6 +1,6 @@
 {
   "icon": "/icons/duoliveslogo.png",
-  "title": "<a href=\"http://www.1993.city\" target=\"_blank\">繁鲜</a>",
+  "title": "繁鲜",
   "baseDirectory": "/duolives",
   "maxItems": 100,
   "googleFontSans": "Inter",
