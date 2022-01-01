@@ -24,6 +24,6 @@
       "link": "https://t.me/realSpencerWoo"
     }
   ],
-  "searchPolicy": "ascii-onedrive-other-builtin",
+  "searchPolicy": "ascii-onedrive-else-builtin",
   "maxSearchItems": 5
 }

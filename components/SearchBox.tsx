@@ -3,7 +3,6 @@ import { ParsedUrlQuery } from 'querystring'
 
 import { queryToPath } from './FileListing'
 import siteConfig from '../config/site.json'
-import apiConfig from '../config/api.json'
 import { fetcher } from '../utils/fetchWithSWR'
 import { getStoredToken } from '../utils/protectedRouteHandler'
 import { traverseFolder } from './MultiFileDownloader'
@@ -58,7 +57,7 @@ async function search(path: string, q: string): Promise<{ name: string; path: st
       return await searchViaOnedriveApi(path, q)
     case 'bultin':
       return await searchViaBuiltinAlgo(path, q)
-    case 'ascii-onedrive-other-builtin':
+    case 'ascii-onedrive-else-builtin':
     default:
       // If all ASCII, use OneDrive API provided search; else use builtin search
       if (q.match(/^[\x00-\x7f]+$/)) {
@@ -103,7 +102,7 @@ function getPathFromWebUrl(webUrl: string): string {
   ps.splice(0, 3)
 
   // Remove base segments set in api config
-  const basePs = apiConfig.base.split('/').filter(p => p)
+  const basePs = siteConfig.baseDirectory.split('/').filter(p => p)
   for (let i = 0; i < basePs.length; i++) {
     if (basePs[i] != ps[i]) {
       throw new Error('Path does not match base')
