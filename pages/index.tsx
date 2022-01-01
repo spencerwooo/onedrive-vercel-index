@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div className="dark:bg-gray-900 flex flex-col items-center justify-center min-h-screen bg-white">
       <Head>
-        <title>{siteConfig.title</title>
+        <title>{siteConfig.title}</title>
       </Head>
 
       <main className="bg-gray-50 dark:bg-gray-800 flex flex-col flex-1 w-full">
