@@ -33,9 +33,9 @@ const SearchBox: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => 
     <Menu as="div" className="relative pb-4">
       <div className="flex space-x-2">
         <input
+          title="Search in current folder"
           className="flex-1 border border-gray-600/10 dark:bg-gray-600 dark:text-white focus:ring focus:ring-blue-300 dark:focus:ring-blue-700 focus:outline-none py-1 px-2 rounded text-sm"
           id="search"
-          autoFocus
           placeholder="Search..."
           value={q}
           onChange={e => {
@@ -48,6 +48,7 @@ const SearchBox: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => 
           }}
         />
         <button
+          title="Search in current folder"
           className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-400 px-2 py-1 text-white bg-blue-500 rounded"
           onClick={handleSearch}
         >
@@ -69,20 +70,25 @@ const SearchBox: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => 
             static
             className="origin-top-right absolute mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
           >
-            {results.map(({ name, path }) => (
-              <Menu.Item key={name}>
-                {({ active }) => (
-                  <a
-                    href={path}
-                    className={[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm'].join(
-                      ' '
-                    )}
-                  >
-                    {name}
-                  </a>
-                )}
-              </Menu.Item>
-            ))}
+            {results.length > 0 ? (
+              results.map(({ name, path }) => (
+                <Menu.Item key={name}>
+                  {({ active }) => (
+                    <a
+                      href={path}
+                      className={[
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                        'block px-4 py-2 text-sm'
+                      ].join(' ')}
+                    >
+                      {name}
+                    </a>
+                  )}
+                </Menu.Item>
+              ))
+            ) : (
+              <div className="px-4 py-2 text-sm">No search results in current folder</div>
+            )}
           </Menu.Items>
         </Transition>
       }
