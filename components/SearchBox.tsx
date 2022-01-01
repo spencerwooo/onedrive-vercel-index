@@ -1,5 +1,6 @@
-import { FunctionComponent, useState } from 'react'
+import { FunctionComponent, useState, useRef } from 'react'
 import { ParsedUrlQuery } from 'querystring'
+import { Menu, Transition } from '@headlessui/react'
 
 import { queryToPath } from './FileListing'
 import siteConfig from '../config/site.json'
@@ -7,42 +8,88 @@ import { fetcher } from '../utils/fetchWithSWR'
 import { getStoredToken } from '../utils/protectedRouteHandler'
 import { traverseFolder } from './MultiFileDownloader'
 import getStrSimilarity from '../utils/getStrSimilarity'
+import useClickAwayListener from '../utils/useClickAwayListener'
 
 const SearchBox: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => {
   const path = queryToPath(query)
+
   const [q, setQ] = useState<string>('')
+  const [results, setResults] = useState<{ name: string; path: string }[]>([])
+
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+  useClickAwayListener(ref, () => setOpen(false))
 
   const handleSearch = () => {
     if (q) {
-      search(path, q).then(res => console.log(res))
+      search(path, q).then(res => {
+        setResults(res)
+        setOpen(true)
+      })
     }
   }
 
   return (
-    <div className="flex space-x-2 pb-4">
-      <input
-        className="flex-1 border border-gray-600/10 dark:bg-gray-600 dark:text-white focus:ring focus:ring-blue-300 dark:focus:ring-blue-700 focus:outline-none py-1 px-2 rounded text-sm"
-        autoFocus
-        placeholder="Search..."
-        value={q}
-        onChange={e => {
-          setQ(e.target.value)
-        }}
-        onKeyPress={e => {
-          if (e.key === 'Enter' || e.key === 'NumpadEnter') {
-            handleSearch()
-          }
-        }}
-      />
-      <button
-        className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-400 px-2 py-1 text-white bg-blue-500 rounded"
-        onClick={handleSearch}
-      >
-        <SearchIcon className="w-5 h-5 fill-white" />
-      </button>
-    </div>
+    <Menu as="div" className="relative pb-4">
+      <div className="flex space-x-2">
+        <input
+          className="flex-1 border border-gray-600/10 dark:bg-gray-600 dark:text-white focus:ring focus:ring-blue-300 dark:focus:ring-blue-700 focus:outline-none py-1 px-2 rounded text-sm"
+          id="search"
+          autoFocus
+          placeholder="Search..."
+          value={q}
+          onChange={e => {
+            setQ(e.target.value)
+          }}
+          onKeyPress={e => {
+            if (e.key === 'Enter' || e.key === 'NumpadEnter') {
+              handleSearch()
+            }
+          }}
+        />
+        <button
+          className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-400 px-2 py-1 text-white bg-blue-500 rounded"
+          onClick={handleSearch}
+        >
+          <SearchIcon className="w-5 h-5 fill-white" />
+        </button>
+      </div>
+      {
+        <Transition
+          show={open}
+          enter="transition ease-out duration-100"
+          enterFrom="transform opacity-0 scale-95"
+          enterTo="transform opacity-100 scale-100"
+          leave="transition ease-in duration-75"
+          leaveFrom="transform opacity-100 scale-100"
+          leaveTo="transform opacity-0 scale-95"
+        >
+          <Menu.Items
+            ref={ref}
+            static
+            className="origin-top-right absolute mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+          >
+            {results.map(({ name, path }) => (
+              <Menu.Item key={name}>
+                {({ active }) => (
+                  <a
+                    href={path}
+                    className={[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm'].join(
+                      ' '
+                    )}
+                  >
+                    {name}
+                  </a>
+                )}
+              </Menu.Item>
+            ))}
+          </Menu.Items>
+        </Transition>
+      }
+    </Menu>
   )
 }
+
 export default SearchBox
 
 /**
@@ -78,7 +125,7 @@ async function searchViaOnedriveApi(path: string, q: string) {
 // Builtin search shipped by the app which supports Chinese
 async function searchViaBuiltinAlgo(path: string, q: string) {
   // Space-separated q is recoginzed as a list of keywords
-  const qs = q.split(' ').filter(q => q)
+  const qs = q.split(' ').filter(Boolean)
 
   const res: [number, { name: string; path: string }][] = []
   for await (const { meta: c, path: p } of traverseFolder(path)) {
@@ -96,13 +143,13 @@ async function searchViaBuiltinAlgo(path: string, q: string) {
 // as OneDrive API does not provide an easy way to convert ID to path
 function getPathFromWebUrl(webUrl: string): string {
   const url = new URL(webUrl)
-  const ps = url.pathname.split('/').filter(p => p)
+  const ps = url.pathname.split('/').filter(Boolean)
 
   // Remove meaningless segments to get full path
   ps.splice(0, 3)
 
   // Remove base segments set in api config
-  const basePs = siteConfig.baseDirectory.split('/').filter(p => p)
+  const basePs = siteConfig.baseDirectory.split('/').filter(Boolean)
   for (let i = 0; i < basePs.length; i++) {
     if (basePs[i] != ps[i]) {
       throw new Error('Path does not match base')

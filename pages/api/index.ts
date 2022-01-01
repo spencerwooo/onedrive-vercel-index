@@ -188,6 +188,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     })
     res.status(200).json(data)
+    return
   }
 
   // Querying current path identity (file or folder) and follow up query childrens in folder
