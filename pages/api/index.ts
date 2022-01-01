@@ -185,6 +185,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
         select: 'name,webUrl',
+        top: siteConfig.maxSearchItems,
       },
     })
     res.status(200).json(data)
