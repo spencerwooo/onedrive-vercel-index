@@ -1,7 +1,7 @@
 {
-  "icon": "/duolives/duoliveslogo.jpg",
+  "icon": "/public/ma.jpg",
   "title": "繁鲜网盘",
-  "baseDirectory": "/duolives",
+  "baseDirectory": "/",
   "maxItems": 100,
   "googleFontSans": "Inter",
   "googleFontMono": "Fira Mono",
