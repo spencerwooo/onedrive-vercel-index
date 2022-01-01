@@ -121,16 +121,16 @@ async function searchViaOnedriveApi(path: string, q: string) {
   const data = await fetcher(`/api?path=${path}&q=${q}`, hashedToken ?? undefined)
   return data.value.map((c: any) => {
     let basePath = siteConfig.baseDirectory
-    basePath = basePath.startsWith('/') ? '' : '/' + basePath
+    basePath = basePath.startsWith('/') ? basePath : '/' + basePath
     basePath = basePath === '/' ? '' : basePath
     basePath = basePath.endsWith('/') ? basePath.substring(0, basePath.length - 1) : basePath
 
-    let path = c.path as string
+    let itemPath = c.path as string
     // Base dir will not be in search results
-    path = path.substring(path.indexOf(':') + 1)
-    path = path.substring(basePath.length)
+    itemPath = itemPath.substring(itemPath.indexOf(':') + 1)
+    itemPath = itemPath.substring(basePath.length)
 
-    return { name: c.name, path: c.path }
+    return { name: c.name, path: itemPath }
   })
 }
 
