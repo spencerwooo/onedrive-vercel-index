@@ -10,7 +10,7 @@
   ],
   "footer": "繁鲜网盘基于 👉 <a href=\"http://www.1993.city\" target=\"_blank\">繁鲜</a> 👈 个人博客制作，用于储存繁杂但却鲜活的人生",
   "protectedRoutes": [ ],
-  
+  "email": "mailto:rackey0623@gmail.com",
   "links": [
     {
       "name": "GitHub",
@@ -24,6 +24,5 @@
       "name": "首页",
       "link": "http://www.1993.city/"
     }
-   ],
-  "email": "mailto:rackey0623@gmail.com",
+   ]
 }
