@@ -179,7 +179,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (q) {
     let qs = typeof q === 'string' ? q : q.join(' ')
     // q can nots contain single quote, even urlencoded, but double quote is ok
-    qs.replaceAll('\'', '')
+    qs = qs.replace(/'/g, '')
 
     const { data } = await axios.get(`${requestUrl}${isRoot ? '' : ':'}/search(q='${encodeURIComponent(qs)}')`, {
       headers: { Authorization: `Bearer ${accessToken}` },
