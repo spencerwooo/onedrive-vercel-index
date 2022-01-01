@@ -6,7 +6,7 @@ import FileListing from '../components/FileListing'
 import Footer from '../components/Footer'
 import Breadcrumb from '../components/Breadcrumb'
 
-export default function 首页() {
+export default function Home() {
   return (
     <div className="dark:bg-gray-900 flex flex-col items-center justify-center min-h-screen bg-white">
       <Head>
