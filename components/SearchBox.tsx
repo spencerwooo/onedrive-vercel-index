@@ -119,7 +119,7 @@ async function search(path: string, q: string): Promise<{ name: string; path: st
 async function searchViaOnedriveApi(path: string, q: string) {
   const hashedToken = getStoredToken(path)
   const data = await fetcher(`/api?path=${path}&q=${q}`, hashedToken ?? undefined)
-  return data.value.map((c: any) => ({ name: c.name, path: getPathFromWebUrl(c.webUrl) }))
+  return data.value.map((c: any) => ({ name: c.name, path: c.path }))
 }
 
 // Builtin search shipped by the app which supports Chinese
@@ -137,27 +137,6 @@ async function searchViaBuiltinAlgo(path: string, q: string) {
   }
   res.sort((a, b) => b[0] - a[0])
   return res.slice(0, siteConfig.maxSearchItems).map(r => r[1])
-}
-
-// Helper to extract path from webUrl
-// as OneDrive API does not provide an easy way to convert ID to path
-function getPathFromWebUrl(webUrl: string): string {
-  const url = new URL(webUrl)
-  const ps = url.pathname.split('/').filter(Boolean)
-
-  // Remove meaningless segments to get full path
-  ps.splice(0, 3)
-
-  // Remove base segments set in api config
-  const basePs = siteConfig.baseDirectory.split('/').filter(Boolean)
-  for (let i = 0; i < basePs.length; i++) {
-    if (basePs[i] != ps[i]) {
-      throw new Error('Path does not match base')
-    }
-  }
-  ps.splice(0, basePs.length)
-
-  return ps.join('/')
 }
 
 // Material design search icon licensed under Apache 2.0,

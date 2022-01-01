@@ -184,10 +184,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { data } = await axios.get(`${requestUrl}${isRoot ? '' : ':'}/search(q='${encodeURIComponent(qs)}')`, {
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
-        select: 'name,webUrl',
+        select: 'id,name',
         top: siteConfig.maxSearchItems,
       },
     })
+    await Promise.all(data.value.map((c: any, i: number) => (async () => {
+      const { data: itemData } = await axios.get(`${apiConfig.driveApi}/items/${c.id}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: {
+          select: 'parentReference',
+        },
+      })
+      data.value[i].path = itemData.parentReference.path + '/' + encodeURIComponent(c.name)
+    })()))
+
     res.status(200).json(data)
     return
   }
