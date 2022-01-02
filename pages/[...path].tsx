@@ -6,7 +6,6 @@ import Navbar from '../components/Navbar'
 import FileListing from '../components/FileListing'
 import Footer from '../components/Footer'
 import Breadcrumb from '../components/Breadcrumb'
-import SearchBox from '../components/SearchBox'
 
 export default function Folders() {
   const { query } = useRouter()
@@ -20,10 +19,7 @@ export default function Folders() {
       <main className="bg-gray-50 dark:bg-gray-800 flex flex-col flex-1 w-full">
         <Navbar />
         <div className="w-full max-w-5xl p-4 mx-auto">
-          <div className='flex flex-wrap justify-between items-center'>
-            <Breadcrumb query={query} />
-            <SearchBox query={query} />
-          </div>
+          <Breadcrumb query={query} />
           <FileListing query={query} />
         </div>
       </main>

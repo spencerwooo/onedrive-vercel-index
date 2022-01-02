@@ -1,6 +1,6 @@
 import { FunctionComponent, useState, useRef } from 'react'
-import { ParsedUrlQuery } from 'querystring'
 import { Menu, Transition } from '@headlessui/react'
+import { useRouter } from 'next/router'
 
 import { queryToPath } from './FileListing'
 import siteConfig from '../config/site.json'
@@ -10,7 +10,8 @@ import { traverseFolder } from './MultiFileDownloader'
 import getStrSimilarity from '../utils/getStrSimilarity'
 import useClickAwayListener from '../utils/useClickAwayListener'
 
-const SearchBox: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => {
+const SearchBox: FunctionComponent = () => {
+  const { query } = useRouter()
   const path = queryToPath(query)
 
   const [q, setQ] = useState<string>('')
@@ -30,7 +31,7 @@ const SearchBox: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => 
   }
 
   return (
-    <Menu as="div" className="relative pb-4">
+    <Menu as="div" className="relative">
       <div className="flex space-x-2">
         <input
           title="Search in current folder"

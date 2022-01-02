@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 
 import siteConfig from '../config/site.json'
+import SearchBox from './SearchBox'
 
 const Navbar = () => {
   const router = useRouter()
@@ -53,6 +54,8 @@ const Navbar = () => {
         </Link>
 
         <div className="flex items-center space-x-4 text-gray-700">
+          <SearchBox />
+
           {siteConfig.links.map(l => (
             <a
               key={l.name}
