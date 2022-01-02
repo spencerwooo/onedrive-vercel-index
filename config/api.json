@@ -4,5 +4,6 @@
   "redirectUri": "http://localhost",
   "authApi": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
   "driveApi": "https://graph.microsoft.com/v1.0/me/drive",
-  "scope": "Files.Read.All Files.ReadWrite.All offline_access"
+  "scope": "Files.Read.All Files.ReadWrite.All offline_access",
+  "directLink": "https://public.dm.files.1drv.com"
 }

@@ -84,7 +84,7 @@ const DownloadButtonGroup: React.FC<{ downloadUrl: string }> = ({ downloadUrl })
           clipboard.copy(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
           toast.success('Copied direct link to clipboard.')
         }}
-        btnColor="yellow"
+        btnColor="pink"
         btnText="Copy direct link"
         btnIcon="copy"
         btnTitle="Copy the permalink to the file to the clipboard"
