@@ -23,7 +23,7 @@ export default function OAuthStep1() {
         <div className="w-full max-w-5xl p-4 mx-auto">
           <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded p-3">
             <div className="mx-auto w-52">
-              <Image src="/images/fabulous-fireworks.png" width={912} height={912} alt="fabulous fireworks" />
+              <Image src="/images/fabulous-fireworks.png" width={912} height={912} alt="fabulous fireworks" priority />
             </div>
             <h3 className="font-medium text-xl mb-4 text-center">Welcome to your new onedrive-vercel-index 🎉</h3>
 

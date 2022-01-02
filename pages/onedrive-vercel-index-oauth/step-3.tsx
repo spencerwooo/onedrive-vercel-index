@@ -85,7 +85,13 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
         <div className="w-full max-w-5xl p-4 mx-auto">
           <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded p-3">
             <div className="mx-auto w-52">
-              <Image src="/images/fabulous-celebration.png" width={912} height={912} alt="fabulous celebration" />
+              <Image
+                src="/images/fabulous-celebration.png"
+                width={912}
+                height={912}
+                alt="fabulous celebration"
+                priority
+              />
             </div>
             <h3 className="font-medium text-xl mb-4 text-center">Welcome to your new onedrive-vercel-index 🎉</h3>
 

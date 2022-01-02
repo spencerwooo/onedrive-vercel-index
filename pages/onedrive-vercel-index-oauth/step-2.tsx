@@ -36,6 +36,7 @@ export default function OAuthStep2() {
                 width={912}
                 height={912}
                 alt="fabulous come back later"
+                priority
               />
             </div>
             <h3 className="font-medium text-xl mb-4 text-center">Welcome to your new onedrive-vercel-index 🎉</h3>

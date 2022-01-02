@@ -359,7 +359,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
               ) : (
                 <button
                   title="Download selected files"
-                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer disabled:text-gray-400 disabled:dark:text-gray-600 disabled:hover:bg-white disabled:hover:dark:bg-gray-900"
+                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer disabled:text-gray-400 disabled:dark:text-gray-600 disabled:hover:bg-white disabled:hover:dark:bg-gray-900 disabled:cursor-not-allowed"
                   disabled={totalSelected === 0}
                   onClick={handleSelectedDownload}
                 >
@@ -496,7 +496,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
               - showing {size} page{size > 1 ? 's' : ''} of {isLoadingMore ? '...' : children.length} files -
             </div>
             <button
-              className={`flex items-center justify-center w-full p-3 space-x-2 ${
+              className={`flex items-center justify-center w-full p-3 space-x-2 disabled:cursor-not-allowed ${
                 isLoadingMore || isReachingEnd ? 'opacity-60' : 'hover:bg-gray-100 dark:hover:bg-gray-850'
               }`}
               onClick={() => setSize(size + 1)}
