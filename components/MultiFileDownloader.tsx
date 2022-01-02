@@ -178,7 +178,18 @@ export async function* traverseFolder(path: string): AsyncGenerator<
     const itemLists = await Promise.all(
       folderPaths.map(fp =>
         (async fp => {
-          const data = await fetcher(`/api?path=${fp}`, hashedToken ?? undefined)
+          let data: any
+          try {
+            data = await fetcher(`/api?path=${fp}`, hashedToken ?? undefined)
+          } catch (error: any) {
+            // Skip errors caused by the client
+            if (Math.floor(error.response.status / 100) === 4) {
+              return null
+            } else {
+              throw error
+            }
+          }
+
           if (data && data.folder) {
             return data.folder.value.map((c: any) => {
               const p = `${fp === '/' ? '' : fp}/${encodeURIComponent(c.name)}`
@@ -191,7 +202,7 @@ export async function* traverseFolder(path: string): AsyncGenerator<
       )
     )
 
-    const items = itemLists.flat() as { path: string; meta: any; isFolder: boolean }[]
+    const items = itemLists.filter(Boolean).flat() as { path: string; meta: any; isFolder: boolean }[]
     yield* items
     folderPaths = items.filter(i => i.isFolder).map(i => i.path)
   }
