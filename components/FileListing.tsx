@@ -30,11 +30,11 @@ import CodePreview from './previews/CodePreview'
 import OfficePreview from './previews/OfficePreview'
 import AudioPreview from './previews/AudioPreview'
 import VideoPreview from './previews/VideoPreview'
-import DownloadBtn from './DownloadBtn'
+import DownloadButtonGroup from './DownloadBtnGtoup'
+import PDFPreview from './previews/PDFPreview'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
-const PDFPreview = dynamic(() => import('./previews/PDFPreview'), { ssr: false })
 const EPUBPreview = dynamic(() => import('./previews/EPUBPreview'), { ssr: false })
 
 /**
@@ -179,6 +179,14 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
   const { data, error, size, setSize } = useProtectedSWRInfinite(path)
 
   if (error) {
+    console.log(error)
+
+    // If error includes 403 which means the user has not completed initial setup, redirect to OAuth page
+    if (error.message.includes('403')) {
+      router.push('/onedrive-vercel-index-oauth/step-1')
+      return <div></div>
+    }
+
     return (
       <div className="dark:bg-gray-900 p-3 bg-white rounded">
         {error.message.includes('401') ? <Auth redirect={path} /> : <FourOhFour errorMsg={error.message} />}
@@ -351,7 +359,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
               ) : (
                 <button
                   title="Download selected files"
-                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer disabled:text-gray-400 disabled:dark:text-gray-600 disabled:hover:bg-white disabled:hover:dark:bg-gray-900"
+                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer disabled:text-gray-400 disabled:dark:text-gray-600 disabled:hover:bg-white disabled:hover:dark:bg-gray-900 disabled:cursor-not-allowed"
                   disabled={totalSelected === 0}
                   onClick={handleSelectedDownload}
                 >
@@ -488,7 +496,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
               - showing {size} page{size > 1 ? 's' : ''} of {isLoadingMore ? '...' : children.length} files -
             </div>
             <button
-              className={`flex items-center justify-center w-full p-3 space-x-2 ${
+              className={`flex items-center justify-center w-full p-3 space-x-2 disabled:cursor-not-allowed ${
                 isLoadingMore || isReachingEnd ? 'opacity-60' : 'hover:bg-gray-100 dark:hover:bg-gray-850'
               }`}
               onClick={() => setSize(size + 1)}
@@ -592,7 +600,7 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           />
         </div>
         <div className="mt-4">
-          <DownloadBtn downloadUrl={downloadUrl} />
+          <DownloadButtonGroup downloadUrl={downloadUrl} />
         </div>
       </>
     )

@@ -995,7 +995,7 @@
     background-color: #18181b;
   }
   .markdown-body a {
-    color: #58a6ff;
+    color: rgba(2, 132, 199);
   }
   .markdown-body hr {
     border-bottom: 1px solid #21262d;

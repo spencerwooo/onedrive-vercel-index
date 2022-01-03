@@ -20,6 +20,7 @@ import {
   faArrowAltCircleDown,
   faTrashAlt,
   faEnvelope,
+  faCheckCircle,
 } from '@fortawesome/free-regular-svg-icons'
 import {
   faPlus,
@@ -36,6 +37,10 @@ import {
   faSignOutAlt,
   faCloud,
   faChevronCircleDown,
+  faExternalLinkAlt,
+  faExclamationCircle,
+  faExclamationTriangle,
+  faHome,
 } from '@fortawesome/free-solid-svg-icons'
 import * as Icons from '@fortawesome/free-brands-svg-icons'
 
@@ -78,13 +83,18 @@ library.add(
   faEnvelope,
   faCloud,
   faChevronCircleDown,
-  ...iconList,
+  faExternalLinkAlt,
+  faExclamationCircle,
+  faExclamationTriangle,
+  faHome,
+  faCheckCircle,
+  ...iconList
 )
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      <NextNProgress height={1} color="rgb(63,63,70,0.9)" options={{ showSpinner: false }} />
+      <NextNProgress height={1} color="rgb(156, 163, 175, 0.9)" options={{ showSpinner: false }} />
       <Component {...pageProps} />
     </>
   )

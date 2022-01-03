@@ -1,6 +1,7 @@
 {
   "icon": "/icons/128.png",
   "title": "Hao_Tian's OneDrive Index",
+  "baseDirectory": "/Public",
   "maxItems": 100,
   "googleFontSans": "Overpass",
   "googleFontMono": "Overpass Mono",
