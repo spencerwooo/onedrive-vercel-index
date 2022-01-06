@@ -10,7 +10,7 @@
   ],
   "footer": "Powered by <a href=\"https://github.com/spencerwooo/onedrive-vercel-index\" target=\"_blank\" rel=\"noopener noreferrer\">onedrive-vercel-index</a>. Made with ❤ by SpencerWoo.",
   "protectedRoutes": [
-    "/Drive/passwd"
+    "/passwd"
   ],
   "email": "mailto:admin@champhoon.xyz",
   "links": [
