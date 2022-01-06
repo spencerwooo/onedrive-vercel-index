@@ -41,11 +41,11 @@ const Navbar = () => {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 sticky top-0 bg-opacity-80 border-b border-gray-900/10 backdrop-blur-md z-[100]">
+    <div className="bg-white dark:bg-gray-900 dark:border-gray-500/30 sticky top-0 bg-opacity-80 border-b border-gray-900/10 backdrop-blur-md z-[100]">
       <Toaster />
 
-      <div className="flex items-center justify-between w-full max-w-5xl mx-auto pr-4 py-1">
-        <Link href="/">
+      <div className="flex items-center justify-between w-full mx-auto px-4 py-1">
+        <Link href="/" passHref>
           <a className="dark:text-white hover:opacity-80 flex items-center p-2 space-x-2">
             <Image src={siteConfig.icon} alt="icon" width="25" height="25" priority />
             <span className="sm:block hidden font-bold">{siteConfig.title}</span>

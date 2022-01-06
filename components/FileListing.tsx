@@ -76,7 +76,7 @@ const FileListItem: FC<{
   const renderEmoji = emojiIcon && !emojiIcon.index
 
   return (
-    <div className="grid items-center grid-cols-10 p-3 space-x-2 cursor-pointer">
+    <div className="grid items-center grid-cols-10 px-3 py-2.5 space-x-2 cursor-pointer">
       <div className="md:col-span-6 flex items-center col-span-10 space-x-2 truncate">
         {/* <div>{c.file ? c.file.mimeType : 'folder'}</div> */}
         <div className="flex-shrink-0 w-5 text-center">
@@ -342,14 +342,18 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
     return (
       <>
-        <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded border border-gray-899/10">
-          <div className="dark:border-gray-700 grid items-center grid-cols-12 px-3 space-x-2 border-b border-gray-200">
-            <div className="md:col-span-6 col-span-12 font-bold py-3">Name</div>
-            <div className="md:block hidden col-span-3 font-bold">Last Modified</div>
-            <div className="md:block hidden font-bold">Size</div>
-            <div className="md:block hidden font-bold">Actions</div>
-            <div className="md:block hidden font-bold">
-              <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
+        <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded">
+          <div className="dark:border-gray-500/30 grid items-center grid-cols-12 px-3 space-x-2 border-b border-gray-900/10">
+            <div className="md:col-span-6 col-span-12 font-bold py-2 text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">
+              Name
+            </div>
+            <div className="md:block hidden col-span-3 font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">
+              Last Modified
+            </div>
+            <div className="md:block hidden font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">Size</div>
+            <div className="md:block hidden font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">Actions</div>
+            <div className="md:block hidden font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">
+              <div className="md:flex dark:text-gray-400 hidden px-1.5 py-1 text-gray-700">
                 <Checkbox
                   checked={totalSelected}
                   onChange={toggleTotalSelected}
@@ -365,7 +369,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
                     disabled={totalSelected === 0}
                     onClick={handleSelectedDownload}
                   >
-                    <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
+                    <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} size="lg" />
                   </button>
                 )}
               </div>
@@ -429,10 +433,10 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
                 <FileListItem fileContent={c} />
               </div>
               {c.folder ? (
-                <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
+                <div className="md:flex dark:text-gray-400 hidden p-1.5 text-gray-700">
                   <span
                     title="Copy folder permalink"
-                    className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
+                    className="hover:bg-gray-300 dark:hover:bg-gray-600 px-1.5 py-1 rounded cursor-pointer"
                     onClick={() => {
                       clipboard.copy(`${getBaseUrl()}${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)
                       toast('Copied folder permalink.', { icon: '👌' })
@@ -445,7 +449,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
                   ) : (
                     <span
                       title="Download folder"
-                      className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
+                      className="hover:bg-gray-300 dark:hover:bg-gray-600 px-1.5 py-1 rounded cursor-pointer"
                       onClick={() => {
                         const p = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
                         handleFolderDownload(p, c.id, c.name)()
@@ -456,10 +460,10 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
                   )}
                 </div>
               ) : (
-                <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
+                <div className="md:flex dark:text-gray-400 hidden px-1.5 py-1 text-gray-700">
                   <span
                     title="Copy raw file permalink"
-                    className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
+                    className="hover:bg-gray-300 dark:hover:bg-gray-600 px-1.5 py-1 rounded cursor-pointer"
                     onClick={() => {
                       clipboard.copy(
                         `${getBaseUrl()}/api?path=${path === '/' ? '' : path}/${encodeURIComponent(c.name)}&raw=true`
@@ -471,7 +475,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
                   </span>
                   <a
                     title="Download file"
-                    className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
+                    className="hover:bg-gray-300 dark:hover:bg-gray-600 p-1 rounded cursor-pointer"
                     href={c['@microsoft.graph.downloadUrl']}
                   >
                     <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />

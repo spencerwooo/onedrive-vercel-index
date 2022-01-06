@@ -16,7 +16,7 @@ export default function Folders() {
         <title>{siteConfig.title}</title>
       </Head>
 
-      <main className=" flex flex-col flex-1 w-full">
+      <main className="bg-gray-50 dark:bg-gray-800 flex flex-col flex-1 w-full">
         <Navbar />
         <div className="w-full max-w-5xl p-4 mx-auto">
           <Breadcrumb query={query} />

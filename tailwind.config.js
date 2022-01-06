@@ -30,7 +30,7 @@ module.exports = {
       },
       colors: {
         gray: {
-          850: '#2E2E34'
+          850: '#222226'
         }
       }
     }

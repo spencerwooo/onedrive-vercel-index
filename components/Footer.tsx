@@ -9,7 +9,7 @@ const createFooterMarkup = () => {
 const Footer = () => {
   return (
     <div
-      className="p-4 text-sm text-gray-400 w-full text-center border-t border-gray-900/10"
+      className="p-4 text-sm text-gray-400 w-full text-center border-t border-gray-900/10 dark:border-gray-500/30"
       dangerouslySetInnerHTML={createFooterMarkup()}
     ></div>
   )
