@@ -1,7 +1,7 @@
 {
   "icon": "/icons/128.png",
   "title": "Index-Drive-Prohibitorum",
-  "baseDirectory": "/",
+  "baseDirectory": "",
   "maxItems": 100,
   "googleFontSans": "Inter",
   "googleFontMono": "Fira Mono",
