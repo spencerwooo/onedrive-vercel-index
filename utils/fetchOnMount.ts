@@ -2,10 +2,10 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 
 // Custom hook to fetch raw file content on mount
-export default function useFileContent(odRawUrl: string): { content: string; error: null; validating: boolean } {
+export default function useFileContent(odRawUrl: string): { content: string; error: string; validating: boolean } {
   const [content, setContent] = useState('')
   const [validating, setValidating] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     axios
