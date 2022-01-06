@@ -33,7 +33,7 @@ const Breadcrumb: React.FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
   return (
     <div className="dark:text-gray-300 hover:opacity-80 pb-4 text-sm text-gray-600 transition-all duration-75">
-      <div className="px-1">
+      <div>
         <Link href="/">🚩 Home</Link>
       </div>
     </div>
