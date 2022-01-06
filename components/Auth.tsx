@@ -2,12 +2,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { FunctionComponent, useState } from 'react'
+import { FC, useState } from 'react'
 
 import { matchProtectedRoute } from '../utils/protectedRouteHandler'
 import useLocalStorage from '../utils/useLocalStorage'
 
-const Auth: FunctionComponent<{ redirect: string }> = ({ redirect }) => {
+const Auth: FC<{ redirect: string }> = ({ redirect }) => {
   const authTokenPath = matchProtectedRoute(redirect)
 
   const router = useRouter()

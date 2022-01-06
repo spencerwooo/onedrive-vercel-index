@@ -4,7 +4,7 @@ import emojiRegex from 'emoji-regex'
 import { useClipboard } from 'use-clipboard-copy'
 
 import { ParsedUrlQuery } from 'querystring'
-import { FunctionComponent, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
+import { FC, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
 import { ImageDecorator } from 'react-viewer/lib/ViewerProps'
 
 import { useRouter } from 'next/router'
@@ -32,6 +32,7 @@ import AudioPreview from './previews/AudioPreview'
 import VideoPreview from './previews/VideoPreview'
 import DownloadButtonGroup from './DownloadBtnGtoup'
 import PDFPreview from './previews/PDFPreview'
+import { DownloadBtnContainer, PreviewContainer } from './previews/Containers'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
@@ -68,14 +69,14 @@ const queryToPath = (query?: ParsedUrlQuery) => {
   return '/'
 }
 
-const FileListItem: FunctionComponent<{
+const FileListItem: FC<{
   fileContent: { id: string; name: string; size: number; file: Object; lastModifiedDateTime: string }
 }> = ({ fileContent: c }) => {
   const emojiIcon = emojiRegex().exec(c.name)
   const renderEmoji = emojiIcon && !emojiIcon.index
 
   return (
-    <div className="grid items-center grid-cols-10 p-3 space-x-2 cursor-pointer">
+    <div className="grid items-center grid-cols-10 px-3 py-2.5 space-x-2 cursor-pointer">
       <div className="md:col-span-6 flex items-center col-span-10 space-x-2 truncate">
         {/* <div>{c.file ? c.file.mimeType : 'folder'}</div> */}
         <div className="flex-shrink-0 w-5 text-center">
@@ -106,7 +107,7 @@ const FileListItem: FunctionComponent<{
   )
 }
 
-const Checkbox: FunctionComponent<{
+const Checkbox: FC<{
   checked: 0 | 1 | 2
   onChange: () => void
   title: string
@@ -151,7 +152,7 @@ const Checkbox: FunctionComponent<{
   )
 }
 
-const Downloading: FunctionComponent<{ title: string }> = ({ title }) => {
+const Downloading: FC<{ title: string }> = ({ title }) => {
   return (
     <span title={title} className="p-2 rounded" role="status">
       <LoadingIcon
@@ -163,7 +164,7 @@ const Downloading: FunctionComponent<{ title: string }> = ({ title }) => {
   )
 }
 
-const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => {
+const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   const [imageViewerVisible, setImageViewerVisibility] = useState(false)
   const [activeImageIdx, setActiveImageIdx] = useState(0)
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
@@ -188,16 +189,16 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     }
 
     return (
-      <div className="dark:bg-gray-900 p-3 bg-white rounded">
+      <PreviewContainer>
         {error.message.includes('401') ? <Auth redirect={path} /> : <FourOhFour errorMsg={error.message} />}
-      </div>
+      </PreviewContainer>
     )
   }
   if (!data) {
     return (
-      <div className="dark:bg-gray-900 p-3 bg-white rounded">
+      <PreviewContainer>
         <Loading loadingText="Loading ..." />
-      </div>
+      </PreviewContainer>
     )
   }
 
@@ -340,210 +341,215 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
     }
 
     return (
-      <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded">
-        <div className="dark:border-gray-700 grid items-center grid-cols-12 px-3 space-x-2 border-b border-gray-200">
-          <div className="md:col-span-6 col-span-12 font-bold py-3">Name</div>
-          <div className="md:block hidden col-span-3 font-bold">Last Modified</div>
-          <div className="md:block hidden font-bold">Size</div>
-          <div className="md:block hidden font-bold">Actions</div>
-          <div className="md:block hidden font-bold">
-            <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
-              <Checkbox
-                checked={totalSelected}
-                onChange={toggleTotalSelected}
-                indeterminate={true}
-                title={'Select files'}
-              />
-              {totalGenerating ? (
-                <Downloading title="Downloading selected files, refresh page to cancel" />
-              ) : (
-                <button
-                  title="Download selected files"
-                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer disabled:text-gray-400 disabled:dark:text-gray-600 disabled:hover:bg-white disabled:hover:dark:bg-gray-900 disabled:cursor-not-allowed"
-                  disabled={totalSelected === 0}
-                  onClick={handleSelectedDownload}
-                >
-                  <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
-                </button>
-              )}
+      <>
+        <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded">
+          <div className="dark:border-gray-500/30 grid items-center grid-cols-12 px-3 space-x-2 border-b border-gray-900/10">
+            <div className="md:col-span-6 col-span-12 font-bold py-2 text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">
+              Name
             </div>
-          </div>
-        </div>
-
-        <Toaster />
-
-        {imagesInFolder.length !== 0 && (
-          <ReactViewer
-            zIndex={99}
-            visible={imageViewerVisible}
-            activeIndex={activeImageIdx}
-            images={imagesInFolder}
-            drag={false}
-            rotatable={false}
-            noClose={true}
-            scalable={false}
-            zoomSpeed={0.2}
-            downloadable={true}
-            downloadInNewWindow={true}
-            onMaskClick={() => {
-              setImageViewerVisibility(false)
-            }}
-            customToolbar={toolbars => {
-              toolbars[0].render = <FontAwesomeIcon icon="plus" />
-              toolbars[1].render = <FontAwesomeIcon icon="minus" />
-              toolbars[2].render = <FontAwesomeIcon icon="arrow-left" />
-              toolbars[3].render = <FontAwesomeIcon icon="undo" />
-              toolbars[4].render = <FontAwesomeIcon icon="arrow-right" />
-              toolbars[9].render = <FontAwesomeIcon icon="download" />
-              return toolbars.concat([
-                {
-                  key: 'copy',
-                  render: <FontAwesomeIcon icon={['fas', 'copy']} />,
-                  onClick: i => {
-                    clipboard.copy(i.alt ? `${getBaseUrl()}/api?path=${path + '/' + i.alt}&raw=true` : '')
-                    toast('Copied image permanent link to clipboard.', { icon: '👌' })
-                  },
-                },
-              ])
-            }}
-          />
-        )}
-
-        {children.map((c: any) => (
-          <div className="hover:bg-gray-100 dark:hover:bg-gray-850 grid grid-cols-12" key={c.id}>
-            <div
-              className="col-span-10"
-              onClick={e => {
-                e.preventDefault()
-
-                if (!c.folder && fileIsImage(c.name)) {
-                  setActiveImageIdx(imageIndexDict[c.id])
-                  setImageViewerVisibility(true)
-                } else {
-                  router.push(`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)
-                }
-              }}
-            >
-              <FileListItem fileContent={c} />
+            <div className="md:block hidden col-span-3 font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">
+              Last Modified
             </div>
-            {c.folder ? (
-              <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
-                <span
-                  title="Copy folder permalink"
-                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
-                  onClick={() => {
-                    clipboard.copy(`${getBaseUrl()}${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)
-                    toast('Copied folder permalink.', { icon: '👌' })
-                  }}
-                >
-                  <FontAwesomeIcon icon={['far', 'copy']} />
-                </span>
-                {folderGenerating[c.id] ? (
-                  <Downloading title="Downloading folder, refresh page to cancel" />
+            <div className="md:block hidden font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">Size</div>
+            <div className="md:block hidden font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">Actions</div>
+            <div className="md:block hidden font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">
+              <div className="md:flex dark:text-gray-400 hidden px-1.5 py-1 text-gray-700">
+                <Checkbox
+                  checked={totalSelected}
+                  onChange={toggleTotalSelected}
+                  indeterminate={true}
+                  title={'Select files'}
+                />
+                {totalGenerating ? (
+                  <Downloading title="Downloading selected files, refresh page to cancel" />
                 ) : (
-                  <span
-                    title="Download folder"
-                    className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
-                    onClick={() => {
-                      const p = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
-                      handleFolderDownload(p, c.id, c.name)()
-                    }}
+                  <button
+                    title="Download selected files"
+                    className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer disabled:text-gray-400 disabled:dark:text-gray-600 disabled:hover:bg-white disabled:hover:dark:bg-gray-900 disabled:cursor-not-allowed"
+                    disabled={totalSelected === 0}
+                    onClick={handleSelectedDownload}
                   >
-                    <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
-                  </span>
+                    <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} size="lg" />
+                  </button>
                 )}
               </div>
-            ) : (
-              <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
-                <span
-                  title="Copy raw file permalink"
-                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
-                  onClick={() => {
-                    clipboard.copy(
-                      `${getBaseUrl()}/api?path=${path === '/' ? '' : path}/${encodeURIComponent(c.name)}&raw=true`
-                    )
-                    toast.success('Copied raw file permalink.')
-                  }}
-                >
-                  <FontAwesomeIcon icon={['far', 'copy']} />
-                </span>
-                <a
-                  title="Download file"
-                  className="hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded cursor-pointer"
-                  href={c['@microsoft.graph.downloadUrl']}
-                >
-                  <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
-                </a>
+            </div>
+          </div>
+
+          <Toaster />
+
+          {imagesInFolder.length !== 0 && (
+            <ReactViewer
+              zIndex={99}
+              visible={imageViewerVisible}
+              activeIndex={activeImageIdx}
+              images={imagesInFolder}
+              drag={false}
+              rotatable={false}
+              noClose={true}
+              scalable={false}
+              zoomSpeed={0.2}
+              downloadable={true}
+              downloadInNewWindow={true}
+              onMaskClick={() => {
+                setImageViewerVisibility(false)
+              }}
+              customToolbar={toolbars => {
+                toolbars[0].render = <FontAwesomeIcon icon="plus" />
+                toolbars[1].render = <FontAwesomeIcon icon="minus" />
+                toolbars[2].render = <FontAwesomeIcon icon="arrow-left" />
+                toolbars[3].render = <FontAwesomeIcon icon="undo" />
+                toolbars[4].render = <FontAwesomeIcon icon="arrow-right" />
+                toolbars[9].render = <FontAwesomeIcon icon="download" />
+                return toolbars.concat([
+                  {
+                    key: 'copy',
+                    render: <FontAwesomeIcon icon={['fas', 'copy']} />,
+                    onClick: i => {
+                      clipboard.copy(i.alt ? `${getBaseUrl()}/api?path=${path + '/' + i.alt}&raw=true` : '')
+                      toast('Copied image permanent link to clipboard.', { icon: '👌' })
+                    },
+                  },
+                ])
+              }}
+            />
+          )}
+
+          {children.map((c: any) => (
+            <div className="hover:bg-gray-100 dark:hover:bg-gray-850 grid grid-cols-12" key={c.id}>
+              <div
+                className="col-span-10"
+                onClick={e => {
+                  e.preventDefault()
+
+                  if (!c.folder && fileIsImage(c.name)) {
+                    setActiveImageIdx(imageIndexDict[c.id])
+                    setImageViewerVisibility(true)
+                  } else {
+                    router.push(`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)
+                  }
+                }}
+              >
+                <FileListItem fileContent={c} />
               </div>
-            )}
-            <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
-              {c.folder || c.name === '.password' ? (
-                ''
-              ) : (
-                <Checkbox
-                  checked={selected[c.id] ? 2 : 0}
-                  onChange={() => toggleItemSelected(c.id)}
-                  title="Select file"
-                />
-              )}
-            </div>
-          </div>
-        ))}
-
-        {!onlyOnePage && (
-          <div>
-            <div className="dark:border-gray-700 p-3 font-mono text-sm text-center text-gray-400 border-b border-gray-200">
-              - showing {size} page{size > 1 ? 's' : ''} of {isLoadingMore ? '...' : children.length} files -
-            </div>
-            <button
-              className={`flex items-center justify-center w-full p-3 space-x-2 disabled:cursor-not-allowed ${
-                isLoadingMore || isReachingEnd ? 'opacity-60' : 'hover:bg-gray-100 dark:hover:bg-gray-850'
-              }`}
-              onClick={() => setSize(size + 1)}
-              disabled={isLoadingMore || isReachingEnd}
-            >
-              {isLoadingMore ? (
-                <>
-                  <span>Loading ...</span>{' '}
-                  <svg
-                    className="animate-spin w-5 h-5 mr-3 -ml-1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
+              {c.folder ? (
+                <div className="md:flex dark:text-gray-400 hidden p-1.5 text-gray-700">
+                  <span
+                    title="Copy folder permalink"
+                    className="hover:bg-gray-300 dark:hover:bg-gray-600 px-1.5 py-1 rounded cursor-pointer"
+                    onClick={() => {
+                      clipboard.copy(`${getBaseUrl()}${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)
+                      toast('Copied folder permalink.', { icon: '👌' })
+                    }}
                   >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                </>
-              ) : isReachingEnd ? (
-                <span>No more files</span>
+                    <FontAwesomeIcon icon={['far', 'copy']} />
+                  </span>
+                  {folderGenerating[c.id] ? (
+                    <Downloading title="Downloading folder, refresh page to cancel" />
+                  ) : (
+                    <span
+                      title="Download folder"
+                      className="hover:bg-gray-300 dark:hover:bg-gray-600 px-1.5 py-1 rounded cursor-pointer"
+                      onClick={() => {
+                        const p = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
+                        handleFolderDownload(p, c.id, c.name)()
+                      }}
+                    >
+                      <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
+                    </span>
+                  )}
+                </div>
               ) : (
-                <>
-                  <span>Load more</span>
-                  <FontAwesomeIcon icon="chevron-circle-down" />
-                </>
+                <div className="md:flex dark:text-gray-400 hidden px-1.5 py-1 text-gray-700">
+                  <span
+                    title="Copy raw file permalink"
+                    className="hover:bg-gray-300 dark:hover:bg-gray-600 px-1.5 py-1 rounded cursor-pointer"
+                    onClick={() => {
+                      clipboard.copy(
+                        `${getBaseUrl()}/api?path=${path === '/' ? '' : path}/${encodeURIComponent(c.name)}&raw=true`
+                      )
+                      toast.success('Copied raw file permalink.')
+                    }}
+                  >
+                    <FontAwesomeIcon icon={['far', 'copy']} />
+                  </span>
+                  <a
+                    title="Download file"
+                    className="hover:bg-gray-300 dark:hover:bg-gray-600 p-1 rounded cursor-pointer"
+                    href={c['@microsoft.graph.downloadUrl']}
+                  >
+                    <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
+                  </a>
+                </div>
               )}
-            </button>
-          </div>
-        )}
+              <div className="md:flex dark:text-gray-400 hidden p-1 text-gray-700">
+                {c.folder || c.name === '.password' ? (
+                  ''
+                ) : (
+                  <Checkbox
+                    checked={selected[c.id] ? 2 : 0}
+                    onChange={() => toggleItemSelected(c.id)}
+                    title="Select file"
+                  />
+                )}
+              </div>
+            </div>
+          ))}
 
+          {!onlyOnePage && (
+            <div>
+              <div className="dark:border-gray-700 p-3 font-mono text-sm text-center text-gray-400 border-b border-gray-200">
+                - showing {size} page{size > 1 ? 's' : ''} of {isLoadingMore ? '...' : children.length} files -
+              </div>
+              <button
+                className={`flex items-center justify-center w-full p-3 space-x-2 disabled:cursor-not-allowed ${
+                  isLoadingMore || isReachingEnd ? 'opacity-60' : 'hover:bg-gray-100 dark:hover:bg-gray-850'
+                }`}
+                onClick={() => setSize(size + 1)}
+                disabled={isLoadingMore || isReachingEnd}
+              >
+                {isLoadingMore ? (
+                  <>
+                    <span>Loading ...</span>{' '}
+                    <svg
+                      className="animate-spin w-5 h-5 mr-3 -ml-1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  </>
+                ) : isReachingEnd ? (
+                  <span>No more files</span>
+                ) : (
+                  <>
+                    <span>Load more</span>
+                    <FontAwesomeIcon icon="chevron-circle-down" />
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+        </div>
         {renderReadme && (
-          <div className="dark:border-gray-700 border-t">
+          <div className="mt-4">
             <MarkdownPreview file={readmeFile} path={path} standalone={false} />
           </div>
         )}
-      </div>
+      </>
     )
   }
 
@@ -557,10 +563,10 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
       switch (extensions[fileExtension]) {
         case preview.image:
           return (
-            <div className="w-full p-3 bg-white rounded">
+            <PreviewContainer>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img className="mx-auto" src={downloadUrl} alt={fileName} />
-            </div>
+            </PreviewContainer>
           )
 
         case preview.text:
@@ -588,28 +594,28 @@ const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) =
           return <EPUBPreview file={file} />
 
         default:
-          return <div className="dark:bg-gray-900 bg-white rounded">{fileName}</div>
+          return <PreviewContainer>{fileName}</PreviewContainer>
       }
     }
 
     return (
       <>
-        <div className="dark:bg-gray-900 p-3 bg-white rounded">
+        <PreviewContainer>
           <FourOhFour
             errorMsg={`Preview for file ${fileName} is not available, download directly with the button below.`}
           />
-        </div>
-        <div className="mt-4">
+        </PreviewContainer>
+        <DownloadBtnContainer>
           <DownloadButtonGroup downloadUrl={downloadUrl} />
-        </div>
+        </DownloadBtnContainer>
       </>
     )
   }
 
   return (
-    <div className="dark:bg-gray-900 p-3 bg-white rounded">
+    <PreviewContainer>
       <FourOhFour errorMsg={`Cannot preview ${path}`} />
-    </div>
+    </PreviewContainer>
   )
 }
 export default FileListing
