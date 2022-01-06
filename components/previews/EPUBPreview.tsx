@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { ReactReader } from 'react-reader'
 import type { Rendition } from 'epubjs'
 
@@ -6,7 +6,7 @@ import Loading from '../Loading'
 import DownloadButtonGroup from '../DownloadBtnGtoup'
 import { DownloadBtnContainer } from './Containers'
 
-const EPUBPreview: FunctionComponent<{ file: any }> = ({ file }) => {
+const EPUBPreview: FC<{ file: any }> = ({ file }) => {
   const [epubContainerWidth, setEpubContainerWidth] = useState(400)
   const epubContainer = useRef<HTMLDivElement>(null)
 

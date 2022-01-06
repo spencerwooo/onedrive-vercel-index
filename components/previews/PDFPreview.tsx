@@ -1,9 +1,7 @@
-import { FunctionComponent } from 'react'
-
 import DownloadButtonGroup from '../DownloadBtnGtoup'
 import { DownloadBtnContainer } from './Containers'
 
-const PDFEmbedPreview: FunctionComponent<{ file: any }> = ({ file }) => {
+const PDFEmbedPreview: React.FC<{ file: any }> = ({ file }) => {
   // const url = `/api/proxy?url=${encodeURIComponent(file['@microsoft.graph.downloadUrl'])}&inline=true`
   const url = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(
     file['@microsoft.graph.downloadUrl']

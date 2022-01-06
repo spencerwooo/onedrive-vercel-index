@@ -4,7 +4,7 @@ import emojiRegex from 'emoji-regex'
 import { useClipboard } from 'use-clipboard-copy'
 
 import { ParsedUrlQuery } from 'querystring'
-import { FunctionComponent, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
+import { FC, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
 import { ImageDecorator } from 'react-viewer/lib/ViewerProps'
 
 import { useRouter } from 'next/router'
@@ -69,7 +69,7 @@ const queryToPath = (query?: ParsedUrlQuery) => {
   return '/'
 }
 
-const FileListItem: FunctionComponent<{
+const FileListItem: FC<{
   fileContent: { id: string; name: string; size: number; file: Object; lastModifiedDateTime: string }
 }> = ({ fileContent: c }) => {
   const emojiIcon = emojiRegex().exec(c.name)
@@ -107,7 +107,7 @@ const FileListItem: FunctionComponent<{
   )
 }
 
-const Checkbox: FunctionComponent<{
+const Checkbox: FC<{
   checked: 0 | 1 | 2
   onChange: () => void
   title: string
@@ -152,7 +152,7 @@ const Checkbox: FunctionComponent<{
   )
 }
 
-const Downloading: FunctionComponent<{ title: string }> = ({ title }) => {
+const Downloading: FC<{ title: string }> = ({ title }) => {
   return (
     <span title={title} className="p-2 rounded" role="status">
       <LoadingIcon
@@ -164,7 +164,7 @@ const Downloading: FunctionComponent<{ title: string }> = ({ title }) => {
   )
 }
 
-const FileListing: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => {
+const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   const [imageViewerVisible, setImageViewerVisibility] = useState(false)
   const [activeImageIdx, setActiveImageIdx] = useState(0)
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({})

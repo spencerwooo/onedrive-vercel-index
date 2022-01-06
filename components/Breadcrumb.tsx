@@ -1,9 +1,8 @@
 import Link from 'next/link'
 
 import { ParsedUrlQuery } from 'querystring'
-import { FunctionComponent } from 'react'
 
-const Breadcrumb: FunctionComponent<{ query?: ParsedUrlQuery }> = ({ query }) => {
+const Breadcrumb: React.FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   if (query) {
     const { path } = query
     if (Array.isArray(path)) {

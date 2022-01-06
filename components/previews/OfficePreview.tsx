@@ -1,10 +1,10 @@
-import { FunctionComponent, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import Preview from 'preview-office-docs'
 
 import DownloadButtonGroup from '../DownloadBtnGtoup'
 import { DownloadBtnContainer } from './Containers'
 
-const OfficePreview: FunctionComponent<{ file: any }> = ({ file }) => {
+const OfficePreview: FC<{ file: any }> = ({ file }) => {
   const docContainer = useRef<HTMLDivElement>(null)
   const [docContainerWidth, setDocContainerWidth] = useState(600)
 

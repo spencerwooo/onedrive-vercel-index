@@ -1,4 +1,4 @@
-import { useEffect, FunctionComponent, CSSProperties } from 'react'
+import { useEffect, FC, CSSProperties } from 'react'
 import Prism from 'prismjs'
 import ReactMarkdown from 'react-markdown'
 import gfm from 'remark-gfm'
@@ -14,7 +14,7 @@ import DownloadButtonGroup from '../DownloadBtnGtoup'
 import useFileContent from '../../utils/fetchOnMount'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
-const MarkdownPreview: FunctionComponent<{ file: any; path: string; standalone?: boolean }> = ({
+const MarkdownPreview: FC<{ file: any; path: string; standalone?: boolean }> = ({
   file,
   path,
   standalone = true,
