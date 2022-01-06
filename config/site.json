@@ -12,5 +12,11 @@
   "protectedRoutes": [
     "/passwd"
   ],
-  "email": "mailto:admin@champhoon.xyz"
+  "email": "mailto:admin@champhoon.xyz",
+  "links": [
+    {
+      "name": "Telegram",
+      "link": "https://t.me/aquausora"
+    }
+  ]
 }
