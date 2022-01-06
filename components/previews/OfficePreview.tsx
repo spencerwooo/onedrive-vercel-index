@@ -1,9 +1,10 @@
-import { FunctionComponent, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import Preview from 'preview-office-docs'
 
 import DownloadButtonGroup from '../DownloadBtnGtoup'
+import { DownloadBtnContainer } from './Containers'
 
-const OfficePreview: FunctionComponent<{ file: any }> = ({ file }) => {
+const OfficePreview: FC<{ file: any }> = ({ file }) => {
   const docContainer = useRef<HTMLDivElement>(null)
   const [docContainerWidth, setDocContainerWidth] = useState(600)
 
@@ -20,9 +21,9 @@ const OfficePreview: FunctionComponent<{ file: any }> = ({ file }) => {
           height="600"
         />
       </div>
-      <div className="border-t-gray-200 dark:border-t-gray-700 border-t p-2 sticky bottom-0 left-0 right-0 z-10 bg-white bg-opacity-80 backdrop-blur-md dark:bg-gray-900">
+      <DownloadBtnContainer>
         <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
-      </div>
+      </DownloadBtnContainer>
     </div>
   )
 }

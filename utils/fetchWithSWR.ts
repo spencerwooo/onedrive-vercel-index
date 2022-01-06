@@ -56,10 +56,11 @@ export function useProtectedSWRInfinite(path: string = '') {
     return [`/api?path=${path}&next=${previousPageData.next}`, hashedToken]
   }
 
-  const revalidationOptions = {
-    revalidateOnMount: !(cache.has(`arg@"/api?path=${path}"@null`) || cache.has(`/api?path=${path}`)),
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-  }
-  return useSWRInfinite(getNextKey, fetcher, revalidationOptions)
+  // const revalidationOptions = {
+  //   revalidateOnMount: !(cache.has(`arg@"/api?path=${path}"@null`) || cache.has(`/api?path=${path}`)),
+  //   revalidateOnFocus: false,
+  //   revalidateOnReconnect: true,
+  // }
+  // return useSWRInfinite(getNextKey, fetcher, revalidationOptions)
+  return useSWRInfinite(getNextKey, fetcher)
 }
