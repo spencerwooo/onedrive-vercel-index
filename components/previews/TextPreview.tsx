@@ -1,35 +1,43 @@
-import { FunctionComponent } from 'react'
-
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import DownloadButtonGroup from '../DownloadBtnGtoup'
-import { useStaleSWR } from '../../utils/fetchWithSWR'
+import useFileContent from '../../utils/fetchOnMount'
+import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
-const TextPreview: FunctionComponent<{ file: any }> = ({ file }) => {
-  const { data, error } = useStaleSWR({ url: file['@microsoft.graph.downloadUrl'] })
+const TextPreview = ({ file }) => {
+  const { content, error, validating } = useFileContent(file['@microsoft.graph.downloadUrl'])
   if (error) {
     return (
-      <div className="dark:bg-gray-900 p-3 bg-white rounded">
-        <FourOhFour errorMsg={error.message} />
-      </div>
+      <PreviewContainer>
+        <FourOhFour errorMsg={error} />
+      </PreviewContainer>
     )
   }
-  if (!data) {
+
+  if (validating) {
     return (
-      <div className="dark:bg-gray-900 p-3 bg-white rounded">
+      <PreviewContainer>
         <Loading loadingText="Loading file content..." />
-      </div>
+      </PreviewContainer>
+    )
+  }
+
+  if (!content) {
+    return (
+      <PreviewContainer>
+        <FourOhFour errorMsg="File is empty." />
+      </PreviewContainer>
     )
   }
 
   return (
     <div>
-      <div className="dark:bg-gray-900 dark:text-gray-100 p-3 bg-white rounded">
-        <pre className="md:p-3 p-0 overflow-scroll">{data}</pre>
-      </div>
-      <div className="border-t-gray-200 dark:border-t-gray-700 border-t p-2 sticky bottom-0 left-0 right-0 z-10 bg-white bg-opacity-80 backdrop-blur-md dark:bg-gray-900">
+      <PreviewContainer>
+        <pre className="md:p-3 p-0 overflow-x-scroll text-sm">{content}</pre>
+      </PreviewContainer>
+      <DownloadBtnContainer>
         <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
-      </div>
+      </DownloadBtnContainer>
     </div>
   )
 }

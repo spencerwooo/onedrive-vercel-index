@@ -1,7 +1,6 @@
 import Image from 'next/image'
-import { FunctionComponent } from 'react'
 
-const FourOhFour: FunctionComponent<{ errorMsg: string }> = ({ errorMsg }) => {
+const FourOhFour: React.FC<{ errorMsg: string }> = ({ errorMsg }) => {
   return (
     <div className="my-12">
       <div className="w-1/3 mx-auto">

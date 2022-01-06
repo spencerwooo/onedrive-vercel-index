@@ -1,8 +1,9 @@
-import { FunctionComponent, useState } from 'react'
+import { FC, useState } from 'react'
 import ReactPlayer from 'react-player'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import DownloadButtonGroup from '../DownloadBtnGtoup'
+import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
 enum PlayerState {
   Loading,
@@ -11,12 +12,12 @@ enum PlayerState {
   Paused,
 }
 
-const AudioPreview: FunctionComponent<{ file: any }> = ({ file }) => {
+const AudioPreview: FC<{ file: any }> = ({ file }) => {
   const [playerStatus, setPlayerStatus] = useState(PlayerState.Loading)
 
   return (
     <>
-      <div className="dark:bg-gray-900 dark:text-white w-full p-3 bg-white rounded">
+      <PreviewContainer>
         <div className="md:flex-row md:space-x-4 flex flex-col space-y-4">
           <div className="dark:bg-gray-700 aspect-square flex items-center justify-center w-full md:w-40 transition-all duration-75 bg-gray-100 rounded">
             {playerStatus === PlayerState.Loading ? (
@@ -72,11 +73,11 @@ const AudioPreview: FunctionComponent<{ file: any }> = ({ file }) => {
             />
           </div>
         </div>
-      </div>
+      </PreviewContainer>
 
-      <div className="border-t-gray-200 dark:border-t-gray-700 border-t p-2 sticky bottom-0 left-0 right-0 z-10 bg-white bg-opacity-80 backdrop-blur-md dark:bg-gray-900">
+      <DownloadBtnContainer>
         <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
-      </div>
+      </DownloadBtnContainer>
     </>
   )
 }
