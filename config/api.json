@@ -1,7 +1,7 @@
 {
   "clientId": "50efcbc6-7762-4d61-85c5-deeded065def",
   "obfuscatedClientSecret": "FhLTyHBpw4zV82el3ADwtIN2QHlhK9DEhBmSp5+8tEKYow4UNxnAz7kbpI8I1ofe",
-  "redirectUri": "http://localhost",
+  "redirectUri": "http://localhost:3000",
   "authApi": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
   "driveApi": "https://graph.microsoft.com/v1.0/me/drive",
   "scope": "Files.Read.All Files.ReadWrite.All offline_access",
