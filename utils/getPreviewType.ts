@@ -8,6 +8,7 @@ const preview = {
   audio: 'audio',
   office: 'ms-office',
   epub: 'epub',
+  url: 'url',
 }
 
 const extensions = {
@@ -64,6 +65,8 @@ const extensions = {
   flac: preview.audio,
 
   epub: preview.epub,
+
+  url: preview.url,
 }
 
 export { extensions, preview }

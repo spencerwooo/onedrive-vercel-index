@@ -32,6 +32,7 @@ import AudioPreview from './previews/AudioPreview'
 import VideoPreview from './previews/VideoPreview'
 import DownloadButtonGroup from './DownloadBtnGtoup'
 import PDFPreview from './previews/PDFPreview'
+import URLPreview from './previews/URLPreview'
 import { DownloadBtnContainer, PreviewContainer } from './previews/Containers'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
@@ -594,6 +595,9 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
         case preview.epub:
           return <EPUBPreview file={file} />
+
+        case preview.url:
+          return <URLPreview file={file} />
 
         default:
           return <PreviewContainer>{fileName}</PreviewContainer>
