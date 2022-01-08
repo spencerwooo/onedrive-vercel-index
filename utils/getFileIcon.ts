@@ -14,6 +14,7 @@ const icons: { [key: string]: [IconPrefix, IconName] } = {
   file: ['far', 'file'],
   markdown: ['fab', 'markdown'],
   book: ['fas', 'book'],
+  link: ['fas', 'link'],
 }
 
 const extensions = {
@@ -73,6 +74,8 @@ const extensions = {
   epub: icons.book,
   mobi: icons.book,
   azw3: icons.book,
+
+  url: icons.link,
 }
 
 /**
