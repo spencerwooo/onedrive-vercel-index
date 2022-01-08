@@ -23,6 +23,7 @@ import {
   faCheckCircle,
 } from '@fortawesome/free-regular-svg-icons'
 import {
+  faCheck,
   faPlus,
   faMinus,
   faCopy as faCopySolid,
@@ -89,6 +90,7 @@ library.add(
   faExclamationCircle,
   faExclamationTriangle,
   faHome,
+  faCheck,
   faCheckCircle,
   ...iconList
 )

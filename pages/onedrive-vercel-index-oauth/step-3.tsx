@@ -1,4 +1,3 @@
-import axios from 'axios'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -9,7 +8,7 @@ import siteConfig from '../../config/site.json'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 
-import { obfuscateToken, requestTokenWithAuthCode } from '../../utils/oAuthHandler'
+import { getAuthPersonInfo, requestTokenWithAuthCode, sendTokenToServer } from '../../utils/oAuthHandler'
 import { LoadingIcon } from '../../components/Loading'
 
 export default function OAuthStep3({ accessToken, expiryTime, refreshToken, error, description, errorUri }) {
@@ -27,48 +26,59 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
   }, [expiryTimeLeft])
 
   const [buttonContent, setButtonContent] = useState(
-    <>
+    <div>
       <span>Store tokens</span> <FontAwesomeIcon icon="key" />
-    </>
+    </div>
   )
+  const [buttonError, setButtonError] = useState(false)
 
   const sendAuthTokensToServer = async () => {
+    setButtonError(false)
     setButtonContent(
-      <>
+      <div>
         <span>Storing tokens</span> <LoadingIcon className="animate-spin w-4 h-4 ml-1 inline" />
-      </>
+      </div>
     )
 
-    await axios
-      .post(
-        '/api',
-        {
-          obfuscatedAccessToken: obfuscateToken(accessToken),
-          accessTokenExpiry: parseInt(expiryTime),
-          obfuscatedRefreshToken: obfuscateToken(refreshToken),
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+    // verify identity of the authenticated user with the Microsoft Graph API
+    const { data, status } = await getAuthPersonInfo(accessToken)
+    if (status !== 200) {
+      setButtonError(true)
+      setButtonContent(
+        <div>
+          <span>Error validating identify, restart</span> <FontAwesomeIcon icon="exclamation-circle" />
+        </div>
       )
-      .then(_ => {
-        setButtonContent(
-          <>
-            <span>Stored! Going home...</span> <FontAwesomeIcon icon="check" />
-          </>
-        )
+      return
+    }
+    if (data.userPrincipalName !== siteConfig.userPrincipalName) {
+      setButtonError(true)
+      setButtonContent(
+        <div>
+          <span>Do not pretend to be the site owner</span> <FontAwesomeIcon icon="exclamation-circle" />
+        </div>
+      )
+      return
+    }
 
+    await sendTokenToServer(accessToken, refreshToken, expiryTime)
+      .then(() => {
+        setButtonError(false)
+        setButtonContent(
+          <div>
+            <span>Stored! Going home...</span> <FontAwesomeIcon icon="check" />
+          </div>
+        )
         setTimeout(() => {
           router.push('/')
         }, 2000)
       })
       .catch(_ => {
+        setButtonError(true)
         setButtonContent(
-          <>
+          <div>
             <span>Error storing the token</span> <FontAwesomeIcon icon="exclamation-circle" />
-          </>
+          </div>
         )
       })
   }
@@ -168,7 +178,11 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
 
                 <div className="text-right mb-2 mt-6">
                   <button
-                    className="text-white bg-gradient-to-br from-green-500 to-teal-300 hover:bg-gradient-to-bl focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center disabled:cursor-not-allowed disabled:grayscale"
+                    className={`text-white bg-gradient-to-br hover:bg-gradient-to-bl focus:ring-4 font-medium rounded-lg text-sm px-4 py-2.5 text-center ${
+                      buttonError
+                        ? 'from-red-500 to-orange-400 focus:ring-red-200 dark:focus:ring-red-800'
+                        : 'from-green-500 to-teal-300 focus:ring-green-200 dark:focus:ring-green-800'
+                    }`}
                     onClick={sendAuthTokensToServer}
                   >
                     {buttonContent}
