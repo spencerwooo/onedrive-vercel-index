@@ -99,7 +99,13 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
 ### New users
 
 - Fork the project to your own GitHub account, as you will be maintaining your custom version of this project with your own configurations.
-- Modify [`config/site.json`](config/site.json) according to your configs (see [Configurations](#configurations) ↓).
+- Modify [`config/site.json`](config/site.json) according to your configs, where you must change:
+
+  - `userPrincipalName`: used to verify your identity when doing OAuth. It is usually your Microsoft email address.
+  - `baseDirectory`: the base folder shared using onedrive-vercel-index. You must make sure that the folder exists inside your OneDrive.
+  
+  ... for other configs, please refer to [Configurations](#configurations) ↓.
+
 - Only change [`config/api.json`](config/api.json) if you must (if you are not a OneDrive international user).
   - SharePoint users need to define their own API endpoints.
 - Import your forked `onedrive-vercel-index` GitHub project to Vercel. Vercel will automatically build the Next.js project, so please wait for deployment to finish.
@@ -121,6 +127,7 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
   }
   ```
 
+- You also need to define `userPrincipalName` inside `config/site.json`, which is used to verify your identity when doing OAuth. It is usually your Microsoft email address.
 - You can safely delete old environment variables such as your own `CLIENT_SECRET`, `ACCESS_TOKEN`, and `REFRESH_TOKEN`.
 
 Deployment issues *please, please, please* post to the [discussion forum](https://github.com/spencerwooo/onedrive-vercel-index/discussions) with tags `FAQ`.
