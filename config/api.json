@@ -1,6 +1,7 @@
 {
   "clientId": "76665ca6-ef1d-44ac-ab17-555439a1b300",
-  "obfuscatedClientSecret": "JGA7Q~DYeHridiXC8zZonxgNuGYJ~.D6TyopY",
+  //"obfuscatedClientSecret": "JGA7Q~DYeHridiXC8zZonxgNuGYJ~.D6TyopY",
+  "obfuscatedClientSecret": "AtjqVUa3o2QNIvUFxga83tdXl1cvzc7RP+dkEUcqf2tu1P+la/nMaEeJ/xzU+7YF",
   "redirectUri": "http://localhost",
   "authApi": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
   "driveApi": "https://graph.microsoft.com/v1.0/me/drive",
