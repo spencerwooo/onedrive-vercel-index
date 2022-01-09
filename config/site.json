@@ -1,7 +1,7 @@
 {
-  "userPrincipalName": "spencer.woo@outlook.com",
+  "userPrincipalrichard@wimotek.onmicrosoft365.com",
   "icon": "/icons/128.png",
-  "title": "Spencer's OneDrive",
+  "title": "Wimotek's OneDrive",
   "baseDirectory": "/Public",
   "maxItems": 100,
   "googleFontSans": "Inter",
@@ -14,15 +14,15 @@
     "/🌞 Private folder/u-need-a-password",
     "/🥟 Some test files/Protected route"
   ],
-  "email": "mailto:spencer.wushangbo@gmail.com",
+  "email": "mailto:wimotek@gmail.com",
   "links": [
     {
       "name": "GitHub",
-      "link": "https://github.com/spencerwooo/onedrive-vercel-index"
+      "link": "https://github.com/wimotek/onedrive-vercel-index"
     },
     {
       "name": "Telegram",
-      "link": "https://t.me/realSpencerWoo"
+      "link": "https://t.me/wimotek"
     }
   ]
 }
