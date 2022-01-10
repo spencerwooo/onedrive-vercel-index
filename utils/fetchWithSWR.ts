@@ -4,14 +4,18 @@ import useSWR, { cache, Key, useSWRInfinite } from 'swr'
 import { getStoredToken } from './protectedRouteHandler'
 
 // Common axios fetch function for use with useSWR
-export function fetcher(url: string, token?: string): Promise<any> {
-  return token
-    ? axios
-        .get(url, {
-          headers: { 'od-protected-token': token },
-        })
-        .then(res => res.data)
-    : axios.get(url).then(res => res.data)
+export async function fetcher(url: string, token?: string): Promise<any> {
+  try {
+    return (
+      await (token
+        ? axios.get(url, {
+            headers: { 'od-protected-token': token },
+          })
+        : axios.get(url))
+    ).data
+  } catch (err: any) {
+    throw { status: err.response.status, message: err.response.data }
+  }
 }
 /**
  * Use stale SWR instead of revalidating on each request. Not ideal for this scenario but have to do

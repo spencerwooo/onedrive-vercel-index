@@ -178,39 +178,46 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Querying current path identity (file or folder) and follow up query childrens in folder
   // console.log(accessToken)
 
-  const { data: identityData } = await axios.get(requestUrl, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-    params: {
-      select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
-    },
-  })
-
-  if ('folder' in identityData) {
-    const { data: folderData } = await axios.get(`${requestUrl}${isRoot ? '' : ':'}/children`, {
+  try {
+    const { data: identityData } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
-      params: next
-        ? {
-            select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
-            top: siteConfig.maxItems,
-            $skipToken: next,
-          }
-        : {
-            select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
-            top: siteConfig.maxItems,
-          },
+      params: {
+        select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
+      },
     })
 
-    // Extract next page token from full @odata.nextLink
-    const nextPage = folderData['@odata.nextLink'] ? folderData['@odata.nextLink'].match(/&\$skiptoken=(.+)/i)[1] : null
+    if ('folder' in identityData) {
+      const { data: folderData } = await axios.get(`${requestUrl}${isRoot ? '' : ':'}/children`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: next
+          ? {
+              select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
+              top: siteConfig.maxItems,
+              $skipToken: next,
+            }
+          : {
+              select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
+              top: siteConfig.maxItems,
+            },
+      })
 
-    // Return paging token if specified
-    if (nextPage) {
-      res.status(200).json({ folder: folderData, next: nextPage })
-    } else {
-      res.status(200).json({ folder: folderData })
+      // Extract next page token from full @odata.nextLink
+      const nextPage = folderData['@odata.nextLink']
+        ? folderData['@odata.nextLink'].match(/&\$skiptoken=(.+)/i)[1]
+        : null
+
+      // Return paging token if specified
+      if (nextPage) {
+        res.status(200).json({ folder: folderData, next: nextPage })
+      } else {
+        res.status(200).json({ folder: folderData })
+      }
+      return
     }
+    res.status(200).json({ file: identityData })
+    return
+  } catch (error: any) {
+    res.status(error.response.status).json({ error: error.response.data })
     return
   }
-  res.status(200).json({ file: identityData })
-  return
 }
