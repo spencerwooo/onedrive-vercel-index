@@ -5,6 +5,7 @@
   <img src="https://img.shields.io/badge/OneDrive-2C68C3?style=flat&logo=microsoft-onedrive&logoColor=white" alt="Next.js" />
   <img src="https://img.shields.io/badge/Next.js-black?style=flat&logo=next.js&logoColor=white" alt="Next.js" />
   <img src="https://img.shields.io/badge/Vercel-black?style=flat&logo=Vercel&logoColor=white" alt="Vercel" />
+  <a href="https://docs.spencerwoo.com/onedrive-vercel-index"><img src="https://img.shields.io/badge/Documentation-black?style=flat&logo=Notion&logoColor=white" alt="Documentation" /></a>
   <a href="https://github.com/spencerwooo/onedrive-vercel-index/discussions"><img src="https://img.shields.io/github/discussions/spencerwooo/onedrive-vercel-index?color=CF2B5B&labelColor=black&logo=github" alt="GitHub Discussions" /></a>
 </div>
 
@@ -12,7 +13,9 @@
 
 Please go to our [discussion forum](https://github.com/spencerwooo/onedrive-vercel-index/discussions) for general questions and FAQs, **issues are for bug reports and bug reports only.** Feature requests may or may not be ignored, as [I (@spencerwooo)](https://spencerwoo.com) am the only one maintaining the project, so **I only prioritise features that I use.**
 
-*Of course, I accept sponsors and donations* :3
+*If you happen to like this project, please give it a star!* :3
+
+*If you really, really like this project, please send money! -> [Sponsors 🤑 and donations 💰](https://docs.spencerwoo.com/please-donate)*
 
 ## Demo
 
@@ -90,141 +93,40 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
 - Permalink copy, proxied download link copy ...
 - Full dark mode support, style and website customisations ...
 
-🍌 More importantly, it's pretty (●'◡'●)
+Basically, we are -
 
-## Deployment
+- Completely free to host 💸
+- Fast ⚡ and responsive 💦
+- Takes less than 15 minutes to setup ⏱️
+- Highly customisable ⚒️
 
-> Starting now, you don't have to manually acquire your tokens, and you don't need to register a client at Microsoft anymore ([PR #210](https://github.com/spencerwooo/onedrive-vercel-index/pull/210) and [Discussion #215](https://github.com/spencerwooo/onedrive-vercel-index/discussions/215)).
+🍌 More importantly, we are pretty (●'◡'●)
 
-### New users
+## Documentation
 
-- Fork the project to your own GitHub account, as you will be maintaining your custom version of this project with your own configurations.
-- Modify [`config/site.json`](config/site.json) according to your configs, where you must change:
+Documentation is hosted at [docs.spencerwoo.com](https://docs.spencerwoo.com/onedrive-vercel-index).
 
-  - `userPrincipalName`: used to verify your identity when doing OAuth. It is usually your Microsoft email address.
-  - `baseDirectory`: the base folder shared using onedrive-vercel-index. You must make sure that the folder exists inside your OneDrive.
-  
-  ... for other configs, please refer to [Configurations](#configurations) ↓.
+- How can I get started and deploy? - [Documentation - Getting started](https://docs.spencerwoo.com/getting-started).
+- How can I configure ... ? - [Documentation -Custom configs](https://docs.spencerwoo.com/custom-configs).
+- Where is feature x ? - [todo]
+- I deployed this before, how can I upgrade to the latest version? - [todo]
+- I was here before 2022, how can I migrate to the new version? - [Migrating from versions before 2022](https://docs.spencerwoo.com/if-you-deployed-before-2022).
+- I got a problem during deployment ... - [todo]
+- I didn't find a solution / My problem is unique - [Find help in discussion forum](https://github.com/spencerwooo/onedrive-vercel-index/discussions).
 
-- Only change [`config/api.json`](config/api.json) if you must (if you are not a OneDrive international user).
-  - SharePoint users need to define their own API endpoints.
-- Import your forked `onedrive-vercel-index` GitHub project to Vercel. Vercel will automatically build the Next.js project, so please wait for deployment to finish.
-- Create a Redis database, and set the URL of the Redis instance to environment variable `REDIS_URL` inside the Vercel project.
-  - You can use Upstash for this, completely free, full integration with Vercel, documentation here: [Vercel Integration
-](https://docs.upstash.com/redis/howto/vercelintegration).
-- Finally, trigger a redeployment on Vercel to use the new environment variable, navigate to the newly deployed page, and perform authorisation as guided by `onedrive-vercel-index`.
-
-### Migrating from an old project
-
-- You need to first create a Redis instance, and define the URL of the instance in the environment variable `REDIS_URL` in Vercel.
-  - Likewise, you can still use Upstash for this, same as above.
-- You need to revert some fields of your customised `config/api.json` back, where specifically the `clientId` and `obfuscatedClientSecret` should exactly match:
-
-  ```json
-  {
-    "clientId": "d87bcc39-1750-4ca0-ad54-f8d0efbb2735",
-    "obfuscatedClientSecret": "U2FsdGVkX1830zo3/pFDqaBCVBb37iLw3WnBDWGF9GIB2f4apzv0roemp8Y+iIxI3Ih5ecyukqELQEGzZlYiWg==",
-  }
-  ```
-
-- You also need to define `userPrincipalName` inside `config/site.json`, which is used to verify your identity when doing OAuth. It is usually your Microsoft email address.
-- You can safely delete old environment variables such as your own `CLIENT_SECRET`, `ACCESS_TOKEN`, and `REFRESH_TOKEN`.
-
-Deployment issues *please, please, please* post to the [discussion forum](https://github.com/spencerwooo/onedrive-vercel-index/discussions) with tags `FAQ`.
-
-## Configurations
-
-> These configurations are subject to change before `v1.0` milestone.
-
-Two configuration files are used for customisations - `config/api.json` and `config/site.json`.
-
-- `config/api.json` - is used to define your API endpoints and tokens. **OneDrive international users don't have to change anything.**
-- `config/site.json` - is used for customising the website, such as the folder to share, the title, used Google fonts, site icons, contact info, etc.
-
-A few things to keep in mind for `config/site.json`:
-
-- `icon` - is the website icon to the left of the title inside the navigation bar. It should be placed under `/public/` and referenced here by its relative path.
-- `maxItems` - represents the maximum number of items that one directory lists, pagination supported. This is limited up to 200 items by the upstream OneDrive API.
-- `email` - is optional, and can be removed should you wish. However, I suggest adding some form of contact for your website.
-- `links` - is an array of `{ "name": "xxx", "link": "xxx" }`. In the latest update, all brand icons inside font awesome is supported and the icon to render is based on the `name` you provide. See the demo screen recording below. _(The additional links in the demo video are generated automatically by GitHub Copilot and may not be my personal account.)_
-
-https://user-images.githubusercontent.com/32114380/147660565-1fc66ea4-35cd-47f8-8070-2e641aed5184.mp4
-
-The rest of the configuration fields are self-explanatory.
-
-## These may interest you ...
-
-### 🔒 Password protected folders
-
-https://user-images.githubusercontent.com/32114380/146787150-fb30c5fe-7fdf-4de6-bd43-1bd0a98547b0.mp4
-
-You can now specify a `.password` under a folder, declare the directory's absolute path, to password-protect the route and all files inside.
-
-- Declare protected route inside `config/site.json` under `protectedRoutes`, for instance:
-
-  ```
-  "protectedRoutes": [
-    "/🌞 Private folder/u-need-a-password",
-    "/🥟 Some test files/Protected route"
-  ],
-  ```
-
-- Add `.password` file under the root protected folder, redeploy your project on Vercel. Profit.
-
-However, there are some caveats:
-
-- Function is not entirely reliable and may be largely vulnerable to all kinds of threats. DO NOT use for protecting sensitive information.
-- Protected files cannot be shared through `?raw=true` url parameters.
-
-[*Discussion #66.*](https://github.com/spencerwooo/onedrive-vercel-index/discussions/66)
-
-### ⏬ Multi-file and folder download
-
-https://user-images.githubusercontent.com/32114380/146787219-0d546eb6-71dc-4c3c-8871-86dde1d98ffb.mp4
-
-We use JSZip to download all files in-browser and compress them into file blobs, which are then downloaded to your device as a `zip` file. This is extremely useful if a series of small files are to be downloaded, but it could be time consuming if used for bulk-downloading a few large files.
-
-Folders are traversed and recursively fetched into the compressed zip. Multiple files or folders can be selected and downloaded side-by-side.
-
-*PR [#177](https://github.com/spencerwooo/onedrive-vercel-index/pull/177) and [#169](https://github.com/spencerwooo/onedrive-vercel-index/pull/169).*
-
-### 🖼 OneDrive as your website's image storage
-
-Yes, it can be used as an image (or any kind of file) online storage, where the raw file link is exported and can be embedded into your blog or other websites. Images, videos, songs, PDFs..., you name it.
-
-```markdown
-[nyan cat](https://drive.spencerwoo.com/api?path=/%F0%9F%A5%9F%20Some%20test%20files/nyancat.gif&raw=true)
-```
-
-![nyan cat](https://drive.spencerwoo.com/api?path=/%F0%9F%A5%9F%20Some%20test%20files/nyancat.gif&raw=true)
-
-### ⏭ Proxied download
-
-In order to speed up (I doubt it would?) download speed when files are directly served on OneDrive servers, we can leverage a proxied download which relays the file download stream through Vercel Serverless first, then back to our own device.
-
-You can download a file via this method by either clicking on the `Proxy download` button beside the normal `Download` button in file preview pages ...
-
-![Proxied download button](https://user-images.githubusercontent.com/32114380/147642523-00fa4aed-86e7-4762-ae53-6011074580a5.png)
-
-... or craft the API request yourself:
-
-```http
-GET /api/proxy?url=<URL_ENCODED_DIRECT_FILE_LINK>
-```
-
-Only thing to keep in mind is that the parameter `url` should be a direct OneDrive file link that is URL encoded. An example is shown below:
-
-```
-https://drive.spencerwoo.com/api/proxy?url=https%3A%2F%2Fpublic.dm.files.1drv.com%2Fy4myMMSl7_RbMnKGsEh63emSTxRqfK74Ove5_k-zuKFv7Y_uet4FeuwI5X3NW8IjdkOlvoIRfq64XICJeHeZiRDBcnJuH-lfjZUQykrMM11xO9H3Z8GPRA9lfjjjdYXQAcMc2XYAr1Pnmod3PeEYoAKAArFEyLKvwk19iypsEDhXbl6L8-f1QxMGGlf6tboO0XijBdxtmV4oQJLmutVk44kETDC-16Sfj2--9erJfsH_W1EEddXUB-vEtpRoBM20srt
-```
-
-> An `&inline=true` parameter is also accepted here, where the response header `content-disposition` of the direct file stream from OneDrive is replaced from `attachment, filename*=...` to `inline, filename*=...`. This only applies to PDF files with a header `content-type` of `application/pdf`, so that the PDF returned can be viewed inside the browser, instead of being force downloaded.
-
-*Feature parity with original project: [Proxied / raw file download](https://github.com/spencerwooo/onedrive-cf-index#%EF%B8%8F-proxied--raw-file-download).*
-
-### Server-*less*?
+## Server-*less* (free)?
 
 Yes! Completely free with no backend server what-so-ever. (Well, we use Redis, but that's free to some extent also.)
+
+## Sponsors and donations!
+
+Open-source is hard! If you happen to like this project and want me to keep going, please consider sponsoring me or providing a single donation! Thanks for all the love and support!
+
+[🧸 Please donate - 微信/支付宝](https://docs.spencerwoo.com/please-donate) · [Patreon](https://www.patreon.com/spencerwoo) · [爱发电](https://afdian.net/@spencerwoo)
+
+### Sponsors
+
+*Your name will appear here if you sponsor or donate 😀*
 
 ---
 
