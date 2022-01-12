@@ -9,6 +9,17 @@
   <a href="https://github.com/spencerwooo/onedrive-vercel-index/discussions"><img src="https://img.shields.io/github/discussions/spencerwooo/onedrive-vercel-index?color=CF2B5B&labelColor=black&logo=github" alt="GitHub Discussions" /></a>
 </div>
 
+## TL;DR
+
+Showcase, share, preview, and download files inside *your* OneDrive with onedrive-vercel-index -
+
+- Completely free to host 💸
+- Fast ⚡ and responsive 💦
+- Takes less than 15 minutes to setup ⏱️
+- Highly customisable ⚒️
+
+🍌 More importantly, we are pretty (●'◡'●)
+
 ## Discussion
 
 Please go to our [discussion forum](https://github.com/spencerwooo/onedrive-vercel-index/discussions) for general questions and FAQs, **issues are for bug reports and bug reports only.** Feature requests may or may not be ignored, as [I (@spencerwooo)](https://spencerwoo.com) am the only one maintaining the project, so **I only prioritise features that I use.**
@@ -93,25 +104,16 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
 - Permalink copy, proxied download link copy ...
 - Full dark mode support, style and website customisations ...
 
-Basically, we are -
-
-- Completely free to host 💸
-- Fast ⚡ and responsive 💦
-- Takes less than 15 minutes to setup ⏱️
-- Highly customisable ⚒️
-
-🍌 More importantly, we are pretty (●'◡'●)
-
 ## Documentation
 
 Documentation is hosted at [docs.spencerwoo.com](https://docs.spencerwoo.com/onedrive-vercel-index).
 
-- How can I get started and deploy? - [Documentation - Getting started](https://docs.spencerwoo.com/getting-started).
-- How can I configure ... ? - [Documentation -Custom configs](https://docs.spencerwoo.com/custom-configs).
-- Where is feature x ? - [todo]
+- How can I get started and deploy? - [Docs - Getting started](https://docs.spencerwoo.com/getting-started).
+- How can I configure ... ? - [Docs - Custom configs](https://docs.spencerwoo.com/custom-configs).
+- Where is feature x ? - [Docs - Features](https://docs.spencerwoo.com/onedrive-vercel-index#ed39fe1746e5444c818c9d2fbc74a378)
 - I deployed this before, how can I upgrade to the latest version? - [todo]
-- I was here before 2022, how can I migrate to the new version? - [Migrating from versions before 2022](https://docs.spencerwoo.com/if-you-deployed-before-2022).
-- I got a problem during deployment ... - [todo]
+- I was here before 2022, how can I migrate to the new version? - [Docs - Migrating from versions before 2022](https://docs.spencerwoo.com/if-you-deployed-before-2022).
+- I got a problem during deployment ... - [Docs - FAQ](https://docs.spencerwoo.com/onedrive-vercel-index#aa6b5064e87d4aaea581213a0ea2e3d9)
 - I didn't find a solution / My problem is unique - [Find help in discussion forum](https://github.com/spencerwooo/onedrive-vercel-index/discussions).
 
 ## Server-*less* (free)?
