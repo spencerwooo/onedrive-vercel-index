@@ -84,14 +84,14 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
       <td>⏭ Proxied download</td>
     </tr>
     <tr>
-      <td>Password protected routes and files, <a href="#-password-protected-folders">details down here</a> ↓</td>
+      <td>Password protected routes and files, <a href="https://docs.spencerwoo.com/password-protected-folders">Check here for details</a></td>
       <td>
         Compress and download multiple files or folders,
-        <a href="#-multi-file-and-folder-download">details down here</a> ↓
+        <a href="https://docs.spencerwoo.com/multi-file-and-folder-download">Check here for details</a>
       </td>
       <td>
         Download files with streams proxied through Vercel Serverless,
-        <a href="#-proxied-download">details down here</a> ↓
+        <a href="https://docs.spencerwoo.com/proxied-download">Check here for details</a>
       </td>
     </tr>
   </tbody>
