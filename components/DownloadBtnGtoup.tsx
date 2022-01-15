@@ -72,13 +72,13 @@ const DownloadButtonGroup: React.FC<{ downloadUrl: string }> = ({ downloadUrl })
         btnIcon="file-download"
         btnTitle="Download the file directly through OneDrive"
       />
-      <DownloadButton
+      {/* <DownloadButton
         onClickCallback={() => window.open(`/api/proxy?url=${encodeURIComponent(downloadUrl)}`)}
         btnColor="teal"
         btnText="Proxy download"
         btnIcon="download"
         btnTitle="Download the file with the stream proxied through Vercel Serverless"
-      />
+      /> */}
       <DownloadButton
         onClickCallback={() => {
           clipboard.copy(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
