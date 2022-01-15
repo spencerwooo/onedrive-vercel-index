@@ -5,5 +5,5 @@
   "authApi": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
   "driveApi": "https://graph.microsoft.com/v1.0/me/drive",
   "scope": "user.read files.read.all offline_access",
-  "directLink": "https://public.dm.files.1drv.com"
+  "directLinkRegex": "public[.].*[.]files[.]1drv[.]com"
 }

@@ -53,6 +53,7 @@ const extensions = {
   webm: preview.video,
   m3u8: preview.video,
   mkv: preview.video,
+  mov: preview.video,
   avi: preview.video, // won't work!
 
   mp3: preview.audio,
