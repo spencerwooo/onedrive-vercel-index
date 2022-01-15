@@ -32,14 +32,14 @@ const VideoPreview: React.FC<{ file: any }> = ({ file }) => {
             btnText="Download"
             btnIcon="file-download"
           />
-          <DownloadButton
+          {/* <DownloadButton
             onClickCallback={() =>
               window.open(`/api/proxy?url=${encodeURIComponent(file['@microsoft.graph.downloadUrl'])}`)
             }
             btnColor="teal"
             btnText="Proxy download"
             btnIcon="download"
-          />
+          /> */}
           <DownloadButton
             onClickCallback={() => {
               clipboard.copy(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
