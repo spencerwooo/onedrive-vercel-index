@@ -9,11 +9,15 @@ import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 
 import siteConfig from '../config/site.json'
+import SearchModal from './SearchModal'
 
 const Navbar = () => {
   const router = useRouter()
   const [tokenPresent, setTokenPresent] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+
+  const [searchOpen, setSearchOpen] = useState(false)
+  const openSearchBox = () => setSearchOpen(true)
 
   useEffect(() => {
     const storedToken = () => {
@@ -44,6 +48,8 @@ const Navbar = () => {
     <div className="bg-white dark:bg-gray-900 dark:border-gray-500/30 sticky top-0 bg-opacity-80 border-b border-gray-900/10 backdrop-blur-md z-[100]">
       <Toaster />
 
+      <SearchModal searchOpen={searchOpen} setSearchOpen={setSearchOpen} />
+
       <div className="flex items-center justify-between w-full mx-auto px-4 py-1">
         <Link href="/" passHref>
           <a className="dark:text-white hover:opacity-80 flex items-center p-2 space-x-2">
@@ -53,6 +59,10 @@ const Navbar = () => {
         </Link>
 
         <div className="flex items-center space-x-4 text-gray-700">
+          <button className="dark:text-white hover:opacity-80" onClick={openSearchBox}>
+            <FontAwesomeIcon icon="search" />
+          </button>
+
           {siteConfig.links.length !== 0 &&
             siteConfig.links.map((l: { name: string; link: string }) => (
               <a
