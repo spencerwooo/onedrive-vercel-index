@@ -10,6 +10,7 @@ import { ImageDecorator } from 'react-viewer/lib/ViewerProps'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 
+import { humanFileSize, formatModifiedDateTime } from '../utils/fileDetails'
 import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
 import { extensions, preview } from '../utils/getPreviewType'
 import { useProtectedSWRInfinite } from '../utils/fetchWithSWR'
@@ -30,29 +31,14 @@ import CodePreview from './previews/CodePreview'
 import OfficePreview from './previews/OfficePreview'
 import AudioPreview from './previews/AudioPreview'
 import VideoPreview from './previews/VideoPreview'
-import DownloadButtonGroup from './DownloadBtnGtoup'
 import PDFPreview from './previews/PDFPreview'
 import URLPreview from './previews/URLPreview'
-import { DownloadBtnContainer, PreviewContainer } from './previews/Containers'
+import DefaultPreview from './previews/DefaultPreview'
+import { PreviewContainer } from './previews/Containers'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
 const EPUBPreview = dynamic(() => import('./previews/EPUBPreview'), { ssr: false })
-
-/**
- * Convert raw bits file/folder size into a human readable string
- *
- * @param size File or folder size, in raw bits
- * @returns Human readable form of the file or folder size
- */
-const humanFileSize = (size: number) => {
-  if (size < 1024) return size + ' B'
-  const i = Math.floor(Math.log(size) / Math.log(1024))
-  const num = size / Math.pow(1024, i)
-  const round = Math.round(num)
-  const formatted = round < 10 ? num.toFixed(2) : round < 100 ? num.toFixed(1) : round
-  return `${formatted} ${'KMGTPEZY'[i - 1]}B`
-}
 
 /**
  * Convert url query into path string
@@ -92,14 +78,7 @@ const FileListItem: FC<{
         </div>
       </div>
       <div className="md:block dark:text-gray-500 flex-shrink-0 hidden col-span-3 font-mono text-sm text-gray-700">
-        {new Date(c.lastModifiedDateTime).toLocaleString('en-US', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        })}
+        {formatModifiedDateTime(c.lastModifiedDateTime)}
       </div>
       <div className="md:block dark:text-gray-500 flex-shrink-0 hidden col-span-1 font-mono text-sm text-gray-700 truncate">
         {humanFileSize(c.size)}
@@ -600,22 +579,11 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
           return <URLPreview file={file} />
 
         default:
-          return <PreviewContainer>{fileName}</PreviewContainer>
+          return <DefaultPreview file={file} />
       }
+    } else {
+      return <DefaultPreview file={file} />
     }
-
-    return (
-      <>
-        <PreviewContainer>
-          <FourOhFour
-            errorMsg={`Preview for file ${fileName} is not available, download directly with the button below.`}
-          />
-        </PreviewContainer>
-        <DownloadBtnContainer>
-          <DownloadButtonGroup downloadUrl={downloadUrl} />
-        </DownloadBtnContainer>
-      </>
-    )
   }
 
   return (
