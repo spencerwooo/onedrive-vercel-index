@@ -1,3 +1,4 @@
+import { OdFileObject } from '../../types'
 import ReactPlayer from 'react-player'
 import { useRouter } from 'next/router'
 import { useClipboard } from 'use-clipboard-copy'
@@ -7,7 +8,7 @@ import { getBaseUrl } from '../../utils/getBaseUrl'
 import { DownloadButton } from '../DownloadBtnGtoup'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
-const VideoPreview: React.FC<{ file: any }> = ({ file }) => {
+const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const { asPath } = useRouter()
   const clipboard = useClipboard()
 
