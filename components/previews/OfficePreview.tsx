@@ -1,10 +1,12 @@
+import { OdFileObject } from '../../types'
 import { FC, useEffect, useRef, useState } from 'react'
+
 import Preview from 'preview-office-docs'
 
 import DownloadButtonGroup from '../DownloadBtnGtoup'
 import { DownloadBtnContainer } from './Containers'
 
-const OfficePreview: FC<{ file: any }> = ({ file }) => {
+const OfficePreview: FC<{ file: OdFileObject }> = ({ file }) => {
   const docContainer = useRef<HTMLDivElement>(null)
   const [docContainerWidth, setDocContainerWidth] = useState(600)
 
