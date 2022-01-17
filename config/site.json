@@ -11,8 +11,7 @@
   ],
   "footer": "Powered by <a href=\"https://github.com/spencerwooo/onedrive-vercel-index\" target=\"_blank\" rel=\"noopener noreferrer\">onedrive-vercel-index</a>. Made with ❤ by Lemonawa.",
   "protectedRoutes": [
-    "/🌞 Private folder/u-need-a-password",
-    "/🥟 Some test files/Protected route"
+    "/📚 Learning Materials"
   ],
   "email": "mailto:lemonawa1209@gmail.com",
   "links": [
