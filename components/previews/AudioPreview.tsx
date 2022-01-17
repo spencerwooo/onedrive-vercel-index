@@ -1,4 +1,6 @@
+import { OdFileObject } from '../../types'
 import { FC, useState } from 'react'
+
 import ReactPlayer from 'react-player'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -12,7 +14,7 @@ enum PlayerState {
   Paused,
 }
 
-const AudioPreview: FC<{ file: any }> = ({ file }) => {
+const AudioPreview: FC<{ file: OdFileObject }> = ({ file }) => {
   const [playerStatus, setPlayerStatus] = useState(PlayerState.Loading)
 
   return (
