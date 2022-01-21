@@ -10,14 +10,27 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-const useDriveItemSearch = () => {
+import { OdSearchResult } from '../types'
+import { getFileIcon } from '../utils/getFileIcon'
+import siteConfig from '../config/site.json'
+import { LoadingIcon } from './Loading'
+
+function useDriveItemSearch() {
   const [query, setQuery] = useState('')
   const searchDriveItem = async (q: string) => {
-    // TODO: currently using mock data, change this to a query to OneDrive API
-    const result = await axios.get('https://jsonplaceholder.typicode.com/posts')
-    console.log(q, result.data)
+    const { data } = await axios.get<OdSearchResult>(`/api/search?q=${q}`)
 
-    return result.data
+    // Extract the searched item's path and convert it to the absolute path in onedrive-vercel-index
+    function mapAbsolutePath(path: string): string {
+      return siteConfig.baseDirectory === '/' ? path.split('root:')[1] : path.split(siteConfig.baseDirectory)[1]
+    }
+
+    // Map parentReference to the absolute path of the search result
+    data.map(item => {
+      item['path'] = `${mapAbsolutePath(item.parentReference.path)}/${encodeURIComponent(item.name)}`
+    })
+
+    return data
   }
 
   const debouncedNotionSearch = useConstant(() => AwesomeDebouncePromise(searchDriveItem, 1000))
@@ -36,10 +49,13 @@ const useDriveItemSearch = () => {
   }
 }
 
-const SearchModal: FC<{
+function SearchModal({
+  searchOpen,
+  setSearchOpen,
+}: {
   searchOpen: boolean
   setSearchOpen: Dispatch<SetStateAction<boolean>>
-}> = ({ searchOpen, setSearchOpen }) => {
+}) {
   const closeSearchBox = () => setSearchOpen(false)
 
   const { query, setQuery, results } = useDriveItemSearch()
@@ -70,48 +86,50 @@ const SearchModal: FC<{
             leaveTo="opacity-0 scale-95"
           >
             <div className="border rounded border-gray-400/30 shadow-xl my-20 text-left w-full max-w-3xl transform transition-all inline-block overflow-hidden ">
-              <Dialog.Title as="h3" className="relative dark:text-white">
-                <div className="flex pl-3 inset-y-0 left-0 absolute items-center pointer-events-none">
-                  <FontAwesomeIcon icon="search" />
-                </div>
+              <Dialog.Title
+                as="h3"
+                className="flex items-center space-x-4 dark:text-white border-b bg-gray-50 border-gray-400/30 p-4 dark:bg-gray-800"
+              >
+                <FontAwesomeIcon icon="search" className="w-4 h-4" />
                 <input
                   type="text"
                   id="search-box"
-                  className="border-b bg-gray-50 border-gray-400/30 w-full p-2.5 pt-4 pl-10 block dark:bg-gray-800 focus:outline-none focus-visible:outline-none"
+                  className="w-full bg-transparent focus:outline-none focus-visible:outline-none"
                   placeholder="Search ..."
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                 />
+                <div className="px-2 py-1 rounded-lg bg-gray-100 dark:bg-gray-700 font-medium text-xs">ESC</div>
               </Dialog.Title>
 
               <div className="bg-white dark:text-white dark:bg-gray-900">
                 {results.loading && (
-                  <div className="text-center">
-                    <div className="animate-pulse">
-                      <Image src="/images/fabulous-come-back-later.png" alt="purr loading" width={300} height={300} />
-                    </div>
-                    <div className="pb-4 text-sm font-medium">Loading ...</div>
+                  <div className="text-center px-4 py-12 text-sm font-medium">
+                    <LoadingIcon className="animate-spin w-4 h-4 mr-2 inline-block svg-inline--fa" />
+                    <span>Loading ...</span>
                   </div>
                 )}
                 {results.error && (
-                  <div className="text-center">
-                    <Image src="/images/fabulous-page-not-found.png" alt="errored out" width={300} height={300} />
-                    <div className="pb-4 text-sm font-medium">Error: {results.error.message}</div>
-                  </div>
+                  <div className="text-center px-4 py-12 text-sm font-medium">Error: {results.error.message}</div>
                 )}
                 {results.result && (
                   <>
                     {results.result.length === 0 ? (
-                      <div className="text-center">
-                        <Image src="/images/fabulous-rip-2.png" alt="empty list" width={300} height={300} />
-                        <div className="pb-4 text-sm font-medium">Nothing here...</div>
-                      </div>
+                      <div className="text-center px-4 py-12 text-sm font-medium">Nothing here.</div>
                     ) : (
-                      results.result.map((result: any, i: number) => (
-                        <Link href={`/`} key={i} passHref>
-                          <div className="border-b cursor-pointer border-gray-400/30 p-4 hover:bg-gray-50 dark:hover:bg-gray-850">
-                            <div className="font-medium">{result.title}</div>
-                            <div className="text-sm opacity-70">{result.body}</div>
+                      results.result.map(result => (
+                        <Link href={result.path} key={result.id} passHref>
+                          <div
+                            className="flex items-center space-x-4 border-b cursor-pointer border-gray-400/30 px-4 py-1.5 hover:bg-gray-50 dark:hover:bg-gray-850"
+                            onClick={closeSearchBox}
+                          >
+                            <FontAwesomeIcon icon={result.file ? getFileIcon(result.name) : ['far', 'folder']} />
+                            <div>
+                              <div className="text-sm font-medium leading-8">{result.name}</div>
+                              <div className="text-xs font-mono opacity-60 truncate overflow-hidden">
+                                {decodeURIComponent(result.path)}
+                              </div>
+                            </div>
                           </div>
                         </Link>
                       ))
