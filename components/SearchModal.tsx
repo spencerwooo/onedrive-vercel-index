@@ -62,7 +62,7 @@ function SearchModal({
 
   return (
     <Transition appear show={searchOpen} as={Fragment}>
-      <Dialog as="div" className="inset-0 z-50 fixed overflow-y-auto" onClose={closeSearchBox}>
+      <Dialog as="div" className="inset-0 z-[200] fixed overflow-y-auto" onClose={closeSearchBox}>
         <div className="min-h-screen text-center px-4">
           <Transition.Child
             as={Fragment}
@@ -85,7 +85,7 @@ function SearchModal({
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="border rounded border-gray-400/30 shadow-xl my-20 text-left w-full max-w-3xl transform transition-all inline-block overflow-hidden ">
+            <div className="border rounded border-gray-400/30 shadow-xl my-12 text-left w-full max-w-3xl transform transition-all inline-block overflow-hidden">
               <Dialog.Title
                 as="h3"
                 className="flex items-center space-x-4 dark:text-white border-b bg-gray-50 border-gray-400/30 p-4 dark:bg-gray-800"
@@ -102,7 +102,7 @@ function SearchModal({
                 <div className="px-2 py-1 rounded-lg bg-gray-100 dark:bg-gray-700 font-medium text-xs">ESC</div>
               </Dialog.Title>
 
-              <div className="bg-white dark:text-white dark:bg-gray-900">
+              <div className="bg-white dark:text-white dark:bg-gray-900 max-h-[80vh] overflow-x-hidden overflow-y-scroll">
                 {results.loading && (
                   <div className="text-center px-4 py-12 text-sm font-medium">
                     <LoadingIcon className="animate-spin w-4 h-4 mr-2 inline-block svg-inline--fa" />

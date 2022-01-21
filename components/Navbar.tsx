@@ -50,17 +50,21 @@ const Navbar = () => {
 
       <SearchModal searchOpen={searchOpen} setSearchOpen={setSearchOpen} />
 
-      <div className="flex items-center justify-between w-full mx-auto px-4 py-1">
+      <div className="flex items-center space-x-4 justify-between w-full mx-auto px-4 py-1">
         <Link href="/" passHref>
-          <a className="dark:text-white hover:opacity-80 flex items-center p-2 space-x-2">
+          <a className="dark:text-white hover:opacity-80 flex items-center py-2 md:p-2 space-x-2">
             <Image src={siteConfig.icon} alt="icon" width="25" height="25" priority />
             <span className="sm:block hidden font-bold">{siteConfig.title}</span>
           </a>
         </Link>
 
-        <div className="flex items-center space-x-4 text-gray-700">
-          <button className="dark:text-white hover:opacity-80" onClick={openSearchBox}>
+        <div className="flex items-center flex-1 md:flex-initial space-x-4 text-gray-700">
+          <button
+            className="flex-1 flex items-center space-x-2 rounded-lg bg-gray-100 dark:bg-gray-800 md:w-40 px-2.5 py-1.5 dark:text-white hover:opacity-80"
+            onClick={openSearchBox}
+          >
             <FontAwesomeIcon icon="search" />
+            <span className="text-sm font-medium">Search ...</span>
           </button>
 
           {siteConfig.links.length !== 0 &&
