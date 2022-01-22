@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconName } from '@fortawesome/fontawesome-svg-core'
 import { Dialog, Transition } from '@headlessui/react'
 import toast, { Toaster } from 'react-hot-toast'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 import Link from 'next/link'
 import Image from 'next/image'
@@ -10,14 +11,19 @@ import { Fragment, useEffect, useState } from 'react'
 
 import siteConfig from '../config/site.json'
 import SearchModal from './SearchModal'
+import useDeviceOS from '../utils/useDeviceOS'
 
 const Navbar = () => {
   const router = useRouter()
+  const os = useDeviceOS()
+
   const [tokenPresent, setTokenPresent] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
 
   const [searchOpen, setSearchOpen] = useState(false)
   const openSearchBox = () => setSearchOpen(true)
+
+  useHotkeys(`${os === 'mac' ? 'cmd' : 'ctrl'}+k`, openSearchBox)
 
   useEffect(() => {
     const storedToken = () => {
@@ -60,11 +66,20 @@ const Navbar = () => {
 
         <div className="flex items-center flex-1 md:flex-initial space-x-4 text-gray-700">
           <button
-            className="flex-1 flex items-center space-x-2 rounded-lg bg-gray-100 dark:bg-gray-800 md:w-40 px-2.5 py-1.5 dark:text-white hover:opacity-80"
+            className="flex-1 flex items-center justify-between rounded-lg bg-gray-100 dark:bg-gray-800 md:w-48 px-2.5 py-1.5 dark:text-white hover:opacity-80"
             onClick={openSearchBox}
           >
-            <FontAwesomeIcon icon="search" />
-            <span className="text-sm font-medium">Search ...</span>
+            <div className="flex items-center space-x-2">
+              <FontAwesomeIcon icon="search" />
+              <span className="text-sm font-medium">Search ...</span>
+            </div>
+
+            <div className="flex items-center space-x-1">
+              <div className="px-2 py-1 rounded-lg bg-gray-100 dark:bg-gray-700 font-medium text-xs">
+                {os === 'mac' ? '⌘' : 'Ctrl'}
+              </div>
+              <div className="px-2 py-1 rounded-lg bg-gray-100 dark:bg-gray-700 font-medium text-xs">K</div>
+            </div>
           </button>
 
           {siteConfig.links.length !== 0 &&

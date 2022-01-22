@@ -2,13 +2,11 @@ import axios from 'axios'
 import AwesomeDebouncePromise from 'awesome-debounce-promise'
 import { useAsync } from 'react-async-hook'
 import useConstant from 'use-constant'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { Dispatch, FC, Fragment, SetStateAction, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-
 import Link from 'next/link'
-import Image from 'next/image'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { OdSearchResult } from '../types'
 import { getFileIcon } from '../utils/getFileIcon'
