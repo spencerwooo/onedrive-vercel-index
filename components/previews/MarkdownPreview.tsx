@@ -1,4 +1,4 @@
-import { useEffect, FunctionComponent, CSSProperties } from 'react'
+import { useEffect, FC, CSSProperties } from 'react'
 import Prism from 'prismjs'
 import ReactMarkdown from 'react-markdown'
 import gfm from 'remark-gfm'
@@ -11,14 +11,15 @@ import 'katex/dist/katex.min.css'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import DownloadButtonGroup from '../DownloadBtnGtoup'
-import { useStaleSWR } from '../../utils/fetchWithSWR'
+import useFileContent from '../../utils/fetchOnMount'
+import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
-const MarkdownPreview: FunctionComponent<{ file: any; path: string; standalone?: boolean }> = ({
+const MarkdownPreview: FC<{ file: any; path: string; standalone?: boolean }> = ({
   file,
   path,
   standalone = true,
 }) => {
-  const { data, error } = useStaleSWR({ url: file['@microsoft.graph.downloadUrl'] })
+  const { content, error, validating } = useFileContent(file['@microsoft.graph.downloadUrl'])
 
   // The parent folder of the markdown file, which is also the relative image folder
   const parentPath = path.substring(0, path.lastIndexOf('/'))
@@ -63,45 +64,41 @@ const MarkdownPreview: FunctionComponent<{ file: any; path: string; standalone?:
 
   useEffect(() => {
     Prism.highlightAll()
-  }, [data])
+  }, [content])
 
   if (error) {
     return (
-      <div className={`${standalone ? 'bg-white dark:bg-gray-900 rounded p-3' : ''}`}>
-        <FourOhFour errorMsg={error.message} />
-      </div>
+      <PreviewContainer>
+        <FourOhFour errorMsg={error} />
+      </PreviewContainer>
     )
   }
-  if (!data) {
+  if (validating) {
     return (
-      <div className={standalone ? 'bg-white dark:bg-gray-900 rounded p-3' : ''}>
+      <PreviewContainer>
         <Loading loadingText="Loading file content..." />
-      </div>
+      </PreviewContainer>
     )
   }
 
   return (
     <div>
-      <div
-        className={
-          standalone
-            ? 'markdown-body bg-white dark:bg-gray-900 rounded p-3 dark:text-white'
-            : 'markdown-body p-3 dark:text-white'
-        }
-      >
-        {/* Using rehypeRaw to render HTML inside Markdown is potentially dangerous, use under safe environments. (#18) */}
-        <ReactMarkdown
-          remarkPlugins={[gfm, remarkMath]}
-          rehypePlugins={[rehypeKatex, rehypeRaw as any]}
-          components={relativeImagePathRenderer}
-        >
-          {data}
-        </ReactMarkdown>
-      </div>
-      {standalone && (
-        <div className="border-t-gray-200 dark:border-t-gray-700 border-t p-2 sticky bottom-0 left-0 right-0 z-10 bg-white bg-opacity-80 backdrop-blur-md dark:bg-gray-900">
-          <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
+      <PreviewContainer>
+        <div className="markdown-body">
+          {/* Using rehypeRaw to render HTML inside Markdown is potentially dangerous, use under safe environments. (#18) */}
+          <ReactMarkdown
+            remarkPlugins={[gfm, remarkMath]}
+            rehypePlugins={[rehypeKatex, rehypeRaw as any]}
+            components={relativeImagePathRenderer}
+          >
+            {content}
+          </ReactMarkdown>
         </div>
+      </PreviewContainer>
+      {standalone && (
+        <DownloadBtnContainer>
+          <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        </DownloadBtnContainer>
       )}
     </div>
   )

@@ -1,8 +1,15 @@
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
-import DownloadButtonGroup from '../DownloadBtnGtoup'
+import { DownloadButton } from '../DownloadBtnGtoup'
 import useFileContent from '../../utils/fetchOnMount'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
+
+const parseDotUrl = (content: string): string | undefined => {
+  return content
+    .split('\n')
+    .find(line => line.startsWith('URL='))
+    ?.split('=')[1]
+}
 
 const TextPreview = ({ file }) => {
   const { content, error, validating } = useFileContent(file['@microsoft.graph.downloadUrl'])
@@ -36,7 +43,15 @@ const TextPreview = ({ file }) => {
         <pre className="md:p-3 p-0 overflow-x-scroll text-sm">{content}</pre>
       </PreviewContainer>
       <DownloadBtnContainer>
-        <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <div className="flex justify-center">
+          <DownloadButton
+            onClickCallback={() => window.open(parseDotUrl(content) || '')}
+            btnColor="blue"
+            btnText="Open URL"
+            btnIcon="external-link-alt"
+            btnTitle={`Open URL ${parseDotUrl(content) || ''}`}
+          />
+        </div>
       </DownloadBtnContainer>
     </div>
   )

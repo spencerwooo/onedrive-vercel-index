@@ -7,10 +7,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // 'inline' is used for previewing PDF files inside the browser directly
   const { url, inline = false } = req.query
 
+  if (!url || typeof url !== 'string') {
+    res.status(400).json({ error: 'Bad request, URL is not valid.' })
+    return
+  }
+
   // Only handle urls that start with OneDrive's own direct link (or SharePoint's):
-  // https://public.dm.files.1drv.com/y4m0G_0GPeS8AXGrux-lVV79eU1F38VbWxtCSi-8-aUkBLeZH1H6...
-  if (!url || !(url as string).startsWith(apiConfig.directLink)) {
-    res.status(400).json({ error: 'Invalid URL' })
+  // https://public.*.files.1drv.com/y4m0G_0GPeS8AXGrux-lVV79eU1F38VbWxtCSi-8-aUkBLeZH1H6...
+  const hostname = new URL(url).hostname
+  if (hostname.match(new RegExp(apiConfig.directLinkRegex)) === null) {
+    res
+      .status(400)
+      .json({ error: `URL forbidden, only OneDrive direct links that match ${apiConfig.directLinkRegex} are allowed.` })
     return
   }
 

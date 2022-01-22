@@ -19,7 +19,7 @@ export function revealObfuscatedToken(obfuscated: string): string {
 
 // Generate the Microsoft OAuth 2.0 authorization URL, used for requesting the authorisation code
 export function generateAuthorisationUrl(): string {
-  const { clientId, redirectUri, authApi } = apiConfig
+  const { clientId, redirectUri, authApi, scope } = apiConfig
   const authUrl = authApi.replace('/token', '/authorize')
 
   // Construct URL parameters for OAuth2
@@ -27,7 +27,7 @@ export function generateAuthorisationUrl(): string {
   params.append('client_id', clientId)
   params.append('redirect_uri', redirectUri)
   params.append('response_type', 'code')
-  params.append('scope', 'files.readwrite offline_access')
+  params.append('scope', scope)
   params.append('response_mode', 'query')
 
   return `${authUrl}?${params.toString()}`
@@ -81,4 +81,31 @@ export async function requestTokenWithAuthCode(
       const { error, error_description, error_uri } = err.response.data
       return { error, errorDescription: error_description, errorUri: error_uri }
     })
+}
+
+// Verify the identity of the user with the access token and compare it with the userPrincipalName
+// in the Microsoft Graph API. If the userPrincipalName matches, proceed with token storing.
+export async function getAuthPersonInfo(accessToken: string) {
+  const profileApi = apiConfig.driveApi.replace('/drive', '')
+  return axios.get(profileApi, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+}
+
+export async function sendTokenToServer(accessToken: string, refreshToken: string, expiryTime: string) {
+  return await axios.post(
+    '/api',
+    {
+      obfuscatedAccessToken: obfuscateToken(accessToken),
+      accessTokenExpiry: parseInt(expiryTime),
+      obfuscatedRefreshToken: obfuscateToken(refreshToken),
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
 }
