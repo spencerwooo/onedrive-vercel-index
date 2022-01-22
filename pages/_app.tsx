@@ -23,6 +23,7 @@ import {
   faCheckCircle,
 } from '@fortawesome/free-regular-svg-icons'
 import {
+  faSearch,
   faCheck,
   faPlus,
   faMinus,
@@ -92,6 +93,7 @@ library.add(
   faHome,
   faCheck,
   faCheckCircle,
+  faSearch,
   ...iconList
 )
 
