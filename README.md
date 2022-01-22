@@ -81,7 +81,7 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
     <tr>
       <td><a href="https://drive.spencerwoo.com/%F0%9F%8C%9E%20Private%20folder">🔒 Protected folders</a></td>
       <td><a href="https://drive.spencerwoo.com/%F0%9F%8D%8A%20Weibo%20emotes/Source2">⏬ Multi-file download</a></td>
-      <!-- <td>⏭ Proxied download</td> -->
+      <td>🔎 Native Search</td>
     </tr>
     <tr>
       <td>Password protected routes and files. <a href="https://docs.spencerwoo.com/password-protected-folders">Details here</a></td>
@@ -89,10 +89,10 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
         Compress and download multiple files or folders.
         <a href="https://docs.spencerwoo.com/multi-file-and-folder-download">Details here</a>
       </td>
-      <!-- <td>
-        Download files with streams proxied through Vercel Serverless.
-        <a href="https://docs.spencerwoo.com/proxied-download">Details here</a>
-      </td> -->
+      <td>
+        Searching through your shared OneDrive files (with some caveats 🥺).
+        <a href="https://docs.spencerwoo.com/search-for-files-and-folders">Details here</a>
+      </td>
     </tr>
   </tbody>
 </table>

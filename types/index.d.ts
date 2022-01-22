@@ -13,3 +13,34 @@ export type OdFileObject = {
     }
   }
 }
+
+export type OdFolderObject = {
+  '@odata.count': number
+  value: Array<{
+    id: string
+    name: string
+    lastModifiedDateTime: string
+    size: number
+    folder: {
+      childCount: number
+      view: {
+        sortBy: 'name'
+        sortOrder: 'ascending'
+        viewType: 'thumbnails'
+      }
+    }
+  }>
+}
+
+export type OdSearchResult = Array<{
+  id: string
+  name: string
+  file?: OdFileObject
+  folder?: OdFolderObject
+  path: string
+  parentReference: {
+    id: string
+    name: string
+    path: string
+  }
+}>
