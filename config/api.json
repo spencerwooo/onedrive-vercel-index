@@ -1,9 +1,9 @@
 {
-  "clientId": "d87bcc39-1750-4ca0-ad54-f8d0efbb2735",
-  "obfuscatedClientSecret": "U2FsdGVkX1830zo3/pFDqaBCVBb37iLw3WnBDWGF9GIB2f4apzv0roemp8Y+iIxI3Ih5ecyukqELQEGzZlYiWg==",
+  "clientId": "TM-7Q~WP1CAEdXQ6cO9SmVMWBKZv-FOjVuSQd",
+  "obfuscatedClientSecret": "U2FsdGVkX1/GSYmPWxI8mQXPTRb1XB4dG0JA34UMMForc0WxHhXVBmBRswZ7z/zzW+qE7nJw7e8/ynQJzOhuqA==",
   "redirectUri": "http://localhost",
-  "authApi": "https://login.partner.microsoftonline.cn/common/oauth2/v2.0/token",
-  "driveApi": "https://microsoftgraph.chinacloudapi.cn/v1.0/me/drive",
+  "authApi": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+  "driveApi": "https://graph.microsoft.com/v1.0/me/drive",
   "scope": "user.read files.read.all offline_access",
   "directLinkRegex": "public[.].*[.]files[.]1drv[.]com"
 }
