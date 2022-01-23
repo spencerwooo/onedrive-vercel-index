@@ -28,3 +28,7 @@ pre[class*='language-'],
 code[class*='language-'] {
   @apply font-mono !important;
 }
+
+.p-4.text-xs.font-medium.text-gray-400.w-full.text-center.border-t.border-gray-900\/10.dark\:border-gray-500\/30 {
+  line-height: 1.3rem;
+}
