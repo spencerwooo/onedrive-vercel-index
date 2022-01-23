@@ -19,12 +19,14 @@
     {
       "name": "ZkeqのCoding日志",
       "link": "https://coding.maylove.pub/",
-      "other": "code"
+      "fas": "code",
+      "fab": ""
     },
     {
       "name": "Bilibili",
       "link": "https://space.bilibili.com/36184593",
-      "other": "youtube"
+      "fas": "",
+      "fab": "youtube"
     }
   ]
 }

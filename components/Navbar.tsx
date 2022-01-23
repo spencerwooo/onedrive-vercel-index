@@ -54,7 +54,7 @@ const Navbar = () => {
 
         <div className="flex items-center space-x-4 text-gray-700">
           {siteConfig.links.length !== 0 &&
-            siteConfig.links.map((l: { name: string; link: string; other: string}) => (
+            siteConfig.links.map((l: { name: string; link: string; fas: string;fab: string}) => (
               <a
                 key={l.name}
                 href={l.link}
@@ -62,7 +62,8 @@ const Navbar = () => {
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 dark:text-white hover:opacity-80"
               >
-                <FontAwesomeIcon icon={['fab', l.other.toLowerCase() as IconName]} />
+                <FontAwesomeIcon icon={['fas', l.fas.toLowerCase() as IconName]} />
+                <FontAwesomeIcon icon={['fab', l.fab.toLowerCase() as IconName]} />
                 <span className="text-sm font-medium hidden md:inline-block">{l.name}</span>
               </a>
             ))}
