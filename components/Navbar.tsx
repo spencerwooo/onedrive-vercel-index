@@ -75,10 +75,10 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center space-x-1">
-              <div className="px-2 py-1 rounded-lg bg-gray-100 dark:bg-gray-700 font-medium text-xs">
+              <div className="px-2 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 font-medium text-xs">
                 {os === 'mac' ? '⌘' : 'Ctrl'}
               </div>
-              <div className="px-2 py-1 rounded-lg bg-gray-100 dark:bg-gray-700 font-medium text-xs">K</div>
+              <div className="px-2 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 font-medium text-xs">K</div>
             </div>
           </button>
 
