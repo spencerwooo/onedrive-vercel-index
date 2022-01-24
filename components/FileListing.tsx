@@ -34,7 +34,8 @@ import VideoPreview from './previews/VideoPreview'
 import PDFPreview from './previews/PDFPreview'
 import URLPreview from './previews/URLPreview'
 import DefaultPreview from './previews/DefaultPreview'
-import { PreviewContainer } from './previews/Containers'
+import { DownloadBtnContainer, PreviewContainer } from './previews/Containers'
+import DownloadButtonGroup from './DownloadBtnGtoup'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
@@ -545,10 +546,15 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       switch (extensions[fileExtension]) {
         case preview.image:
           return (
-            <PreviewContainer>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="mx-auto" src={downloadUrl} alt={fileName} />
-            </PreviewContainer>
+            <>
+              <PreviewContainer>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="mx-auto" src={downloadUrl} alt={fileName} />
+              </PreviewContainer>
+              <DownloadBtnContainer>
+                <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
+              </DownloadBtnContainer>
+            </>
           )
 
         case preview.text:

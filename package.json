@@ -15,6 +15,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@headlessui/react": "^1.4.0",
+    "awesome-debounce-promise": "^2.1.0",
     "axios": "^0.21.1",
     "crypto-js": "^4.1.1",
     "emoji-regex": "^9.2.2",
@@ -25,9 +26,11 @@
     "preview-office-docs": "^1.0.2",
     "prismjs": "^1.23.0",
     "react": "^17.0.2",
+    "react-async-hook": "^4.0.0",
     "react-copy-to-clipboard": "^5.0.3",
     "react-dom": "^17.0.2",
     "react-hot-toast": "^2.0.0",
+    "react-hotkeys-hook": "^3.4.4",
     "react-markdown": "^6.0.2",
     "react-player": "^2.9.0",
     "react-reader": "^0.20.4",
@@ -37,7 +40,8 @@
     "remark-gfm": "^1.0.0",
     "remark-math": "^4.0.0",
     "swr": "^0.5.6",
-    "use-clipboard-copy": "^0.2.0"
+    "use-clipboard-copy": "^0.2.0",
+    "use-constant": "^1.1.0"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.0.2",

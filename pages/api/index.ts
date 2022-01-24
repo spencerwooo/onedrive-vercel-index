@@ -12,7 +12,7 @@ import { getOdAuthTokens, storeOdAuthTokens } from '../../utils/odAuthTokenStore
 const basePath = pathPosix.resolve('/', siteConfig.baseDirectory)
 const clientSecret = revealObfuscatedToken(apiConfig.obfuscatedClientSecret)
 
-const encodePath = (path: string) => {
+export function encodePath(path: string): string {
   let encodedPath = pathPosix.join(basePath, pathPosix.resolve('/', path))
   if (encodedPath === '/' || encodedPath === '') {
     return ''
@@ -21,7 +21,7 @@ const encodePath = (path: string) => {
   return `:${encodeURIComponent(encodedPath)}`
 }
 
-async function getAccessToken(): Promise<any> {
+export async function getAccessToken(): Promise<string> {
   const { accessToken, refreshToken } = await getOdAuthTokens()
 
   // Return in storage access token if it is still valid
