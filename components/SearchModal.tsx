@@ -25,14 +25,12 @@ function useDriveItemSearch() {
 
     // Map parentReference to the absolute path of the search result
     data.map(item => {
-      // TODO: supporting sharepoint search where the path is not returned in parentReference
-      if ('path' in item.parentReference) {
-        item['path'] = `${mapAbsolutePath(item.parentReference.path)}/${encodeURIComponent(item.name)}`
-      } else {
-        throw Error(
-          'We currently only support search in OneDrive international. SharePoint instances are not supported yet. See issue: https://github.com/spencerwooo/onedrive-vercel-index/issues/299'
-        )
-      }
+      item['path'] =
+        'path' in item.parentReference
+          ? // OneDrive International have the path returned in the parentReference field
+            `${mapAbsolutePath(item.parentReference.path)}/${encodeURIComponent(item.name)}`
+          : // OneDrive for Business/Education does not, so we need extra steps here
+            ''
     })
 
     return data
