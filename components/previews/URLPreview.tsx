@@ -12,7 +12,7 @@ const parseDotUrl = (content: string): string | undefined => {
 }
 
 const TextPreview = ({ file }) => {
-  const { content, error, validating } = useAxiosGet(file['@microsoft.graph.downloadUrl'])
+  const { response: content, error, validating } = useAxiosGet(file['@microsoft.graph.downloadUrl'])
   if (error) {
     return (
       <PreviewContainer>

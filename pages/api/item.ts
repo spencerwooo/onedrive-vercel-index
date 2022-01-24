@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { encodePath, getAccessToken } from '.'
+import { getAccessToken } from '.'
 import apiConfig from '../../config/api.json'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

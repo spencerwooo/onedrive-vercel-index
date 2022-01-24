@@ -1,19 +1,20 @@
 import axios from 'axios'
+import useSWR, { SWRResponse } from 'swr'
+import { Dispatch, Fragment, SetStateAction, useState } from 'react'
 import AwesomeDebouncePromise from 'awesome-debounce-promise'
 import { useAsync } from 'react-async-hook'
 import useConstant from 'use-constant'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import { Dispatch, Fragment, SetStateAction, useState } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
 import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Dialog, Transition } from '@headlessui/react'
 
 import { OdDriveItem, OdSearchResult } from '../types'
 import { LoadingIcon } from './Loading'
 
 import { getFileIcon } from '../utils/getFileIcon'
-import useAxiosGet from '../utils/fetchOnMount'
 import siteConfig from '../config/site.json'
+import { fetcher } from '../utils/fetchWithSWR'
 
 /**
  * Extract the searched item's path in field 'parentReference' and convert it to the
@@ -101,27 +102,18 @@ function SearchResultItemTemplate({
 }
 
 function SearchResultItemLoadRemote({ result }: { result: OdSearchResult[number] }) {
-  const {
-    content,
-    error,
-    validating,
-  }: {
-    content: OdDriveItem
-    error: string
-    validating: boolean
-  } = useAxiosGet(`/api/item?id=${result.id}`)
+  const { data, error }: SWRResponse<OdDriveItem, string> = useSWR(`/api/item?id=${result.id}`, fetcher)
 
   if (error) {
     return <SearchResultItemTemplate driveItem={result} driveItemPath={''} itemDescription={error} disabled={true} />
   }
-
-  if (validating) {
+  if (!data) {
     return (
       <SearchResultItemTemplate driveItem={result} driveItemPath={''} itemDescription={'Loading ...'} disabled={true} />
     )
   }
 
-  const driveItemPath = `${mapAbsolutePath(content.parentReference.path)}/${encodeURIComponent(content.name)}`
+  const driveItemPath = `${mapAbsolutePath(data.parentReference.path)}/${encodeURIComponent(data.name)}`
   return (
     <SearchResultItemTemplate
       driveItem={result}
