@@ -24,7 +24,12 @@ import { fetcher } from '../utils/fetchWithSWR'
  * @returns The absolute path of the driveItem in the search result
  */
 function mapAbsolutePath(path: string): string {
-  return path.split(siteConfig.baseDirectory === '/' ? 'root:' : siteConfig.baseDirectory)[1]
+  // path is in the format of '/drive/root:/path/to/file', if baseDirectory is '/' then we split on 'root:',
+  // otherwise we split on the user defined 'baseDirectory'
+  const absolutePath = path.split(siteConfig.baseDirectory === '/' ? 'root:' : siteConfig.baseDirectory)[1]
+  // path returned by the API may contain #, by doing a decodeURIComponent and then encodeURIComponent we can
+  // replace URL sensitive characters such as the # with %23
+  return encodeURIComponent(decodeURIComponent(absolutePath))
 }
 
 /**
@@ -134,7 +139,7 @@ function SearchResultItem({ result }: { result: OdSearchResult[number] }) {
     return (
       <SearchResultItemTemplate
         driveItem={result}
-        driveItemPath={driveItemPath}
+        driveItemPath={result.path}
         itemDescription={driveItemPath}
         disabled={false}
       />
