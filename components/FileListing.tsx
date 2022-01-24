@@ -58,7 +58,7 @@ const queryToPath = (query?: ParsedUrlQuery) => {
 }
 
 const FileListItem: FC<{
-  fileContent: { id: string; name: string; size: number; file: Object; lastModifiedDateTime: string }
+  fileContent: { id: string; name: string; size: number; file: Object; lastModifiedDateTime: string, video: any }
 }> = ({ fileContent: c }) => {
   const emojiIcon = emojiRegex().exec(c.name)
   const renderEmoji = emojiIcon && !emojiIcon.index
@@ -71,7 +71,7 @@ const FileListItem: FC<{
           {renderEmoji ? (
             <span>{emojiIcon ? emojiIcon[0] : '📁'}</span>
           ) : (
-            <FontAwesomeIcon icon={c.file ? getFileIcon(c.name) : ['far', 'folder']} />
+            <FontAwesomeIcon icon={c.file ? getFileIcon(c.name, { video: Boolean(c.video) }) : ['far', 'folder']} />
           )}
         </div>
         <div className="truncate">

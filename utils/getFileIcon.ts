@@ -94,7 +94,15 @@ export function getExtension(fileName: string): string {
   return fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
 }
 
-export function getFileIcon(fileName: string): [IconPrefix, IconName] {
+export function getFileIcon(fileName: string, flags?: { video?: boolean }): [IconPrefix, IconName] {
   const extension = getExtension(fileName)
-  return hasKey(extensions, extension) ? extensions[extension] : icons.file
+  let icon = hasKey(extensions, extension) ? extensions[extension] : icons.file
+
+  if (extension === 'ts') {
+    if (flags?.video) {
+      icon = icons.video
+    }
+  }
+
+  return icon
 }
