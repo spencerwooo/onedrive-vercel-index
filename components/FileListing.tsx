@@ -75,7 +75,7 @@ const FileListItem: FC<{
           )}
         </div>
         <div className="truncate">
-          {renderEmoji ? c.name.replace(/[0-9][0-9]?#/,'').replace(emojiIcon ? emojiIcon[0] : '', '').trim() : c.name}
+          {renderEmoji ? c.name.replace(/[0-9][0-9]?PX/,'').replace(emojiIcon ? emojiIcon[0] : '', '').trim() : c.name}
         </div>
       </div>
       <div className="md:block dark:text-gray-500 flex-shrink-0 hidden col-span-3 font-mono text-sm text-gray-700">
