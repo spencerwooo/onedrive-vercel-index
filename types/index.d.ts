@@ -11,7 +11,8 @@ export type OdFileObject = {
       sha1Hash: string
       sha256Hash: string
     }
-  }
+  },
+  video: any // Check if field exists only currently
 }
 
 export type OdFolderObject = {

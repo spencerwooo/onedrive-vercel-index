@@ -70,4 +70,19 @@ const extensions = {
   url: preview.url,
 }
 
-export { extensions, preview }
+export { preview }
+
+export function getPreviewType(extension: string, flags?: { video?: boolean }): string | undefined {
+  let previewType = extensions[extension]
+  if (!previewType) {
+    return previewType
+  }
+
+  if (extension === 'ts') {
+    if (flags?.video) {
+      previewType = preview.video
+    }
+  }
+
+  return previewType
+}

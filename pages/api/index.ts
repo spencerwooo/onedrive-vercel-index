@@ -182,7 +182,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { data: identityData } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
-        select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
+        select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file,video',
       },
     })
 
@@ -191,12 +191,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         headers: { Authorization: `Bearer ${accessToken}` },
         params: next
           ? {
-              select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
+              select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file,video',
               top: siteConfig.maxItems,
               $skipToken: next,
             }
           : {
-              select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file',
+              select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file,video',
               top: siteConfig.maxItems,
             },
       })

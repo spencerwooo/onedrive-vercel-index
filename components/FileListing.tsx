@@ -11,8 +11,8 @@ import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 
 import { humanFileSize, formatModifiedDateTime } from '../utils/fileDetails'
-import { getExtension, getFileIcon, hasKey } from '../utils/getFileIcon'
-import { extensions, preview } from '../utils/getPreviewType'
+import { getExtension, getFileIcon } from '../utils/getFileIcon'
+import { getPreviewType, preview } from '../utils/getPreviewType'
 import { useProtectedSWRInfinite } from '../utils/fetchWithSWR'
 import { getBaseUrl } from '../utils/getBaseUrl'
 import {
@@ -185,10 +185,8 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
   const fileIsImage = (fileName: string) => {
     const fileExtension = getExtension(fileName)
-    if (hasKey(extensions, fileExtension)) {
-      if (extensions[fileExtension] === preview.image) {
-        return true
-      }
+    if (getPreviewType(fileExtension) === preview.image) {
+      return true
     }
     return false
   }
@@ -542,8 +540,9 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
     const fileName = file.name
     const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
 
-    if (hasKey(extensions, fileExtension)) {
-      switch (extensions[fileExtension]) {
+    const previewType = getPreviewType(fileExtension, { video: Boolean(file.video) })
+    if (previewType) {
+      switch (previewType) {
         case preview.image:
           return (
             <>
