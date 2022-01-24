@@ -161,12 +161,14 @@ export async function downloadTreelikeMultipleFiles({
  * @param path Folder to be traversed
  * @returns Array of items representing folders and files of traversed folder in BFS order and excluding root folder.
  * Due to BFS, folder items are ALWAYS in front of its children items.
+ * Error key in the item will contain the error when there is a handleable error.
  */
 export async function* traverseFolder(path: string): AsyncGenerator<
   {
     path: string
     meta: any
     isFolder: boolean
+    error?: [number, string]
   },
   void,
   undefined
@@ -182,9 +184,14 @@ export async function* traverseFolder(path: string): AsyncGenerator<
           try {
             data = await fetcher(`/api?path=${fp}`, hashedToken ?? undefined)
           } catch (error: any) {
-            // Skip errors caused by the client
-            if (Math.floor(error.response.status / 100) === 4) {
-              return null
+            console.log(error)
+            // 4xx errors are identified as handleable errors
+            if (Math.floor(error.status / 100) === 4) {
+              return {
+                path: fp,
+                isFolder: true,
+                error: [error.status as number, error.message.error as string]
+              }
             } else {
               throw error
             }
@@ -202,8 +209,11 @@ export async function* traverseFolder(path: string): AsyncGenerator<
       )
     )
 
-    const items = itemLists.filter(Boolean).flat() as { path: string; meta: any; isFolder: boolean }[]
-    yield* items
-    folderPaths = items.filter(i => i.isFolder).map(i => i.path)
+    const items = itemLists.flat() as { path: string; meta: any; isFolder: boolean; error?: [number, string] }[]
+    yield * items
+    folderPaths = items
+      .filter(({ error }) => !error)
+      .filter(i => i.isFolder)
+      .map(i => i.path)
   }
 }
