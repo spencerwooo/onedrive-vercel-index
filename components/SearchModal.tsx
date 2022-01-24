@@ -149,9 +149,12 @@ export default function SearchModal({
   searchOpen: boolean
   setSearchOpen: Dispatch<SetStateAction<boolean>>
 }) {
-  const closeSearchBox = () => setSearchOpen(false)
-
   const { query, setQuery, results } = useDriveItemSearch()
+
+  const closeSearchBox = () => {
+    setSearchOpen(false)
+    setQuery('')
+  }
 
   return (
     <Transition appear show={searchOpen} as={Fragment}>
