@@ -32,6 +32,7 @@ export type OdFolderObject = {
   }>
 }
 
+// Search result type which is returned by /api/search?q={query}
 export type OdSearchResult = Array<{
   id: string
   name: string
@@ -44,3 +45,17 @@ export type OdSearchResult = Array<{
     path: string
   }
 }>
+
+// driveItem type which is returned by /api/item?id={id}
+export type OdDriveItem = {
+  '@odata.context': string
+  '@odata.etag': string
+  id: string
+  name: string
+  parentReference: {
+    driveId: string
+    driveType: string
+    id: string
+    path: string
+  }
+}
