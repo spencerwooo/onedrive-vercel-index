@@ -168,7 +168,7 @@ export async function* traverseFolder(path: string): AsyncGenerator<
     path: string
     meta: any
     isFolder: boolean
-    error?: [number, string]
+    error?: { status: number; message: string }
   },
   void,
   undefined
@@ -184,13 +184,12 @@ export async function* traverseFolder(path: string): AsyncGenerator<
           try {
             data = await fetcher(`/api?path=${fp}`, hashedToken ?? undefined)
           } catch (error: any) {
-            console.log(error)
             // 4xx errors are identified as handleable errors
             if (Math.floor(error.status / 100) === 4) {
               return {
                 path: fp,
                 isFolder: true,
-                error: [error.status as number, error.message.error as string]
+                error: { status: error.status, message: error.message.error },
               }
             } else {
               throw error
@@ -209,7 +208,12 @@ export async function* traverseFolder(path: string): AsyncGenerator<
       )
     )
 
-    const items = itemLists.flat() as { path: string; meta: any; isFolder: boolean; error?: [number, string] }[]
+    const items = itemLists.flat() as {
+      path: string
+      meta: any
+      isFolder: boolean
+      error?: { status: number; message: string }
+    }[]
     yield * items
     folderPaths = items
       .filter(({ error }) => !error)
