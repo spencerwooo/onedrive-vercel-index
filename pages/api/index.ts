@@ -19,7 +19,7 @@ const clientSecret = revealObfuscatedToken(apiConfig.obfuscatedClientSecret)
  * @returns Absolute path of the file inside OneDrive
  */
 export function encodePath(path: string): string {
-  let encodedPath = pathPosix.join(basePath, pathPosix.resolve('/', path))
+  let encodedPath = pathPosix.join(basePath, path)
   if (encodedPath === '/' || encodedPath === '') {
     return ''
   }
@@ -109,6 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(400).json({ error: 'Path query invalid.' })
     return
   }
+  const cleanPath = pathPosix.resolve('/', pathPosix.normalize(path))
 
   const accessToken = await getAccessToken()
 
@@ -122,7 +123,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const protectedRoutes = siteConfig.protectedRoutes
   let authTokenPath = ''
   for (const r of protectedRoutes) {
-    if (path.startsWith(r)) {
+    if (cleanPath.startsWith(r)) {
       authTokenPath = `${r}/.password`
       break
     }
@@ -161,7 +162,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 
-  const requestPath = encodePath(path)
+  const requestPath = encodePath(cleanPath)
   // Handle response from OneDrive API
   const requestUrl = `${apiConfig.driveApi}/root${requestPath}`
   // Whether path is root, which requires some special treatment
