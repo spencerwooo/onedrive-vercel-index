@@ -16,7 +16,7 @@ const DefaultPreview: FC<{ file: OdFileObject }> = ({ file }) => {
         <div className="md:flex px-5 py-4 md:space-x-8 items-center">
           <div className="text-center border rounded-lg px-10 py-20 border-gray-900/10 dark:border-gray-500/30">
             <FontAwesomeIcon icon={getFileIcon(file.name, { video: Boolean(file.video) })} />
-            <div className="font-medium text-sm mt-6">{file.name}</div>
+            <div className="font-medium text-sm mt-6 md:w-20 overflow-hidden truncate">{file.name}</div>
           </div>
 
           <div className="md:flex-1 flex flex-col py-4 space-y-2">
