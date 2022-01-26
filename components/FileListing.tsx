@@ -37,6 +37,8 @@ import DefaultPreview from './previews/DefaultPreview'
 import { DownloadBtnContainer, PreviewContainer } from './previews/Containers'
 import DownloadButtonGroup from './DownloadBtnGtoup'
 
+import { OdFileObject, OdFolderObject } from '../types'
+
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
 const EPUBPreview = dynamic(() => import('./previews/EPUBPreview'), { ssr: false })
@@ -57,9 +59,7 @@ const queryToPath = (query?: ParsedUrlQuery) => {
   return '/'
 }
 
-const FileListItem: FC<{
-  fileContent: { id: string; name: string; size: number; file: Object; lastModifiedDateTime: string, video: any }
-}> = ({ fileContent: c }) => {
+const FileListItem: FC<{ fileContent: OdFolderObject['value'][number] }> = ({ fileContent: c }) => {
   const emojiIcon = emojiRegex().exec(c.name)
   const renderEmoji = emojiIcon && !emojiIcon.index
 
@@ -207,12 +207,12 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
     // README rendering preparations
     let renderReadme = false
-    let readmeFile = null
+    let readmeFile = {}
 
     // Expand list of API returns into flattened file data
-    const children = [].concat(...responses.map(r => r.folder.value))
+    const children = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
 
-    children.forEach((c: any) => {
+    children.forEach(c => {
       if (fileIsImage(c.name)) {
         imagesInFolder.push({
           src: c['@microsoft.graph.downloadUrl'],
@@ -230,11 +230,11 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
     })
 
     // Filtered file list helper
-    const getFiles = () => children.filter((c: any) => !c.folder && c.name !== '.password')
+    const getFiles = () => children.filter(c => !c.folder && c.name !== '.password')
 
     // File selection
     const genTotalSelected = (selected: { [key: string]: boolean }) => {
-      const selectInfo = getFiles().map((c: any) => Boolean(selected[c.id]))
+      const selectInfo = getFiles().map(c => Boolean(selected[c.id]))
       const [hasT, hasF] = [selectInfo.some(i => i), selectInfo.some(i => !i)]
       return hasT && hasF ? 1 : !hasF ? 2 : 0
     }
@@ -256,7 +256,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
         setSelected({})
         setTotalSelected(0)
       } else {
-        setSelected(Object.fromEntries(getFiles().map((c: any) => [c.id, true])))
+        setSelected(Object.fromEntries(getFiles().map(c => [c.id, true])))
         setTotalSelected(2)
       }
     }
@@ -266,8 +266,8 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       const folderName = path.substring(path.lastIndexOf('/') + 1)
       const folder = folderName ? decodeURIComponent(folderName) : undefined
       const files = getFiles()
-        .filter((c: any) => selected[c.id])
-        .map((c: any) => ({ name: c.name, url: c['@microsoft.graph.downloadUrl'] }))
+        .filter(c => selected[c.id])
+        .map(c => ({ name: c.name, url: c['@microsoft.graph.downloadUrl'] }))
 
       if (files.length == 1) {
         const el = document.createElement('a')
@@ -398,7 +398,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
             />
           )}
 
-          {children.map((c: any) => (
+          {children.map(c => (
             <div className="hover:bg-gray-100 dark:hover:bg-gray-850 grid grid-cols-12" key={c.id}>
               <div
                 className="col-span-10"
@@ -535,7 +535,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   }
 
   if ('file' in responses[0] && responses.length === 1) {
-    const { file } = responses[0]
+    const file = responses[0].file as OdFileObject
     const downloadUrl = file['@microsoft.graph.downloadUrl']
     const fileName = file.name
     const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
