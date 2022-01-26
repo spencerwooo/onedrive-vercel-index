@@ -69,10 +69,10 @@ const Navbar = () => {
             className="flex-1 flex items-center justify-between rounded-lg bg-gray-100 dark:bg-gray-800 md:w-48 px-2.5 py-1.5 dark:text-white hover:opacity-80"
             onClick={openSearchBox}
           >
-            <div className="flex items-center space-x-2">
+            {/* <div className="flex items-center space-x-2">
               <FontAwesomeIcon icon="search" />
               <span className="text-sm font-medium">Search ...</span>
-            </div>
+            </div> */}
 
             <div className="flex items-center space-x-1">
               <div className="px-2 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 font-medium text-xs">
