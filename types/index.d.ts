@@ -50,3 +50,17 @@ export declare type OdSearchResult = Array<{
   path: string
   parentReference: { id: string; name: string; path: string }
 }>
+
+// driveItem type which is returned by /api/item?id={id}
+export type OdDriveItem = {
+  '@odata.context': string
+  '@odata.etag': string
+  id: string
+  name: string
+  parentReference: {
+    driveId: string
+    driveType: string
+    id: string
+    path: string
+  }
+}

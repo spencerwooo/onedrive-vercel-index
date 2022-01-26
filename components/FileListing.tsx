@@ -295,7 +295,11 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
     // Folder recursive download
     const handleFolderDownload = (path: string, id: string, name?: string) => () => {
       const files = (async function* () {
-        for await (const { meta: c, path: p, isFolder } of traverseFolder(path)) {
+        for await (const { meta: c, path: p, isFolder, error } of traverseFolder(path)) {
+          if (error) {
+            toast.error(`Failed to download folder ${p}: ${error.status} ${error.message} Skipped it to continue.`)
+            continue
+          }
           yield {
             name: c?.name,
             url: c ? c['@microsoft.graph.downloadUrl'] : undefined,

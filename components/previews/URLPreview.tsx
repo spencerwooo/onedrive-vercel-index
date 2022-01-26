@@ -1,7 +1,7 @@
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import { DownloadButton } from '../DownloadBtnGtoup'
-import useFileContent from '../../utils/fetchOnMount'
+import useAxiosGet from '../../utils/fetchOnMount'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
 const parseDotUrl = (content: string): string | undefined => {
@@ -12,7 +12,7 @@ const parseDotUrl = (content: string): string | undefined => {
 }
 
 const TextPreview = ({ file }) => {
-  const { content, error, validating } = useFileContent(file['@microsoft.graph.downloadUrl'])
+  const { response: content, error, validating } = useAxiosGet(file['@microsoft.graph.downloadUrl'])
   if (error) {
     return (
       <PreviewContainer>

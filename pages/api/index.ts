@@ -12,8 +12,14 @@ import { getOdAuthTokens, storeOdAuthTokens } from '../../utils/odAuthTokenStore
 const basePath = pathPosix.resolve('/', siteConfig.baseDirectory)
 const clientSecret = revealObfuscatedToken(apiConfig.obfuscatedClientSecret)
 
+/**
+ * Encode the path of the file relative to the base directory
+ *
+ * @param path Relative path of the file to the base directory
+ * @returns Absolute path of the file inside OneDrive
+ */
 export function encodePath(path: string): string {
-  let encodedPath = pathPosix.join(basePath, pathPosix.resolve('/', path))
+  let encodedPath = pathPosix.join(basePath, path)
   if (encodedPath === '/' || encodedPath === '') {
     return ''
   }
@@ -21,6 +27,11 @@ export function encodePath(path: string): string {
   return `:${encodeURIComponent(encodedPath)}`
 }
 
+/**
+ * Fetch the access token from Redis storage and check if the token requires a renew
+ *
+ * @returns Access token for OneDrive API
+ */
 export async function getAccessToken(): Promise<string> {
   const { accessToken, refreshToken } = await getOdAuthTokens()
 
@@ -98,6 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(400).json({ error: 'Path query invalid.' })
     return
   }
+  const cleanPath = pathPosix.resolve('/', pathPosix.normalize(path))
 
   const accessToken = await getAccessToken()
 
@@ -111,7 +123,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const protectedRoutes = siteConfig.protectedRoutes
   let authTokenPath = ''
   for (const r of protectedRoutes) {
-    if (path.startsWith(r)) {
+    if (cleanPath.startsWith(r)) {
       authTokenPath = `${r}/.password`
       break
     }
@@ -150,7 +162,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 
-  const requestPath = encodePath(path)
+  const requestPath = encodePath(cleanPath)
   // Handle response from OneDrive API
   const requestUrl = `${apiConfig.driveApi}/root${requestPath}`
   // Whether path is root, which requires some special treatment
