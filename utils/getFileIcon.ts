@@ -98,6 +98,8 @@ export function getFileIcon(fileName: string, flags?: { video?: boolean }): [Ico
   const extension = getExtension(fileName)
   let icon = hasKey(extensions, extension) ? extensions[extension] : icons.file
 
+  // Files with '.ts' extensions may be TypeScript files or TS Video files, we check for the flag 'video'
+  // to determine which icon to render for '.ts' files.
   if (extension === 'ts') {
     if (flags?.video) {
       icon = icons.video

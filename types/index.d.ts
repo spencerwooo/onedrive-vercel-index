@@ -48,5 +48,5 @@ export declare type OdSearchResult = Array<{
   file?: OdFileObject
   folder?: OdFolderObject
   path: string
-  parentReference: { id: string; name: string; path?: string }
+  parentReference: { id: string; name: string; path: string }
 }>

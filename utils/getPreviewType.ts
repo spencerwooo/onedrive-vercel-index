@@ -1,4 +1,4 @@
-const preview = {
+export const preview = {
   markdown: 'markdown',
   image: 'image',
   text: 'text',
@@ -11,7 +11,7 @@ const preview = {
   url: 'url',
 }
 
-const extensions = {
+export const extensions = {
   gif: preview.image,
   jpeg: preview.image,
   jpg: preview.image,
@@ -34,13 +34,17 @@ const extensions = {
   c: preview.code,
   cpp: preview.code,
   js: preview.code,
+  jsx: preview.code,
   java: preview.code,
   sh: preview.code,
   cs: preview.code,
   py: preview.code,
   css: preview.code,
   html: preview.code,
+  // typescript or video file, determined below
   ts: preview.code,
+  tsx: preview.code,
+  rs: preview.code,
   vue: preview.code,
   json: preview.code,
   yaml: preview.code,
@@ -70,14 +74,14 @@ const extensions = {
   url: preview.url,
 }
 
-export { preview }
-
 export function getPreviewType(extension: string, flags?: { video?: boolean }): string | undefined {
   let previewType = extensions[extension]
   if (!previewType) {
     return previewType
   }
 
+  // Files with '.ts' extensions may be TypeScript files or TS Video files, we check for the flag 'video'
+  // to determine what preview renderer to use for '.ts' files.
   if (extension === 'ts') {
     if (flags?.video) {
       previewType = preview.video
