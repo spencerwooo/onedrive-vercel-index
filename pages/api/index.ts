@@ -2,6 +2,7 @@ import { posix as pathPosix } from 'path'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
+import Cors from 'cors'
 
 import apiConfig from '../../config/api.json'
 import siteConfig from '../../config/site.json'
@@ -170,6 +171,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // Go for file raw download link and query with only temporary link parameter
   if (raw) {
+    const cors = Cors({ methods: ['GET', 'HEAD'] })
+    await new Promise((resolve, reject) => {
+      cors(req, res, result => {
+        if (result instanceof Error) {
+          return reject(result)
+        }
+        return resolve(result)
+      })
+    })
+
     const { data } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {

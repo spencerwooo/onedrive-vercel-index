@@ -17,6 +17,7 @@
     "@headlessui/react": "^1.4.0",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "^0.21.1",
+    "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
     "emoji-regex": "^9.2.2",
     "ioredis": "^4.28.2",
@@ -44,6 +45,7 @@
     "use-constant": "^1.1.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.12",
     "@types/crypto-js": "^4.0.2",
     "@types/ioredis": "^4.28.5",
     "@types/prismjs": "^1.16.5",
