@@ -1,20 +1,20 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
-// Custom hook to fetch raw file content on mount
-export default function useFileContent(odRawUrl: string): { content: string; error: string; validating: boolean } {
-  const [content, setContent] = useState('')
+// Custom hook to axios get a URL or API endpoint on mount
+export default function useAxiosGet(fetchUrl: string): { response: any; error: string; validating: boolean } {
+  const [response, setResponse] = useState('')
   const [validating, setValidating] = useState(true)
   const [error, setError] = useState('')
 
   useEffect(() => {
     axios
-      .get(odRawUrl)
-      .then(res => setContent(res.data))
+      .get(fetchUrl)
+      .then(res => setResponse(res.data))
       .catch(e => setError(e.message))
       .finally(() => {
         setValidating(false)
       })
-  }, [odRawUrl])
-  return { content, error, validating }
+  }, [fetchUrl])
+  return { response, error, validating }
 }
