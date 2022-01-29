@@ -2,6 +2,7 @@ import { posix as pathPosix } from 'path'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
+import Cors from 'cors'
 
 import apiConfig from '../../config/api.json'
 import siteConfig from '../../config/site.json'
@@ -11,6 +12,20 @@ import { getOdAuthTokens, storeOdAuthTokens } from '../../utils/odAuthTokenStore
 
 const basePath = pathPosix.resolve('/', siteConfig.baseDirectory)
 const clientSecret = revealObfuscatedToken(apiConfig.obfuscatedClientSecret)
+
+// CORS middleware for raw links: https://nextjs.org/docs/api-routes/api-middlewares
+function runCorsMiddleware(req: NextApiRequest, res: NextApiResponse) {
+  const cors = Cors({ methods: ['GET', 'HEAD'] })
+  return new Promise((resolve, reject) => {
+    cors(req, res, result => {
+      if (result instanceof Error) {
+        return reject(result)
+      }
+
+      return resolve(result)
+    })
+  })
+}
 
 /**
  * Encode the path of the file relative to the base directory
@@ -168,8 +183,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Whether path is root, which requires some special treatment
   const isRoot = requestPath === ''
 
-  // Go for file raw download link and query with only temporary link parameter
+  // Go for file raw download link, add CORS headers, and redirect to @microsoft.graph.downloadUrl
   if (raw) {
+    await runCorsMiddleware(req, res)
+
     const { data } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
@@ -188,8 +205,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Querying current path identity (file or folder) and follow up query childrens in folder
-  // console.log(accessToken)
-
   try {
     const { data: identityData } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
