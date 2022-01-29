@@ -9,7 +9,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 
-import siteConfig from '../config/site.json'
+import siteConfig from '../config/site.config'
 import SearchModal from './SearchModal'
 import useDeviceOS from '../utils/useDeviceOS'
 

@@ -13,7 +13,7 @@ import { OdDriveItem, OdSearchResult } from '../types'
 import { LoadingIcon } from './Loading'
 
 import { getFileIcon } from '../utils/getFileIcon'
-import siteConfig from '../config/site.json'
+import siteConfig from '../config/site.config'
 import { fetcher } from '../utils/fetchWithSWR'
 
 /**

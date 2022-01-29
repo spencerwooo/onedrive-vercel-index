@@ -1,4 +1,4 @@
-import config from '../config/site.json'
+import config from '../config/site.config'
 
 const createFooterMarkup = () => {
   return {
