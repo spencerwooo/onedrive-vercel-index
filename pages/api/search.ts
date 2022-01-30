@@ -2,8 +2,8 @@ import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { encodePath, getAccessToken } from '.'
-import apiConfig from '../../config/api.json'
-import siteConfig from '../../config/site.json'
+import apiConfig from '../../config/api.config'
+import siteConfig from '../../config/site.config'
 
 /**
  * Sanitize the search query

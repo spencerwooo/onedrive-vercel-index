@@ -65,6 +65,6 @@ export function useProtectedSWRInfinite(path: string = '') {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
   }
-  return useSWRInfinite(getNextKey, fetcher, revalidationOptions)
   // return useSWRInfinite(getNextKey, fetcher)
+  return useSWRInfinite(getNextKey, fetcher, revalidationOptions)
 }
