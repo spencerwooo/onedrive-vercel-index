@@ -26,7 +26,7 @@ Please go to our [discussion forum](https://github.com/spencerwooo/onedrive-verc
 
 *If you happen to like this project, please give it a star!* :3
 
-*If you really, really like this project, please send money! -> [Sponsors 🤑 and donations 💰](https://docs.spencerwoo.com/please-donate)*
+*If you really, really like this project, please send money! -> [Sponsors 🤑 and donations 💰](https://onedrive-vercel-index.spencerwoo.com/sponsor)*
 
 ## Demo
 
@@ -84,14 +84,14 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
       <td>🔎 Native Search</td>
     </tr>
     <tr>
-      <td>Password protected routes and files. <a href="https://docs.spencerwoo.com/password-protected-folders">Details here</a></td>
+      <td>Password protected routes and files. <a href="https://onedrive-vercel-index.spencerwoo.com/docs/features/protected-folders">Details here</a></td>
       <td>
         Compress and download multiple files or folders.
-        <a href="https://docs.spencerwoo.com/multi-file-and-folder-download">Details here</a>
+        <a href="https://onedrive-vercel-index.spencerwoo.com/docs/features/multi-file-folder-download">Details here</a>
       </td>
       <td>
         Searching through your shared OneDrive files (with some caveats 🥺).
-        <a href="https://docs.spencerwoo.com/search-for-files-and-folders">Details here</a>
+        <a href="https://onedrive-vercel-index.spencerwoo.com/docs/features/search-for-files-and-folders">Details here</a>
       </td>
     </tr>
   </tbody>
@@ -105,14 +105,18 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
 
 ## Documentation
 
-Documentation is hosted at [docs.spencerwoo.com](https://docs.spencerwoo.com/onedrive-vercel-index).
+Documentation is hosted at [https://onedrive-vercel-index.spencerwoo.com](https://onedrive-vercel-index.spencerwoo.com/).
 
-- How can I get started and deploy? - [Docs - Getting started](https://docs.spencerwoo.com/getting-started).
-- How can I configure ... ? - [Docs - Custom configs](https://docs.spencerwoo.com/custom-configs).
-- Where is feature x ? - [Docs - Features](https://docs.spencerwoo.com/onedrive-vercel-index#ed39fe1746e5444c818c9d2fbc74a378)
-- I deployed this before, how can I upgrade to the latest version? - [todo]
-- I was here before 2022, how can I migrate to the new version? - [Docs - Migrating from versions before 2022](https://docs.spencerwoo.com/if-you-deployed-before-2022).
-- I got a problem during deployment ... - [Docs - FAQ](https://docs.spencerwoo.com/onedrive-vercel-index#aa6b5064e87d4aaea581213a0ea2e3d9)
+- How can I get started and deploy? - [Docs - Getting started](https://onedrive-vercel-index.spencerwoo.com/docs/getting-started).
+- How can I configure ... ? - [Docs - Custom configs](https://onedrive-vercel-index.spencerwoo.com/docs/custom-configs).
+- Where is feature ... ?
+  - [Docs - Password protected folders](https://onedrive-vercel-index.spencerwoo.com/docs/features/protected-folders)
+  - [Docs - Multi-file and folder download](https://onedrive-vercel-index.spencerwoo.com/docs/features/multi-file-folder-download)
+  - [Docs - Hosting files (images) directly](https://onedrive-vercel-index.spencerwoo.com/docs/features/hosting-images-directly)
+  - [Docs - Search for files and folders](https://onedrive-vercel-index.spencerwoo.com/docs/features/search-for-files-and-folders)
+- I deployed this before, how can I upgrade to the latest version? - [Docs - Updating to the latest version](https://onedrive-vercel-index.spencerwoo.com/docs/migration/updating-to-latest-version)
+- I was here before 2022, how can I migrate to the new version? - [Docs - Migrating from versions before 2022](https://onedrive-vercel-index.spencerwoo.com/docs/migration/if-you-deployed-before-2022).
+- I got a problem during deployment ... - [Docs - FAQ](https://onedrive-vercel-index.spencerwoo.com/docs/faqs/error-on-deployment)
 - I didn't find a solution / My problem is unique - [Find help in discussion forum](https://github.com/spencerwooo/onedrive-vercel-index/discussions).
 
 ## Server-*less* (free)?
@@ -123,7 +127,7 @@ Yes! Completely free with no backend server what-so-ever. (Well, we use Redis, b
 
 Open-source is hard! If you happen to like this project and want me to keep going, please consider sponsoring me or providing a single donation! Thanks for all the love and support!
 
-[🧸 Please donate - 微信/支付宝](https://docs.spencerwoo.com/please-donate) · [Patreon](https://www.patreon.com/spencerwoo) · [爱发电](https://afdian.net/@spencerwoo)
+[🧸 Please donate - 微信/支付宝](https://onedrive-vercel-index.spencerwoo.com/sponsor) · [Patreon](https://www.patreon.com/spencerwoo) · [爱发电](https://afdian.net/@spencerwoo)
 
 ### Sponsors
 
