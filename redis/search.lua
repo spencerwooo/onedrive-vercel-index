@@ -97,7 +97,13 @@ table.sort(name_sim, function(a, b)
 end)
 
 local res = {}
-for i = 1, math.min(tonumber(ARGV[2]), #name_sim) do
+local top = tonumber(ARGV[2])
+if top == 0 then
+  top = #name_sim
+else
+  top = math.min(top, #name_sim)
+end
+for i = 1, top do
   res[i] = name_sim[i][2]
 end
 return res

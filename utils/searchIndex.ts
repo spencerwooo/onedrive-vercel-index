@@ -14,5 +14,5 @@ kv.defineCommand('searchIndex', {
  * @returns OneDrive item IDs
  */
 export default async function searchIndex(q: string): Promise<string[]> {
-  return await kv.searchIndex('index', q, siteConfig.maxItems)
+  return await kv.searchIndex('index', q, siteConfig.maxItems ?? 0)
 }
