@@ -1,7 +1,7 @@
 -- Get string similarity
 local function strsim(a, b)
-  a:gsub('%s+', '')
-  b:gsub('%s+', '')
+  a = a:gsub('%s+', '')
+  b = b:gsub('%s+', '')
 
   if #a == 0 or #b == 0 then
     if a == b then
@@ -84,6 +84,23 @@ local function strsim(a, b)
   return r1 * 0.9 + r2 * 0.1
 end
 
+-- Split string with sep. Two sep must not be nerghbors and sep must not be prefix or suffix.
+local function split(s, sep)
+  local segments = {}
+  local n = 0
+  while true do
+    local i = s:find(sep)
+    if not i then
+      break
+    end
+    n = n + 1
+    segments[n] = s:sub(1, i - 1)
+    s = s:sub(i + 1)
+  end
+  segments[n + 1] = s
+  return segments
+end
+
 local names = redis.call('hgetall', KEYS[1])
 local name_sim = {}
 for i = 1, #names / 2 do
@@ -96,14 +113,18 @@ table.sort(name_sim, function(a, b)
   return a[1] > b[1]
 end)
 
-local res = {}
 local top = tonumber(ARGV[2])
-if top == 0 then
-  top = #name_sim
-else
-  top = math.min(top, #name_sim)
-end
-for i = 1, top do
-  res[i] = name_sim[i][2]
+local res = {}
+local res_n = 0
+for i = 1, #name_sim do
+  local ids_str = name_sim[i][2]
+  local ids = split(ids_str, ',')
+  for i = 1, #ids do
+    res_n = res_n + 1
+    if top ~= 0 and res_n > top then
+      break
+    end
+    res[res_n] = ids[i]
+  end
 end
 return res
