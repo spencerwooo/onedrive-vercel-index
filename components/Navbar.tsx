@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconName } from '@fortawesome/fontawesome-svg-core'
 import { Dialog, Transition } from '@headlessui/react'
 import toast, { Toaster } from 'react-hot-toast'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 import Link from 'next/link'
 import Image from 'next/image'
@@ -9,6 +10,8 @@ import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 
 import siteConfig from '../config/site.json'
+import siteConfig from '../config/site.config'
+import useDeviceOS from '../utils/useDeviceOS'
 
 const Navbar = () => {
   const router = useRouter()
