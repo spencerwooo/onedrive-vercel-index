@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/OneDrive-2C68C3?style=flat&logo=microsoft-onedrive&logoColor=white" alt="Next.js" />
   <img src="https://img.shields.io/badge/Next.js-black?style=flat&logo=next.js&logoColor=white" alt="Next.js" />
   <img src="https://img.shields.io/badge/Vercel-black?style=flat&logo=Vercel&logoColor=white" alt="Vercel" />
-  <a href="https://docs.spencerwoo.com/onedrive-vercel-index"><img src="https://img.shields.io/badge/Documentation-black?style=flat&logo=Notion&logoColor=white" alt="Documentation" /></a>
+  <a href="https://onedrive-vercel-index.spencerwoo.com"><img src="https://img.shields.io/badge/Documentation-black?style=flat" alt="Documentation" /></a>
   <a href="https://github.com/spencerwooo/onedrive-vercel-index/discussions"><img src="https://img.shields.io/github/discussions/spencerwooo/onedrive-vercel-index?color=CF2B5B&labelColor=black&logo=github" alt="GitHub Discussions" /></a>
 </div>
 
@@ -19,6 +19,8 @@ Showcase, share, preview, and download files inside *your* OneDrive with onedriv
 - Highly customisable ⚒️
 
 🍌 More importantly, we are pretty (●'◡'●)
+
+🚀 Quick start - [Getting started](https://onedrive-vercel-index.spencerwoo.com/docs/getting-started).
 
 ## Discussion
 
@@ -105,7 +107,7 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
 
 ## Documentation
 
-Documentation is hosted at [https://onedrive-vercel-index.spencerwoo.com](https://onedrive-vercel-index.spencerwoo.com/).
+Documentation is hosted at [onedrive-vercel-index.spencerwoo.com](https://onedrive-vercel-index.spencerwoo.com/).
 
 - How can I get started and deploy? - [Docs - Getting started](https://onedrive-vercel-index.spencerwoo.com/docs/getting-started).
 - How can I configure ... ? - [Docs - Custom configs](https://onedrive-vercel-index.spencerwoo.com/docs/custom-configs).
