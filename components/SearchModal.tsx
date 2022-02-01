@@ -13,8 +13,8 @@ import { OdDriveItem, OdSearchResult } from '../types'
 import { LoadingIcon } from './Loading'
 
 import { getFileIcon } from '../utils/getFileIcon'
-import siteConfig from '../config/site.config'
 import { fetcher } from '../utils/fetchWithSWR'
+import siteConfig from '../config/site.config'
 
 /**
  * Extract the searched item's path in field 'parentReference' and convert it to the
@@ -29,7 +29,10 @@ function mapAbsolutePath(path: string): string {
   const absolutePath = path.split(siteConfig.baseDirectory === '/' ? 'root:' : siteConfig.baseDirectory)[1]
   // path returned by the API may contain #, by doing a decodeURIComponent and then encodeURIComponent we can
   // replace URL sensitive characters such as the # with %23
-  return encodeURIComponent(decodeURIComponent(absolutePath))
+  return absolutePath
+    .split('/')
+    .map(p => encodeURIComponent(decodeURIComponent(p)))
+    .join('/')
 }
 
 /**
