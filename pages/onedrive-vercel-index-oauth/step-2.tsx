@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import siteConfig from '../../config/site.json'
+import siteConfig from '../../config/site.config'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import { LoadingIcon } from '../../components/Loading'
@@ -91,7 +91,7 @@ export default function OAuthStep2() {
             />
 
             <p className="py-1">The authorisation code extracted is:</p>
-            <p className="my-2 font-mono border border-gray-400/20 rounded text-sm bg-gray-50 dark:bg-gray-800 p-2 opacity-80">
+            <p className="my-2 font-mono border border-gray-400/20 rounded text-sm bg-gray-50 dark:bg-gray-800 p-2 opacity-80 truncate overflow-hidden">
               {authCode || <span className="animate-pulse">Waiting for code...</span>}
             </p>
 
