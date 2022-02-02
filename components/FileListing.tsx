@@ -37,7 +37,7 @@ import DefaultPreview from './previews/DefaultPreview'
 import { DownloadBtnContainer, PreviewContainer } from './previews/Containers'
 import DownloadButtonGroup from './DownloadBtnGtoup'
 
-import { OdFileObject, OdFolderObject } from '../types'
+import type { OdFileObject, OdFolderObject } from '../types'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })

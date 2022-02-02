@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Dialog, Transition } from '@headlessui/react'
 
-import { OdDriveItem, OdSearchResult } from '../types'
+import type { OdDriveItem, OdSearchResult } from '../types'
 import { LoadingIcon } from './Loading'
 
 import { getFileIcon } from '../utils/getFileIcon'
