@@ -1,27 +1,35 @@
 import type { OdFileObject } from '../../types'
-import ReactPlayer from 'react-player'
 import { useRouter } from 'next/router'
 import { useClipboard } from 'use-clipboard-copy'
+import DPlayer from 'react-dplayer'
 import toast from 'react-hot-toast'
 
 import { getBaseUrl } from '../../utils/getBaseUrl'
 import { DownloadButton } from '../DownloadBtnGtoup'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
+import { getExtension } from '../../utils/getFileIcon'
 
 const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const { asPath } = useRouter()
   const clipboard = useClipboard()
 
+  // OneDrive generates thumbnails for its video files, we pick the thumbnail with the highest resolution
+  const thumbnail = file.thumbnails && file.thumbnails.length > 0 ? file.thumbnails[0].large.url : ''
+
+  // We assume subtitle files are beside the video with the same name, only webvtt '.vtt' files are supported
+  const subtitle = `/api?path=${asPath.replace(getExtension(file.name), 'vtt')}&raw=true`
+
   return (
     <>
       <PreviewContainer>
-        <ReactPlayer
+        <DPlayer
           className="aspect-video"
-          url={file['@microsoft.graph.downloadUrl']}
-          controls
-          width="100%"
-          height="100%"
-          config={{ file: { forceVideo: true } }}
+          options={{
+            volume: 1.0,
+            lang: 'en',
+            video: { url: file['@microsoft.graph.downloadUrl'], pic: thumbnail },
+            subtitle: { url: subtitle },
+          }}
         />
       </PreviewContainer>
 

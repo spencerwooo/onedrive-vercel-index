@@ -1,9 +1,9 @@
 // API response object for /api?path=<path_to_file_or_folder>, this may return either a file or a folder.
 // Pagination is also declared here with the 'next' parameter.
-export declare type OdAPIResponse = { file?: OdFileObject; folder?: OdFolderObject; next?: string }
+export type OdAPIResponse = { file?: OdFileObject; folder?: OdFolderObject; next?: string }
 // A folder object returned from the OneDrive API. This contains the parameter 'value', which is an array of items
 // inside the folder. The items may also be either files or folders.
-export declare type OdFolderObject = {
+export type OdFolderObject = {
   '@odata.count': number
   '@odata.context': string
   '@odata.nextLink'?: string
@@ -20,7 +20,7 @@ export declare type OdFolderObject = {
   }>
 }
 // A file object returned from the OneDrive API. This object may contain 'video' if the file is a video.
-export declare type OdFileObject = {
+export type OdFileObject = {
   '@microsoft.graph.downloadUrl': string
   '@odata.context': string
   name: string
@@ -30,14 +30,16 @@ export declare type OdFileObject = {
   file: { mimeType: string; hashes: { quickXorHash: string; sha1Hash?: string; sha256Hash?: string } }
   image?: OdImageFile
   video?: OdVideoFile
+  'thumbnails@odata.context'?: string
+  thumbnails?: Array<OdThumbnail>
 }
 // A representation of a OneDrive image file. Some images do not return a width and height, so types are optional.
-export declare type OdImageFile = {
+export type OdImageFile = {
   width?: number
   height?: number
 }
 // A representation of a OneDrive video file. All fields are declared here, but we mainly use 'width' and 'height'.
-export declare type OdVideoFile = {
+export type OdVideoFile = {
   width: number
   height: number
   duration: number
@@ -48,8 +50,14 @@ export declare type OdVideoFile = {
   audioFormat: string
   audioSamplesPerSecond: number
 }
+export type OdThumbnail = {
+  id: string
+  large: { height: number; width: number; url: string }
+  medium: { height: number; width: number; url: string }
+  small: { height: number; width: number; url: string }
+}
 // API response object for /api/search?q=<query>. Likewise, this array of items may also contain either files or folders.
-export declare type OdSearchResult = Array<{
+export type OdSearchResult = Array<{
   id: string
   name: string
   file?: OdFileObject

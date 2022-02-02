@@ -21,7 +21,6 @@ specifiers:
   axios: ^0.25.0
   cors: ^2.8.5
   crypto-js: ^4.1.1
-  csstype: ^3.0.10
   emoji-regex: ^10.0.0
   eslint: 8.8.0
   eslint-config-next: 12.0.10
@@ -34,12 +33,13 @@ specifiers:
   prismjs: ^1.23.0
   react: ^17.0.2
   react-async-hook: ^4.0.0
+  react-audio-player: ^0.17.0
   react-copy-to-clipboard: ^5.0.3
   react-dom: ^17.0.2
+  react-dplayer: ^0.4.2
   react-hot-toast: ^2.0.0
   react-hotkeys-hook: ^3.4.4
   react-markdown: ^8.0.0
-  react-player: ^2.9.0
   react-reader: ^0.20.4
   react-viewer: ^3.2.2
   rehype-katex: ^6.0.2
@@ -63,7 +63,6 @@ dependencies:
   axios: 0.25.0
   cors: 2.8.5
   crypto-js: 4.1.1
-  csstype: 3.0.10
   emoji-regex: 10.0.0
   ioredis: 4.28.3
   jszip: 3.7.1
@@ -73,12 +72,13 @@ dependencies:
   prismjs: 1.26.0
   react: 17.0.2
   react-async-hook: 4.0.0_react@17.0.2
+  react-audio-player: 0.17.0_react-dom@17.0.2+react@17.0.2
   react-copy-to-clipboard: 5.0.4_react@17.0.2
   react-dom: 17.0.2_react@17.0.2
-  react-hot-toast: 2.2.0_cf9e547307deef37c34d2702bfa94a69
+  react-dplayer: 0.4.2_react@17.0.2
+  react-hot-toast: 2.2.0_react-dom@17.0.2+react@17.0.2
   react-hotkeys-hook: 3.4.4_react-dom@17.0.2+react@17.0.2
   react-markdown: 8.0.0_b08e3c15324cbe90a6ff8fcd416c932c
-  react-player: 2.9.0_react@17.0.2
   react-reader: 0.20.5_react@17.0.2
   react-viewer: 3.2.2
   rehype-katex: 6.0.2
@@ -386,6 +386,10 @@ packages:
     resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
     dependencies:
       '@types/ms': 0.7.31
+    dev: false
+
+  /@types/dplayer/1.25.2:
+    resolution: {integrity: sha512-bkTVZkK3Vi7N7eX2FUBnqKhCjTaeRLkhvY8H6zolatbSTtjPPdxyUzhE3C29sIBYRRq1kQHSduFgCHKg5VF3Jw==}
     dev: false
 
   /@types/hast/2.3.4:
@@ -725,6 +729,13 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
+  /axios/0.19.2:
+    resolution: {integrity: sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==}
+    deprecated: Critical security vulnerability fixed in v0.21.1. For more information, see https://github.com/axios/axios/pull/3410
+    dependencies:
+      follow-redirects: 1.5.10
+    dev: false
+
   /axios/0.25.0:
     resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
     dependencies:
@@ -744,6 +755,10 @@ packages:
   /balanced-match/1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
     dev: true
+
+  /balloon-css/1.2.0:
+    resolution: {integrity: sha512-urXwkHgwp6GsXVF+it01485Z2Cj4pnW02ICnM0TemOlkKmCNnDLmyy+ZZiRXBpwldUXO+aRNr7Hdia4CBvXJ5A==}
+    dev: false
 
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
@@ -842,6 +857,11 @@ packages:
 
   /clipboard-copy/3.2.0:
     resolution: {integrity: sha512-vooFaGFL6ulEP1liiaWFBmmfuPm3cY3y7T9eB83ZTnYc/oFeAKsq3NcDrOkBC8XaauEE8zHQwI7k0+JSYiVQSQ==}
+    dev: false
+
+  /clsx/1.1.1:
+    resolution: {integrity: sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==}
+    engines: {node: '>=6'}
     dev: false
 
   /cluster-key-slot/1.1.0:
@@ -943,6 +963,7 @@ packages:
 
   /csstype/3.0.10:
     resolution: {integrity: sha512-2u44ZG2OcNUO9HDp/Jl8C07x6pU/eTR3ncV91SiK3dhG9TWvRVsCoJw14Ckx5DgWkzGA3waZWO3d7pgqpUI/XA==}
+    dev: true
 
   /d/1.0.1:
     resolution: {integrity: sha512-m62ShEObQ39CfralilEQRjH6oAMtNCV1xJyEx5LpRYUVN+EviphDgUc/F3hnYbADmkiNs67Y+3ylmlG7Lnu+FA==}
@@ -964,6 +985,12 @@ packages:
     dependencies:
       ms: 2.0.0
     dev: true
+
+  /debug/3.1.0:
+    resolution: {integrity: sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==}
+    dependencies:
+      ms: 2.0.0
+    dev: false
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -991,11 +1018,6 @@ packages:
   /deep-is/0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
     dev: true
-
-  /deepmerge/4.2.2:
-    resolution: {integrity: sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==}
-    engines: {node: '>=0.10.0'}
-    dev: false
 
   /define-properties/1.1.3:
     resolution: {integrity: sha512-3MqfYKj2lLzdMSf8ZIZE/V+Zuy+BgD6f164e8K2w7dgnpKArBDerGYpM46IYYcjnkdPNMjPk9A6VFB8+3SKlXQ==}
@@ -1061,6 +1083,14 @@ packages:
     dependencies:
       esutils: 2.0.3
     dev: true
+
+  /dplayer/1.26.0:
+    resolution: {integrity: sha512-uOE0w/WdlX7N9d0ppIEcAYrcnUjY52TMX+MBL4lj9Mj+JMljVuaEc5w88HkZp5Q11VqvN/jxnM8ktx2Dr7/MgA==}
+    dependencies:
+      axios: 0.19.2
+      balloon-css: 1.2.0
+      promise-polyfill: 8.1.3
+    dev: false
 
   /electron-to-chromium/1.4.61:
     resolution: {integrity: sha512-kpzCOOFlx63C9qKRyIDEsKIUgzoe98ump7T4gU+/OLzj8gYkkWf2SIyBjhTSE0keAjMAp3i7C262YtkQOMYrGw==}
@@ -1500,6 +1530,13 @@ packages:
         optional: true
     dev: false
 
+  /follow-redirects/1.5.10:
+    resolution: {integrity: sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==}
+    engines: {node: '>=4.0'}
+    dependencies:
+      debug: 3.1.0
+    dev: false
+
   /fraction.js/4.1.2:
     resolution: {integrity: sha512-o2RiJQ6DZaR/5+Si0qJUIy637QMRudSi9kU/FFzx9EZazrIdnBgpU+3sEWCxAVhH2RtxW2Oz+T4p2o8uOPVcgA==}
     dev: true
@@ -1595,12 +1632,10 @@ packages:
       slash: 3.0.0
     dev: true
 
-  /goober/2.1.7_csstype@3.0.10:
+  /goober/2.1.7:
     resolution: {integrity: sha512-aCR8u3A/tTgSrZAHfJObhYC0xgdKoYm4GvE/UFmxmzgvj3TSF+3oFYWtmJ459WBewjOIoEsoOG81sDs1rn+W5w==}
     peerDependencies:
       csstype: ^2.6.2
-    dependencies:
-      csstype: 3.0.10
     dev: false
 
   /has-bigints/1.0.1:
@@ -2026,10 +2061,6 @@ packages:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
     dev: true
 
-  /load-script/1.0.0:
-    resolution: {integrity: sha1-BJGTngvuVkPuSUp+PaPSuscMbKQ=}
-    dev: false
-
   /localforage/1.10.0:
     resolution: {integrity: sha512-14/H1aX7hzBBmmh7sGPd+AOMkkIrHM3Z1PAyGgZigA1H1p5O5ANnMyWzvpAETtG68/dC4pC0ncy3+PPGzXZHPg==}
     dependencies:
@@ -2213,10 +2244,6 @@ packages:
 
   /mdurl/1.0.1:
     resolution: {integrity: sha1-/oWy7HWlkDfyrf7BAP1sYBdhFS4=}
-    dev: false
-
-  /memoize-one/5.2.1:
-    resolution: {integrity: sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==}
     dev: false
 
   /merge2/1.4.1:
@@ -2509,7 +2536,6 @@ packages:
 
   /ms/2.0.0:
     resolution: {integrity: sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=}
-    dev: true
 
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
@@ -2664,6 +2690,10 @@ packages:
       define-properties: 1.1.3
       es-abstract: 1.19.1
     dev: true
+
+  /omit.js/2.0.2:
+    resolution: {integrity: sha512-hJmu9D+bNB40YpL9jYebQl4lsTW6yEHRTroJzNLqQJYHm7c+NQnJGfZmIWh8S3q3KoaxV1aLhV6B3+0N0/kyJg==}
+    dev: false
 
   /once/1.4.0:
     resolution: {integrity: sha1-WDsap3WWHUsROsF9nFC6753Xa9E=}
@@ -2863,6 +2893,10 @@ packages:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
     dev: false
 
+  /promise-polyfill/8.1.3:
+    resolution: {integrity: sha512-MG5r82wBzh7pSKDRa9y+vllNHz3e3d4CNj1PQE4BQYxLme0gKYYBm9YENq+UkEikyZ0XbiGWxYlVw3Rl9O/U8g==}
+    dev: false
+
   /prop-types/15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
     dependencies:
@@ -2897,6 +2931,17 @@ packages:
       react: 17.0.2
     dev: false
 
+  /react-audio-player/0.17.0_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-aCZgusPxA9HK7rLZcTdhTbBH9l6do9vn3NorgoDZRxRxJlOy9uZWzPaKjd7QdcuP2vXpxGA/61JMnnOEY7NXeA==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      prop-types: 15.8.1
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
+
   /react-copy-to-clipboard/5.0.4_react@17.0.2:
     resolution: {integrity: sha512-IeVAiNVKjSPeGax/Gmkqfa/+PuMTBhutEvFUaMQLwE2tS0EXrAdgOpWDX26bWTXF3HrioorR7lr08NqeYUWQCQ==}
     peerDependencies:
@@ -2918,18 +2963,26 @@ packages:
       scheduler: 0.20.2
     dev: false
 
-  /react-fast-compare/3.2.0:
-    resolution: {integrity: sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==}
+  /react-dplayer/0.4.2_react@17.0.2:
+    resolution: {integrity: sha512-UnI6KaAsnGtP6MSz79lGCAEZko+j0DcKgwfNATtQJL/T/zRs1t3ZJDT/ymbCquuU1e3fADn0Cww1gpNJ3K2TiQ==}
+    peerDependencies:
+      react: ^16.x
+    dependencies:
+      '@types/dplayer': 1.25.2
+      clsx: 1.1.1
+      dplayer: 1.26.0
+      omit.js: 2.0.2
+      react: 17.0.2
     dev: false
 
-  /react-hot-toast/2.2.0_cf9e547307deef37c34d2702bfa94a69:
+  /react-hot-toast/2.2.0_react-dom@17.0.2+react@17.0.2:
     resolution: {integrity: sha512-248rXw13uhf/6TNDVzagX+y7R8J183rp7MwUMNkcrBRyHj/jWOggfXTGlM8zAOuh701WyVW+eUaWG2LeSufX9g==}
     engines: {node: '>=10'}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
     dependencies:
-      goober: 2.1.7_csstype@3.0.10
+      goober: 2.1.7
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     transitivePeerDependencies:
@@ -2978,19 +3031,6 @@ packages:
       vfile: 5.3.0
     transitivePeerDependencies:
       - supports-color
-    dev: false
-
-  /react-player/2.9.0_react@17.0.2:
-    resolution: {integrity: sha512-jNUkTfMmUhwPPAktAdIqiBcVUKsFKrVGH6Ocutj6535CNfM91yrvWxHg6fvIX8Y/fjYUPoejddwh7qboNV9vGA==}
-    peerDependencies:
-      react: '>=16.6.0'
-    dependencies:
-      deepmerge: 4.2.2
-      load-script: 1.0.0
-      memoize-one: 5.2.1
-      prop-types: 15.8.1
-      react: 17.0.2
-      react-fast-compare: 3.2.0
     dev: false
 
   /react-reader/0.20.5_react@17.0.2:
