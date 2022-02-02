@@ -1,14 +1,13 @@
 import type { OdFileObject } from '../../types'
-import { FC, useEffect, useRef, useState } from 'react'
 
+import { FC, useEffect, useRef, useState } from 'react'
 import { ReactReader } from 'react-reader'
-import type { Rendition } from 'epubjs'
 
 import Loading from '../Loading'
 import DownloadButtonGroup from '../DownloadBtnGtoup'
 import { DownloadBtnContainer } from './Containers'
 
-const EPUBPreview: FC<{ file: OdFileObject}> = ({ file }) => {
+const EPUBPreview: FC<{ file: OdFileObject }> = ({ file }) => {
   const [epubContainerWidth, setEpubContainerWidth] = useState(400)
   const epubContainer = useRef<HTMLDivElement>(null)
 
@@ -21,9 +20,9 @@ const EPUBPreview: FC<{ file: OdFileObject}> = ({ file }) => {
 
   // Fix for not valid epub files according to
   // https://github.com/gerhardsletten/react-reader/issues/33#issuecomment-673964947
-  const fixEpub = (rendition: Rendition) => {
+  const fixEpub = rendition => {
     const spineGet = rendition.book.spine.get.bind(rendition.book.spine)
-    rendition.book.spine.get = function (target) {
+    rendition.book.spine.get = function (target: string) {
       const targetStr = target as string
       let t = spineGet(target)
       while (t == null && targetStr.startsWith('../')) {
