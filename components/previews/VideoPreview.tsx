@@ -7,6 +7,7 @@ import toast from 'react-hot-toast'
 import { getBaseUrl } from '../../utils/getBaseUrl'
 import { DownloadButton } from '../DownloadBtnGtoup'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
+import { getExtension } from '../../utils/getFileIcon'
 
 const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const { asPath } = useRouter()
@@ -15,6 +16,9 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   // OneDrive generates thumbnails for its video files, we pick the thumbnail with the highest resolution
   const thumbnail = file.thumbnails && file.thumbnails.length > 0 ? file.thumbnails[0].large.url : ''
 
+  // We assume subtitle files are beside the video with the same name, only webvtt '.vtt' files are supported
+  const subtitle = `/api?path=${asPath.replace(getExtension(file.name), 'vtt')}&raw=true`
+
   return (
     <>
       <PreviewContainer>
@@ -22,8 +26,9 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
           className="aspect-video"
           options={{
             volume: 1.0,
-            video: { url: file['@microsoft.graph.downloadUrl'], pic: thumbnail },
             lang: 'en',
+            video: { url: file['@microsoft.graph.downloadUrl'], pic: thumbnail },
+            subtitle: { url: subtitle },
           }}
         />
       </PreviewContainer>
