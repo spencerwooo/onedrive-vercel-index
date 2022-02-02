@@ -1,7 +1,7 @@
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
 
-import apiConfig from '../config/api.json'
+import apiConfig from '../config/api.config'
 
 // Just a disguise to obfuscate required tokens (including but not limited to client secret,
 // access tokens, and refresh tokens), used along with the following two functions

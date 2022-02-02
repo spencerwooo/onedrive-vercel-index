@@ -11,7 +11,7 @@ import 'katex/dist/katex.min.css'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import DownloadButtonGroup from '../DownloadBtnGtoup'
-import useFileContent from '../../utils/fetchOnMount'
+import useAxiosGet from '../../utils/fetchOnMount'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
 const MarkdownPreview: FC<{ file: any; path: string; standalone?: boolean }> = ({
@@ -19,7 +19,7 @@ const MarkdownPreview: FC<{ file: any; path: string; standalone?: boolean }> = (
   path,
   standalone = true,
 }) => {
-  const { content, error, validating } = useFileContent(file['@microsoft.graph.downloadUrl'])
+  const { response: content, error, validating } = useAxiosGet(file['@microsoft.graph.downloadUrl'])
 
   // The parent folder of the markdown file, which is also the relative image folder
   const parentPath = path.substring(0, path.lastIndexOf('/'))

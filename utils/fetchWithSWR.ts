@@ -1,5 +1,7 @@
 import axios from 'axios'
-import useSWR, { cache, Key, useSWRInfinite } from 'swr'
+import useSWRInfinite from 'swr/infinite'
+
+import type { OdAPIResponse } from '../types'
 
 import { getStoredToken } from './protectedRouteHandler'
 
@@ -17,22 +19,6 @@ export async function fetcher(url: string, token?: string): Promise<any> {
     throw { status: err.response.status, message: err.response.data }
   }
 }
-/**
- * Use stale SWR instead of revalidating on each request. Not ideal for this scenario but have to do
- * if fetching serverside props from component instead of pages.
- * @param url request url
- * @returns useSWR instance
- */
-export function useStaleSWR({ url, path = '' }: { url: Key; path?: string }) {
-  const revalidationOptions = {
-    revalidateOnMount: !(cache.has(`arg@"${url}"@null`) || cache.has(url)),
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-  }
-
-  const hashedToken = getStoredToken(path)
-  return useSWR([url, hashedToken], fetcher, revalidationOptions)
-}
 
 /**
  * Paging with useSWRInfinite + protected token support
@@ -49,7 +35,7 @@ export function useProtectedSWRInfinite(path: string = '') {
    * @param path Directory path
    * @returns API to the next page
    */
-  function getNextKey(pageIndex, previousPageData): (string | null)[] | null {
+  function getNextKey(pageIndex: number, previousPageData: OdAPIResponse): (string | null)[] | null {
     // Reached the end of the collection
     if (previousPageData && !previousPageData.folder) return null
 
@@ -60,11 +46,12 @@ export function useProtectedSWRInfinite(path: string = '') {
     return [`/api?path=${path}&next=${previousPageData.next}`, hashedToken]
   }
 
-  // const revalidationOptions = {
-  //   revalidateOnMount: !(cache.has(`arg@"/api?path=${path}"@null`) || cache.has(`/api?path=${path}`)),
-  //   revalidateOnFocus: false,
-  //   revalidateOnReconnect: true,
-  // }
-  // return useSWRInfinite(getNextKey, fetcher, revalidationOptions)
-  return useSWRInfinite(getNextKey, fetcher)
+  // Disable auto-revalidate, these options are equivalent to useSWRImmutable
+  // https://swr.vercel.app/docs/revalidation#disable-automatic-revalidations
+  const revalidationOptions = {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: true,
+  }
+  return useSWRInfinite(getNextKey, fetcher, revalidationOptions)
 }

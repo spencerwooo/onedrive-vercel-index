@@ -1,4 +1,4 @@
-import { IconPrefix, IconName } from '@fortawesome/fontawesome-common-types'
+import type { IconPrefix, IconName } from '@fortawesome/fontawesome-common-types'
 
 const icons: { [key: string]: [IconPrefix, IconName] } = {
   image: ['far', 'file-image'],
@@ -94,7 +94,17 @@ export function getExtension(fileName: string): string {
   return fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
 }
 
-export function getFileIcon(fileName: string): [IconPrefix, IconName] {
+export function getFileIcon(fileName: string, flags?: { video?: boolean }): [IconPrefix, IconName] {
   const extension = getExtension(fileName)
-  return hasKey(extensions, extension) ? extensions[extension] : icons.file
+  let icon = hasKey(extensions, extension) ? extensions[extension] : icons.file
+
+  // Files with '.ts' extensions may be TypeScript files or TS Video files, we check for the flag 'video'
+  // to determine which icon to render for '.ts' files.
+  if (extension === 'ts') {
+    if (flags?.video) {
+      icon = icons.video
+    }
+  }
+
+  return icon
 }
