@@ -1,4 +1,4 @@
-import { OdFileObject } from '../../types'
+import type { OdFileObject } from '../../types'
 import { FC, useState } from 'react'
 
 import ReactPlayer from 'react-player'

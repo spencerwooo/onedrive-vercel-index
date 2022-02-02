@@ -1,4 +1,4 @@
-import { OdFileObject } from '../../types'
+import type { OdFileObject } from '../../types'
 import ReactPlayer from 'react-player'
 import { useRouter } from 'next/router'
 import { useClipboard } from 'use-clipboard-copy'

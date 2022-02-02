@@ -15,6 +15,7 @@ export declare type OdFolderObject = {
     lastModifiedDateTime: string
     file?: { mimeType: string; hashes: { quickXorHash: string; sha1Hash?: string; sha256Hash?: string } }
     folder?: { childCount: number; view: { sortBy: string; sortOrder: 'ascending'; viewType: 'thumbnails' } }
+    image?: OdImageFile
     video?: OdVideoFile
   }>
 }
@@ -27,7 +28,13 @@ export declare type OdFileObject = {
   id: string
   lastModifiedDateTime: string
   file: { mimeType: string; hashes: { quickXorHash: string; sha1Hash?: string; sha256Hash?: string } }
+  image?: OdImageFile
   video?: OdVideoFile
+}
+// A representation of a OneDrive image file. Some images do not return a width and height, so types are optional.
+export declare type OdImageFile = {
+  width?: number
+  height?: number
 }
 // A representation of a OneDrive video file. All fields are declared here, but we mainly use 'width' and 'height'.
 export declare type OdVideoFile = {
