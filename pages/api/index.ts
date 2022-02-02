@@ -210,6 +210,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
         select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file,video,image',
+        $expand: 'thumbnails',
       },
     })
 

@@ -1,7 +1,7 @@
 import type { OdFileObject } from '../../types'
-import ReactPlayer from 'react-player'
 import { useRouter } from 'next/router'
 import { useClipboard } from 'use-clipboard-copy'
+import DPlayer from 'react-dplayer'
 import toast from 'react-hot-toast'
 
 import { getBaseUrl } from '../../utils/getBaseUrl'
@@ -12,16 +12,19 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const { asPath } = useRouter()
   const clipboard = useClipboard()
 
+  // OneDrive generates thumbnails for its video files, we pick the thumbnail with the highest resolution
+  const thumbnail = file.thumbnails && file.thumbnails.length > 0 ? file.thumbnails[0].large.url : ''
+
   return (
     <>
       <PreviewContainer>
-        <ReactPlayer
+        <DPlayer
           className="aspect-video"
-          url={file['@microsoft.graph.downloadUrl']}
-          controls
-          width="100%"
-          height="100%"
-          config={{ file: { forceVideo: true } }}
+          options={{
+            volume: 1.0,
+            video: { url: file['@microsoft.graph.downloadUrl'], pic: thumbnail },
+            lang: 'en',
+          }}
         />
       </PreviewContainer>
 
