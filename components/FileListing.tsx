@@ -37,7 +37,7 @@ import DefaultPreview from './previews/DefaultPreview'
 import { DownloadBtnContainer, PreviewContainer } from './previews/Containers'
 import DownloadButtonGroup from './DownloadBtnGtoup'
 
-import { OdFileObject, OdFolderObject } from '../types'
+import type { OdFileObject, OdFolderObject } from '../types'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
@@ -552,7 +552,13 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
             <>
               <PreviewContainer>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="mx-auto" src={downloadUrl} alt={fileName} />
+                <img
+                  className="mx-auto"
+                  src={downloadUrl}
+                  alt={fileName}
+                  width={file.image?.width}
+                  height={file.image?.height}
+                />
               </PreviewContainer>
               <DownloadBtnContainer>
                 <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />

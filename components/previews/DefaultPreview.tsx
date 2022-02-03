@@ -1,4 +1,4 @@
-import { OdFileObject } from '../../types'
+import type { OdFileObject } from '../../types'
 import { FC } from 'react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

@@ -1,4 +1,4 @@
-import { OdFileObject } from '../../types'
+import type { OdFileObject } from '../../types'
 import { FC, useEffect, useRef, useState } from 'react'
 
 import Preview from 'preview-office-docs'
