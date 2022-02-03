@@ -2,18 +2,28 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconName } from '@fortawesome/fontawesome-svg-core'
 import { Dialog, Transition } from '@headlessui/react'
 import toast, { Toaster } from 'react-hot-toast'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 
-import siteConfig from '../config/site.json'
+import siteConfig from '../config/site.config'
+import SearchModal from './SearchModal'
+import useDeviceOS from '../utils/useDeviceOS'
 
 const Navbar = () => {
   const router = useRouter()
+  const os = useDeviceOS()
+
   const [tokenPresent, setTokenPresent] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+
+  const [searchOpen, setSearchOpen] = useState(false)
+  const openSearchBox = () => setSearchOpen(true)
+
+  useHotkeys(`${os === 'mac' ? 'cmd' : 'ctrl'}+k`, openSearchBox)
 
   useEffect(() => {
     const storedToken = () => {
@@ -41,18 +51,37 @@ const Navbar = () => {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 sticky top-0 bg-opacity-80 border-b border-gray-900/10 backdrop-blur-md z-[100]">
+    <div className="bg-white dark:bg-gray-900 dark:border-gray-500/30 sticky top-0 bg-opacity-80 border-b border-gray-900/10 backdrop-blur-md z-[100]">
       <Toaster />
 
-      <div className="flex items-center justify-between w-full max-w-5xl mx-auto pr-4 py-1">
-        <Link href="/">
-          <a className="dark:text-white hover:opacity-80 flex items-center p-2 space-x-2">
+      <SearchModal searchOpen={searchOpen} setSearchOpen={setSearchOpen} />
+
+      <div className="flex items-center space-x-4 justify-between w-full mx-auto px-4 py-1">
+        <Link href="/" passHref>
+          <a className="dark:text-white hover:opacity-80 flex items-center py-2 md:p-2 space-x-2">
             <Image src={siteConfig.icon} alt="icon" width="25" height="25" priority />
             <span className="sm:block hidden font-bold">{siteConfig.title}</span>
           </a>
         </Link>
 
-        <div className="flex items-center space-x-4 text-gray-700">
+        <div className="flex items-center flex-1 md:flex-initial space-x-4 text-gray-700">
+          <button
+            className="flex-1 flex items-center justify-between rounded-lg bg-gray-100 dark:bg-gray-800 md:w-48 px-2.5 py-1.5 dark:text-white hover:opacity-80"
+            onClick={openSearchBox}
+          >
+            <div className="flex items-center space-x-2">
+              <FontAwesomeIcon icon="search" />
+              <span className="text-sm font-medium">Search ...</span>
+            </div>
+
+            <div className="flex items-center space-x-1">
+              <div className="px-2 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 font-medium text-xs">
+                {os === 'mac' ? '⌘' : 'Ctrl'}
+              </div>
+              <div className="px-2 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 font-medium text-xs">K</div>
+            </div>
+          </button>
+
           {siteConfig.links.length !== 0 &&
             siteConfig.links.map((l: { name: string; link: string }) => (
               <a

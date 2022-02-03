@@ -23,6 +23,8 @@ import {
   faCheckCircle,
 } from '@fortawesome/free-regular-svg-icons'
 import {
+  faSearch,
+  faCheck,
   faPlus,
   faMinus,
   faCopy as faCopySolid,
@@ -37,6 +39,7 @@ import {
   faSignOutAlt,
   faCloud,
   faChevronCircleDown,
+  faLink,
   faExternalLinkAlt,
   faExclamationCircle,
   faExclamationTriangle,
@@ -74,6 +77,7 @@ library.add(
   faPlus,
   faMinus,
   faDownload,
+  faLink,
   faUndo,
   faBook,
   faArrowAltCircleDown,
@@ -87,7 +91,9 @@ library.add(
   faExclamationCircle,
   faExclamationTriangle,
   faHome,
+  faCheck,
   faCheckCircle,
+  faSearch,
   ...iconList
 )
 
