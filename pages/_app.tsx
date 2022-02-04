@@ -41,10 +41,13 @@ import {
   faSignOutAlt,
   faCloud,
   faChevronCircleDown,
+  faChevronDown,
   faLink,
   faExternalLinkAlt,
   faExclamationCircle,
   faExclamationTriangle,
+  faTh,
+  faThList,
   faHome,
 } from '@fortawesome/free-solid-svg-icons'
 import * as Icons from '@fortawesome/free-brands-svg-icons'
@@ -98,6 +101,9 @@ library.add(
   faCheck,
   faCheckCircle,
   faSearch,
+  faChevronDown,
+  faTh,
+  faThList,
   ...iconList
 )
 

@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'
 import FileListing from '../components/FileListing'
 import Footer from '../components/Footer'
 import Breadcrumb from '../components/Breadcrumb'
+import { SwitchLayout } from '../components/SwitchLayout'
 
 export default function Home() {
   return (
@@ -16,8 +17,9 @@ export default function Home() {
       <main className="flex w-full flex-1 flex-col bg-gray-50 dark:bg-gray-800">
         <Navbar />
         <div className="mx-auto w-full max-w-5xl p-4">
-          <nav className="mb-4 flex items-center px-2">
+          <nav className="mb-4 flex items-center justify-between pl-1">
             <Breadcrumb />
+            <SwitchLayout />
           </nav>
           <FileListing />
         </div>
