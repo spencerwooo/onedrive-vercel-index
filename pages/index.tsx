@@ -8,15 +8,17 @@ import Breadcrumb from '../components/Breadcrumb'
 
 export default function Home() {
   return (
-    <div className="dark:bg-gray-900 flex flex-col items-center justify-center min-h-screen bg-white">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
       <Head>
         <title>{siteConfig.title}</title>
       </Head>
 
-      <main className="bg-gray-50 dark:bg-gray-800 flex flex-col flex-1 w-full">
+      <main className="flex w-full flex-1 flex-col bg-gray-50 dark:bg-gray-800">
         <Navbar />
-        <div className="w-full max-w-5xl p-4 mx-auto">
-          <Breadcrumb />
+        <div className="mx-auto w-full max-w-5xl p-4">
+          <nav className="mb-4 flex items-center px-2">
+            <Breadcrumb />
+          </nav>
           <FileListing />
         </div>
       </main>

@@ -66,10 +66,10 @@ const FileListItem: FC<{ fileContent: OdFolderObject['value'][number] }> = ({ fi
   const renderEmoji = emojiIcon && !emojiIcon.index
 
   return (
-    <div className="grid items-center grid-cols-10 px-3 py-2.5 space-x-2 cursor-pointer">
-      <div className="md:col-span-6 flex items-center col-span-10 space-x-2 truncate">
+    <div className="grid cursor-pointer grid-cols-10 items-center space-x-2 px-3 py-2.5">
+      <div className="col-span-10 flex items-center space-x-2 truncate md:col-span-6" title={c.name}>
         {/* <div>{c.file ? c.file.mimeType : 'folder'}</div> */}
-        <div className="flex-shrink-0 w-5 text-center">
+        <div className="w-5 flex-shrink-0 text-center">
           {renderEmoji ? (
             <span>{emojiIcon ? emojiIcon[0] : '📁'}</span>
           ) : (
@@ -80,10 +80,10 @@ const FileListItem: FC<{ fileContent: OdFolderObject['value'][number] }> = ({ fi
           {renderEmoji ? c.name.replace(emojiIcon ? emojiIcon[0] : '', '').trim() : c.name}
         </div>
       </div>
-      <div className="md:block dark:text-gray-500 flex-shrink-0 hidden col-span-3 font-mono text-sm text-gray-700">
+      <div className="col-span-3 hidden flex-shrink-0 font-mono text-sm text-gray-700 dark:text-gray-500 md:block">
         {formatModifiedDateTime(c.lastModifiedDateTime)}
       </div>
-      <div className="md:block dark:text-gray-500 flex-shrink-0 hidden col-span-1 font-mono text-sm text-gray-700 truncate">
+      <div className="col-span-1 hidden flex-shrink-0 truncate font-mono text-sm text-gray-700 dark:text-gray-500 md:block">
         {humanFileSize(c.size)}
       </div>
     </div>
@@ -120,7 +120,7 @@ const Checkbox: FC<{
   return (
     <span
       title={title}
-      className="hover:bg-gray-300 dark:hover:bg-gray-600 p-1.5 inline-flex items-center rounded cursor-pointer"
+      className="inline-flex cursor-pointer items-center rounded p-1.5 hover:bg-gray-300 dark:hover:bg-gray-600"
       onClick={handleClick}
     >
       <input
@@ -137,11 +137,11 @@ const Checkbox: FC<{
 
 const Downloading: FC<{ title: string }> = ({ title }) => {
   return (
-    <span title={title} className="p-2 rounded" role="status">
+    <span title={title} className="rounded p-2" role="status">
       <LoadingIcon
         // Use fontawesome far theme via class `svg-inline--fa` to get style `vertical-align` only
         // for consistent icon alignment, as class `align-*` cannot satisfy it
-        className="animate-spin w-4 h-4 inline-block svg-inline--fa"
+        className="svg-inline--fa inline-block h-4 w-4 animate-spin"
       />
     </span>
   )
@@ -337,22 +337,22 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
     return (
       <>
-        <div className="dark:bg-gray-900 dark:text-gray-100 bg-white rounded">
-          <div className="dark:border-gray-500/30 grid items-center grid-cols-12 px-3 space-x-2 border-b border-gray-900/10">
-            <div className="md:col-span-6 col-span-12 font-bold py-2 text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">
+        <div className="rounded bg-white dark:bg-gray-900 dark:text-gray-100">
+          <div className="grid grid-cols-12 items-center space-x-2 border-b border-gray-900/10 px-3 dark:border-gray-500/30">
+            <div className="col-span-12 py-2 text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:col-span-6">
               Name
             </div>
-            <div className="md:block hidden col-span-3 font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">
+            <div className="col-span-3 hidden text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:block">
               Last Modified
             </div>
-            <div className="md:block hidden font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">
+            <div className="hidden text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:block">
               Size
             </div>
-            <div className="md:block hidden font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">
+            <div className="hidden text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:block">
               Actions
             </div>
-            <div className="md:block hidden font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest text-xs">
-              <div className="md:flex dark:text-gray-400 hidden p-1.5 text-gray-700">
+            <div className="hidden text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:block">
+              <div className="hidden p-1.5 text-gray-700 dark:text-gray-400 md:flex">
                 <Checkbox
                   checked={totalSelected}
                   onChange={toggleTotalSelected}
@@ -364,7 +364,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
                 ) : (
                   <button
                     title="Download selected files"
-                    className="hover:bg-gray-300 dark:hover:bg-gray-600 p-1.5 rounded cursor-pointer disabled:text-gray-400 disabled:dark:text-gray-600 disabled:hover:bg-white disabled:hover:dark:bg-gray-900 disabled:cursor-not-allowed"
+                    className="cursor-pointer rounded p-1.5 hover:bg-gray-300 disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:bg-white dark:hover:bg-gray-600 disabled:dark:text-gray-600 disabled:hover:dark:bg-gray-900"
                     disabled={totalSelected === 0}
                     onClick={handleSelectedDownload}
                   >
@@ -417,7 +417,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
           )}
 
           {children.map(c => (
-            <div className="hover:bg-gray-100 dark:hover:bg-gray-850 grid grid-cols-12" key={c.id}>
+            <div className="grid grid-cols-12 hover:bg-gray-100 dark:hover:bg-gray-850" key={c.id}>
               <div
                 className="col-span-10"
                 onClick={e => {
@@ -434,10 +434,10 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
                 <FileListItem fileContent={c} />
               </div>
               {c.folder ? (
-                <div className="md:flex dark:text-gray-400 hidden p-1.5 text-gray-700">
+                <div className="hidden p-1.5 text-gray-700 dark:text-gray-400 md:flex">
                   <span
                     title="Copy folder permalink"
-                    className="hover:bg-gray-300 dark:hover:bg-gray-600 px-1.5 py-1 rounded cursor-pointer"
+                    className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                     onClick={() => {
                       clipboard.copy(`${getBaseUrl()}${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)
                       toast('Copied folder permalink.', { icon: '👌' })
@@ -450,7 +450,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
                   ) : (
                     <span
                       title="Download folder"
-                      className="hover:bg-gray-300 dark:hover:bg-gray-600 px-1.5 py-1 rounded cursor-pointer"
+                      className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                       onClick={() => {
                         const p = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
                         handleFolderDownload(p, c.id, c.name)()
@@ -461,10 +461,10 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
                   )}
                 </div>
               ) : (
-                <div className="md:flex dark:text-gray-400 hidden p-1.5 text-gray-700">
+                <div className="hidden p-1.5 text-gray-700 dark:text-gray-400 md:flex">
                   <span
                     title="Copy raw file permalink"
-                    className="hover:bg-gray-300 dark:hover:bg-gray-600 px-1.5 py-1 rounded cursor-pointer"
+                    className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                     onClick={() => {
                       clipboard.copy(
                         `${getBaseUrl()}/api?path=${path === '/' ? '' : path}/${encodeURIComponent(c.name)}&raw=true`
@@ -476,14 +476,14 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
                   </span>
                   <a
                     title="Download file"
-                    className="hover:bg-gray-300 dark:hover:bg-gray-600 px-1.5 py-1 rounded cursor-pointer"
+                    className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                     href={c['@microsoft.graph.downloadUrl']}
                   >
                     <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
                   </a>
                 </div>
               )}
-              <div className="md:flex dark:text-gray-400 hidden p-1.5 text-gray-700">
+              <div className="hidden p-1.5 text-gray-700 dark:text-gray-400 md:flex">
                 {!c.folder && !(c.name === '.password') && (
                   <Checkbox
                     checked={selected[c.id] ? 2 : 0}
@@ -497,11 +497,11 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
           {!onlyOnePage && (
             <div>
-              <div className="dark:border-gray-700 p-3 font-mono text-sm text-center text-gray-400 border-b border-gray-200">
+              <div className="border-b border-gray-200 p-3 text-center font-mono text-sm text-gray-400 dark:border-gray-700">
                 - showing {size} page{size > 1 ? 's' : ''} of {isLoadingMore ? '...' : children.length} files -
               </div>
               <button
-                className={`flex items-center justify-center w-full p-3 space-x-2 disabled:cursor-not-allowed ${
+                className={`flex w-full items-center justify-center space-x-2 p-3 disabled:cursor-not-allowed ${
                   isLoadingMore || isReachingEnd ? 'opacity-60' : 'hover:bg-gray-100 dark:hover:bg-gray-850'
                 }`}
                 onClick={() => setSize(size + 1)}
@@ -511,7 +511,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
                   <>
                     <span>Loading ...</span>{' '}
                     <svg
-                      className="animate-spin w-5 h-5 mr-3 -ml-1"
+                      className="mr-3 -ml-1 h-5 w-5 animate-spin"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"

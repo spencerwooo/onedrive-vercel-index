@@ -20,6 +20,7 @@ import {
   faArrowAltCircleDown,
   faTrashAlt,
   faEnvelope,
+  faFlag,
   faCheckCircle,
 } from '@fortawesome/free-regular-svg-icons'
 import {
@@ -28,6 +29,7 @@ import {
   faPlus,
   faMinus,
   faCopy as faCopySolid,
+  faAngleRight,
   faDownload,
   faMusic,
   faArrowLeft,
@@ -67,10 +69,12 @@ library.add(
   faFileCode,
   faFileAlt,
   faFile,
+  faFlag,
   faFolder,
   faMusic,
   faArrowLeft,
   faArrowRight,
+  faAngleRight,
   faFileDownload,
   faCopy,
   faCopySolid,
