@@ -41,7 +41,9 @@ import type { OdFileObject, OdFolderObject } from '../types'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
-const EPUBPreview = dynamic(() => import('./previews/EPUBPreview'), { ssr: false })
+const EPUBPreview = dynamic(() => import('./previews/EPUBPreview'), {
+  ssr: false,
+})
 
 /**
  * Convert url query into path string
@@ -151,7 +153,9 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
   const [totalSelected, setTotalSelected] = useState<0 | 1 | 2>(0)
   const [totalGenerating, setTotalGenerating] = useState<boolean>(false)
-  const [folderGenerating, setFolderGenerating] = useState<{ [key: string]: boolean }>({})
+  const [folderGenerating, setFolderGenerating] = useState<{
+    [key: string]: boolean
+  }>({})
 
   const router = useRouter()
   const clipboard = useClipboard()
@@ -283,7 +287,9 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
         downloadMultipleFiles({ toastId, router, files, folder })
           .then(() => {
             setTotalGenerating(false)
-            toast.success('Finished downloading selected files.', { id: toastId })
+            toast.success('Finished downloading selected files.', {
+              id: toastId,
+            })
           })
           .catch(() => {
             setTotalGenerating(false)
@@ -312,7 +318,13 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       setFolderGenerating({ ...folderGenerating, [id]: true })
       const toastId = toast.loading(DownloadingToast(router))
 
-      downloadTreelikeMultipleFiles({ toastId, router, files, basePath: path, folder: name })
+      downloadTreelikeMultipleFiles({
+        toastId,
+        router,
+        files,
+        basePath: path,
+        folder: name,
+      })
         .then(() => {
           setFolderGenerating({ ...folderGenerating, [id]: false })
           toast.success('Finished downloading folder.', { id: toastId })
@@ -394,7 +406,9 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
                     render: <FontAwesomeIcon icon={['fas', 'copy']} />,
                     onClick: i => {
                       clipboard.copy(i.alt ? `${getBaseUrl()}/api?path=${path + '/' + i.alt}&raw=true` : '')
-                      toast('Copied image permanent link to clipboard.', { icon: '👌' })
+                      toast('Copied image permanent link to clipboard.', {
+                        icon: '👌',
+                      })
                     },
                   },
                 ])
@@ -544,7 +558,9 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
     const fileName = file.name
     const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
 
-    const previewType = getPreviewType(fileExtension, { video: Boolean(file.video) })
+    const previewType = getPreviewType(fileExtension, {
+      video: Boolean(file.video),
+    })
     if (previewType) {
       switch (previewType) {
         case preview.image:

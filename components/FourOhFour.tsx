@@ -4,7 +4,7 @@ const FourOhFour: React.FC<{ errorMsg: string }> = ({ errorMsg }) => {
   return (
     <div className="my-12">
       <div className="w-1/3 mx-auto">
-        <Image src='/images/fabulous-rip-2.png' alt="404" width={912} height={912} priority />
+        <Image src="/images/fabulous-rip-2.png" alt="404" width={912} height={912} priority />
       </div>
       <div className="mt-6 text-gray-500 max-w-xl mx-auto">
         <div className="text-xl font-bold mb-8">

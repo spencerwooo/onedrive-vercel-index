@@ -21,10 +21,10 @@ const AudioPreview: FC<{ file: OdFileObject }> = ({ file }) => {
   return (
     <>
       <PreviewContainer>
-        <div className="md:flex-row md:space-x-4 flex flex-col space-y-4">
-          <div className="dark:bg-gray-700 aspect-square flex items-center justify-center w-full md:w-40 transition-all duration-75 bg-gray-100 rounded">
+        <div className="flex flex-col space-y-4 md:flex-row md:space-x-4">
+          <div className="flex aspect-square w-full items-center justify-center rounded bg-gray-100 transition-all duration-75 dark:bg-gray-700 md:w-40">
             {playerStatus === PlayerState.Loading ? (
-              <LoadingIcon className="animate-spin w-5 h-5 inline-block" />
+              <LoadingIcon className="inline-block h-5 w-5 animate-spin" />
             ) : (
               <FontAwesomeIcon
                 className={`h-5 w-5 ${playerStatus === PlayerState.Playing ? 'animate-spin' : ''}`}
@@ -33,7 +33,7 @@ const AudioPreview: FC<{ file: OdFileObject }> = ({ file }) => {
               />
             )}
           </div>
-          <div className="flex flex-col w-full space-y-2">
+          <div className="flex w-full flex-col space-y-2">
             <div>{file.name}</div>
             <div className="pb-4 text-sm text-gray-500">
               Last modified:{' '}
@@ -44,7 +44,7 @@ const AudioPreview: FC<{ file: OdFileObject }> = ({ file }) => {
             </div>
 
             <ReactAudioPlayer
-              className="w-full h-11"
+              className="h-11 w-full"
               src={file['@microsoft.graph.downloadUrl']}
               controls
               onCanPlay={() => setPlayerStatus(PlayerState.Ready)}

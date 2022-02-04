@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier components/**/*.tsx config/*.js pages/**/*.tsx {types,utils}/**/*.ts --write"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
@@ -58,7 +59,10 @@
     "autoprefixer": "^10.4.0",
     "eslint": "8.8.0",
     "eslint-config-next": "12.0.10",
+    "eslint-config-prettier": "^8.3.0",
     "postcss": "^8.4.5",
+    "prettier": "^2.5.1",
+    "prettier-plugin-tailwindcss": "^0.1.4",
     "tailwindcss": "^3.0.18",
     "typescript": "4.5.5"
   }

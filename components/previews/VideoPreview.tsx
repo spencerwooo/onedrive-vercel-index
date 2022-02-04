@@ -27,7 +27,10 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
           options={{
             volume: 1.0,
             lang: 'en',
-            video: { url: file['@microsoft.graph.downloadUrl'], pic: thumbnail },
+            video: {
+              url: file['@microsoft.graph.downloadUrl'],
+              pic: thumbnail,
+            },
             subtitle: { url: subtitle },
           }}
         />
