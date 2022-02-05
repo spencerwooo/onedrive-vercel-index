@@ -43,6 +43,7 @@ import FolderListLayout from './FolderListLayout'
 
 import type { OdFileObject, OdFolderObject } from '../types'
 import FolderGridLayout from './FolderGridLayout'
+import ImagePreview from './previews/ImagePreview'
 
 // Disabling SSR for some previews
 const EPUBPreview = dynamic(() => import('./previews/EPUBPreview'), {
@@ -340,29 +341,12 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
     const fileName = file.name
     const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
 
-    const previewType = getPreviewType(fileExtension, {
-      video: Boolean(file.video),
-    })
+    const previewType = getPreviewType(fileExtension, { video: Boolean(file.video) })
+
     if (previewType) {
       switch (previewType) {
         case preview.image:
-          return (
-            <>
-              <PreviewContainer>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  className="mx-auto"
-                  src={downloadUrl}
-                  alt={fileName}
-                  width={file.image?.width}
-                  height={file.image?.height}
-                />
-              </PreviewContainer>
-              <DownloadBtnContainer>
-                <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
-              </DownloadBtnContainer>
-            </>
-          )
+          return <ImagePreview file={file} />
 
         case preview.text:
           return <TextPreview file={file} />

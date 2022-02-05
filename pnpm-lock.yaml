@@ -7,6 +7,7 @@ specifiers:
   '@fortawesome/free-solid-svg-icons': ^5.15.3
   '@fortawesome/react-fontawesome': ^0.1.14
   '@headlessui/react': ^1.4.0
+  '@tailwindcss/line-clamp': ^0.3.1
   '@types/cors': ^2.8.12
   '@types/crypto-js': ^4.0.2
   '@types/ioredis': ^4.28.5
@@ -62,6 +63,7 @@ dependencies:
   '@fortawesome/free-solid-svg-icons': 5.15.4
   '@fortawesome/react-fontawesome': 0.1.17_f515edce028694561ceb456e3dba224c
   '@headlessui/react': 1.4.3_react-dom@17.0.2+react@17.0.2
+  '@tailwindcss/line-clamp': 0.3.1_tailwindcss@3.0.18
   awesome-debounce-promise: 2.1.0
   axios: 0.25.0
   cors: 2.8.5
@@ -375,6 +377,14 @@ packages:
   /@rushstack/eslint-patch/1.1.0:
     resolution: {integrity: sha512-JLo+Y592QzIE+q7Dl2pMUtt4q8SKYI5jDrZxrozEQxnGVOyYE+GWK9eLkwTaeN9DDctlaRAQ3TBmzZ1qdLE30A==}
     dev: true
+
+  /@tailwindcss/line-clamp/0.3.1_tailwindcss@3.0.18:
+    resolution: {integrity: sha512-pNr0T8LAc3TUx/gxCfQZRe9NB2dPEo/cedPHzUGIPxqDMhgjwNm6jYxww4W5l0zAsAddxr+XfZcqttGiFDgrGg==}
+    peerDependencies:
+      tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
+    dependencies:
+      tailwindcss: 3.0.18_833e1018ad0d7954aa80c53675939269
+    dev: false
 
   /@types/cors/2.8.12:
     resolution: {integrity: sha512-vt+kDhq/M2ayberEtJcIN/hxXy1Pk+59g2FV/ZQceeaTyCtCucjL2Q7FXlFjtWn4n15KCr1NE2lNNFhp0lEThw==}

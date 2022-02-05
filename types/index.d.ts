@@ -13,7 +13,7 @@ export type OdFolderObject = {
     name: string
     size: number
     lastModifiedDateTime: string
-    file?: { mimeType: string; hashes: { quickXorHash: string; sha1Hash?: string; sha256Hash?: string } }
+    file?: { mimeType: string; hashes: { quickXorHash?: string; sha1Hash?: string; sha256Hash?: string } }
     folder?: { childCount: number; view: { sortBy: string; sortOrder: 'ascending'; viewType: 'thumbnails' } }
     image?: OdImageFile
     video?: OdVideoFile

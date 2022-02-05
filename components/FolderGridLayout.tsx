@@ -1,5 +1,6 @@
 import type { OdFolderObject } from '../types'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import emojiRegex from 'emoji-regex'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -9,7 +10,6 @@ import { getFileIcon } from '../utils/getFileIcon'
 import { getBaseUrl } from '../utils/getBaseUrl'
 import { formatModifiedDateTime } from '../utils/fileDetails'
 import { Checkbox, Downloading } from './FileListing'
-import { useState } from 'react'
 
 type OdFolderChildren = OdFolderObject['value'][number]
 
