@@ -7,6 +7,7 @@ specifiers:
   '@fortawesome/free-solid-svg-icons': ^5.15.3
   '@fortawesome/react-fontawesome': ^0.1.14
   '@headlessui/react': ^1.4.0
+  '@tailwindcss/line-clamp': ^0.3.1
   '@types/cors': ^2.8.12
   '@types/crypto-js': ^4.0.2
   '@types/ioredis': ^4.28.5
@@ -44,7 +45,6 @@ specifiers:
   react-hotkeys-hook: ^3.4.4
   react-markdown: ^8.0.0
   react-reader: ^0.20.4
-  react-viewer: ^3.2.2
   rehype-katex: ^6.0.2
   rehype-raw: ^6.0.0
   remark-gfm: ^3.0.1
@@ -62,6 +62,7 @@ dependencies:
   '@fortawesome/free-solid-svg-icons': 5.15.4
   '@fortawesome/react-fontawesome': 0.1.17_f515edce028694561ceb456e3dba224c
   '@headlessui/react': 1.4.3_react-dom@17.0.2+react@17.0.2
+  '@tailwindcss/line-clamp': 0.3.1_tailwindcss@3.0.18
   awesome-debounce-promise: 2.1.0
   axios: 0.25.0
   cors: 2.8.5
@@ -83,7 +84,6 @@ dependencies:
   react-hotkeys-hook: 3.4.4_react-dom@17.0.2+react@17.0.2
   react-markdown: 8.0.0_b08e3c15324cbe90a6ff8fcd416c932c
   react-reader: 0.20.5_react@17.0.2
-  react-viewer: 3.2.2
   rehype-katex: 6.0.2
   rehype-raw: 6.1.1
   remark-gfm: 3.0.1
@@ -375,6 +375,14 @@ packages:
   /@rushstack/eslint-patch/1.1.0:
     resolution: {integrity: sha512-JLo+Y592QzIE+q7Dl2pMUtt4q8SKYI5jDrZxrozEQxnGVOyYE+GWK9eLkwTaeN9DDctlaRAQ3TBmzZ1qdLE30A==}
     dev: true
+
+  /@tailwindcss/line-clamp/0.3.1_tailwindcss@3.0.18:
+    resolution: {integrity: sha512-pNr0T8LAc3TUx/gxCfQZRe9NB2dPEo/cedPHzUGIPxqDMhgjwNm6jYxww4W5l0zAsAddxr+XfZcqttGiFDgrGg==}
+    peerDependencies:
+      tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
+    dependencies:
+      tailwindcss: 3.0.18_833e1018ad0d7954aa80c53675939269
+    dev: false
 
   /@types/cors/2.8.12:
     resolution: {integrity: sha512-vt+kDhq/M2ayberEtJcIN/hxXy1Pk+59g2FV/ZQceeaTyCtCucjL2Q7FXlFjtWn4n15KCr1NE2lNNFhp0lEThw==}
@@ -856,10 +864,6 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
-
-  /classnames/2.3.1:
-    resolution: {integrity: sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==}
-    dev: false
 
   /clipboard-copy/3.2.0:
     resolution: {integrity: sha512-vooFaGFL6ulEP1liiaWFBmmfuPm3cY3y7T9eB83ZTnYc/oFeAKsq3NcDrOkBC8XaauEE8zHQwI7k0+JSYiVQSQ==}
@@ -3079,12 +3083,6 @@ packages:
       react: ^16.8.3 || ^17
     dependencies:
       react: 17.0.2
-    dev: false
-
-  /react-viewer/3.2.2:
-    resolution: {integrity: sha512-DHOq1x6cXsAViY43204ILRzLVR5ovP1MgzsC+LzZCWlInRuHjzAgpQZ8GzWm1CkiNYuHGwCxH36X0JUHl2xDSg==}
-    dependencies:
-      classnames: 2.3.1
     dev: false
 
   /react/17.0.2:

@@ -51,6 +51,10 @@ export const extensions = {
   toml: preview.code,
 
   txt: preview.text,
+  vtt: preview.text,
+  srt: preview.text,
+  log: preview.text,
+  diff: preview.text,
 
   mp4: preview.video,
   flv: preview.video,

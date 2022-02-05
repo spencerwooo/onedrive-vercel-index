@@ -13,12 +13,15 @@ export type OdFolderObject = {
     name: string
     size: number
     lastModifiedDateTime: string
-    file?: { mimeType: string; hashes: { quickXorHash: string; sha1Hash?: string; sha256Hash?: string } }
+    file?: { mimeType: string; hashes: { quickXorHash?: string; sha1Hash?: string; sha256Hash?: string } }
     folder?: { childCount: number; view: { sortBy: string; sortOrder: 'ascending'; viewType: 'thumbnails' } }
     image?: OdImageFile
     video?: OdVideoFile
+    'thumbnails@odata.context'?: string
+    thumbnails?: Array<OdThumbnail>
   }>
 }
+export type OdFolderChildren = OdFolderObject['value'][number]
 // A file object returned from the OneDrive API. This object may contain 'video' if the file is a video.
 export type OdFileObject = {
   '@microsoft.graph.downloadUrl': string

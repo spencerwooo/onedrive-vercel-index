@@ -69,6 +69,11 @@ const extensions = {
 
   txt: icons.text,
   rtf: icons.text,
+  vtt: icons.text,
+  srt: icons.text,
+  log: icons.text,
+  diff: icons.text,
+
   md: icons.markdown,
 
   epub: icons.book,
