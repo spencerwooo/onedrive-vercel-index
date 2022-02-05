@@ -7,7 +7,7 @@ const HomeCrumb = () => {
   return (
     <Link href="/">
       <a>
-        <FontAwesomeIcon className="h-4 w-4" icon={['far', 'flag']} />
+        <FontAwesomeIcon className="h-3 w-3" icon={['far', 'flag']} />
         <span className="ml-2 font-medium">Home</span>
       </a>
     </Link>
@@ -27,7 +27,7 @@ const Breadcrumb: React.FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
             .reverse()
             .map((p: string, i: number) => (
               <li key={i} className="flex flex-shrink-0 items-center">
-                <FontAwesomeIcon icon="angle-right" />
+                <FontAwesomeIcon className="h-3 w-3" icon="angle-right" />
                 <Link
                   href={`/${path
                     .slice(0, path.length - i)

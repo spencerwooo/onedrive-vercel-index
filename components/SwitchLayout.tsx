@@ -16,7 +16,7 @@ export const SwitchLayout = () => {
   return (
     <div className="w-24 flex-shrink-0 text-sm text-gray-600 dark:text-gray-300 md:w-28">
       <Listbox value={preferredLayout} onChange={setPreferredLayout}>
-        <Listbox.Button className="relative w-full cursor-pointer rounded py-1.5 pl-2">
+        <Listbox.Button className="relative w-full cursor-pointer rounded pl-2">
           <span className="pointer-events-none flex items-center">
             <FontAwesomeIcon className="mr-2 h-4 w-4" icon={preferredLayout.icon} />
             <span>{preferredLayout.name}</span>
