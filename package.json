@@ -38,7 +38,6 @@
     "react-hotkeys-hook": "^3.4.4",
     "react-markdown": "^8.0.0",
     "react-reader": "^0.20.4",
-    "react-viewer": "^3.2.2",
     "rehype-katex": "^6.0.2",
     "rehype-raw": "^6.0.0",
     "remark-gfm": "^3.0.1",
