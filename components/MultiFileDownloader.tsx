@@ -1,6 +1,7 @@
 import { NextRouter } from 'next/router'
 import toast from 'react-hot-toast'
 import JSZip from 'jszip'
+import { useTranslation } from 'next-i18next'
 
 import { fetcher } from '../utils/fetchWithSWR'
 import { getStoredToken } from '../utils/protectedRouteHandler'
@@ -12,10 +13,12 @@ import { getStoredToken } from '../utils/protectedRouteHandler'
  * @returns Toast component with loading progress
  */
 export function DownloadingToast(router: NextRouter, progress?: string) {
+  const { t } = useTranslation()
+
   return (
     <div className="flex items-center space-x-2">
       <div className="w-56">
-        <span>Downloading {progress ? `${progress}%` : 'selected files...'}</span>
+        <span>{progress ? t('Downloading {{progress}}%', { progress }) : t('Downloading selected files...')}</span>
 
         <div className="relative mt-2">
           <div className="overflow-hidden h-1 flex rounded bg-gray-100">
@@ -27,7 +30,7 @@ export function DownloadingToast(router: NextRouter, progress?: string) {
         className="p-2 rounded bg-red-500 hover:bg-red-400 text-white focus:outline-none focus:ring focus:ring-red-300"
         onClick={() => router.reload()}
       >
-        Cancel
+        {t('Cancel')}
       </button>
     </div>
   )

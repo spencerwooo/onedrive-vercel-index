@@ -8,6 +8,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
+import { useTranslation } from 'next-i18next'
 
 import siteConfig from '../config/site.config'
 import SearchModal from './SearchModal'
@@ -36,6 +37,8 @@ const Navbar = () => {
     }
     setTokenPresent(storedToken())
   }, [])
+
+  const { t } = useTranslation()
 
   const clearTokens = () => {
     setIsOpen(false)
@@ -71,7 +74,7 @@ const Navbar = () => {
           >
             <div className="flex items-center space-x-2">
               <FontAwesomeIcon className="h-4 w-4" icon="search" />
-              <span className="text-sm font-medium">Search ...</span>
+              <span className="text-sm font-medium">{t('Search ...')}</span>
             </div>
 
             <div className="flex items-center space-x-1">
