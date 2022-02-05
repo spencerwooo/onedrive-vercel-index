@@ -5,7 +5,6 @@ import { useClipboard } from 'use-clipboard-copy'
 
 import { ParsedUrlQuery } from 'querystring'
 import { FC, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
-import { ImageDecorator } from 'react-viewer/lib/ViewerProps'
 
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
@@ -38,9 +37,9 @@ import { DownloadBtnContainer, PreviewContainer } from './previews/Containers'
 import DownloadButtonGroup from './DownloadBtnGtoup'
 
 import type { OdFileObject, OdFolderObject } from '../types'
+import Link from 'next/link'
 
 // Disabling SSR for some previews (image gallery view, and PDF view)
-const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
 const EPUBPreview = dynamic(() => import('./previews/EPUBPreview'), {
   ssr: false,
 })
@@ -204,34 +203,11 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   const onlyOnePage = data && typeof data[0].next === 'undefined'
 
   if ('folder' in responses[0]) {
-    // Image preview rendering preparations
-    const imagesInFolder: ImageDecorator[] = []
-    const imageIndexDict: { [key: string]: number } = {}
-    let imageIndex = 0
-
-    // README rendering preparations
-    let renderReadme = false
-    let readmeFile = {}
-
     // Expand list of API returns into flattened file data
     const children = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
 
-    children.forEach(c => {
-      if (fileIsImage(c.name)) {
-        imagesInFolder.push({
-          src: c['@microsoft.graph.downloadUrl'],
-          alt: c.name,
-          downloadUrl: c['@microsoft.graph.downloadUrl'],
-        })
-        imageIndexDict[c.id] = imageIndex
-        imageIndex += 1
-      }
-
-      if (c.name.toLowerCase() === 'readme.md') {
-        renderReadme = true
-        readmeFile = c
-      }
-    })
+    // Find README.md file to render
+    const readmeFile = children.find(c => c.name.toLowerCase() === 'readme.md')
 
     // Filtered file list helper
     const getFiles = () => children.filter(c => !c.folder && c.name !== '.password')
@@ -337,6 +313,8 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
     return (
       <>
+        <Toaster />
+
         <div className="rounded bg-white dark:bg-gray-900 dark:text-gray-100">
           <div className="grid grid-cols-12 items-center space-x-2 border-b border-gray-900/10 px-3 dark:border-gray-500/30">
             <div className="col-span-12 py-2 text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:col-span-6">
@@ -375,64 +353,14 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
             </div>
           </div>
 
-          <Toaster />
-
-          {imagesInFolder.length !== 0 && (
-            <ReactViewer
-              zIndex={99}
-              visible={imageViewerVisible}
-              activeIndex={activeImageIdx}
-              images={imagesInFolder}
-              drag={false}
-              rotatable={false}
-              noClose={true}
-              scalable={false}
-              zoomSpeed={0.2}
-              downloadable={true}
-              downloadInNewWindow={true}
-              onMaskClick={() => {
-                setImageViewerVisibility(false)
-              }}
-              customToolbar={toolbars => {
-                toolbars[0].render = <FontAwesomeIcon icon="plus" />
-                toolbars[1].render = <FontAwesomeIcon icon="minus" />
-                toolbars[2].render = <FontAwesomeIcon icon="arrow-left" />
-                toolbars[3].render = <FontAwesomeIcon icon="undo" />
-                toolbars[4].render = <FontAwesomeIcon icon="arrow-right" />
-                toolbars[9].render = <FontAwesomeIcon icon="download" />
-                return toolbars.concat([
-                  {
-                    key: 'copy',
-                    render: <FontAwesomeIcon icon={['fas', 'copy']} />,
-                    onClick: i => {
-                      clipboard.copy(i.alt ? `${getBaseUrl()}/api?path=${path + '/' + i.alt}&raw=true` : '')
-                      toast('Copied image permanent link to clipboard.', {
-                        icon: '👌',
-                      })
-                    },
-                  },
-                ])
-              }}
-            />
-          )}
-
           {children.map(c => (
             <div className="grid grid-cols-12 hover:bg-gray-100 dark:hover:bg-gray-850" key={c.id}>
-              <div
-                className="col-span-10"
-                onClick={e => {
-                  e.preventDefault()
+              <Link href={`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`} passHref>
+                <a className="col-span-10">
+                  <FileListItem fileContent={c} />
+                </a>
+              </Link>
 
-                  if (!c.folder && fileIsImage(c.name)) {
-                    setActiveImageIdx(imageIndexDict[c.id])
-                    setImageViewerVisibility(true)
-                  } else {
-                    router.push(`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)
-                  }
-                }}
-              >
-                <FileListItem fileContent={c} />
-              </div>
               {c.folder ? (
                 <div className="hidden p-1.5 text-gray-700 dark:text-gray-400 md:flex">
                   <span
@@ -509,27 +437,8 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
               >
                 {isLoadingMore ? (
                   <>
+                    <LoadingIcon className="inline-block h-4 w-4 animate-spin" />
                     <span>Loading ...</span>{' '}
-                    <svg
-                      className="mr-3 -ml-1 h-5 w-5 animate-spin"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
                   </>
                 ) : isReachingEnd ? (
                   <span>No more files</span>
@@ -543,7 +452,8 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
             </div>
           )}
         </div>
-        {renderReadme && (
+
+        {readmeFile && (
           <div className="mt-4">
             <MarkdownPreview file={readmeFile} path={path} standalone={false} />
           </div>
