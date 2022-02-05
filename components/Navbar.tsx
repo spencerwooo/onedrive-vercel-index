@@ -51,34 +51,34 @@ const Navbar = () => {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 dark:border-gray-500/30 sticky top-0 bg-opacity-80 border-b border-gray-900/10 backdrop-blur-md z-[100]">
+    <div className="sticky top-0 z-[100] border-b border-gray-900/10 bg-white bg-opacity-80 backdrop-blur-md dark:border-gray-500/30 dark:bg-gray-900">
       <Toaster />
 
       <SearchModal searchOpen={searchOpen} setSearchOpen={setSearchOpen} />
 
-      <div className="flex items-center space-x-4 justify-between w-full mx-auto px-4 py-1">
+      <div className="mx-auto flex w-full items-center justify-between space-x-4 px-4 py-1">
         <Link href="/" passHref>
-          <a className="dark:text-white hover:opacity-80 flex items-center py-2 md:p-2 space-x-2">
+          <a className="flex items-center space-x-2 py-2 hover:opacity-80 dark:text-white md:p-2">
             <Image src={siteConfig.icon} alt="icon" width="25" height="25" priority />
-            <span className="sm:block hidden font-bold">{siteConfig.title}</span>
+            <span className="hidden font-bold sm:block">{siteConfig.title}</span>
           </a>
         </Link>
 
-        <div className="flex items-center flex-1 md:flex-initial space-x-4 text-gray-700">
+        <div className="flex flex-1 items-center space-x-4 text-gray-700 md:flex-initial">
           <button
-            className="flex-1 flex items-center justify-between rounded-lg bg-gray-100 dark:bg-gray-800 md:w-48 px-2.5 py-1.5 dark:text-white hover:opacity-80"
+            className="flex flex-1 items-center justify-between rounded-lg bg-gray-100 px-2.5 py-1.5 hover:opacity-80 dark:bg-gray-800 dark:text-white md:w-48"
             onClick={openSearchBox}
           >
             <div className="flex items-center space-x-2">
-              <FontAwesomeIcon icon="search" />
+              <FontAwesomeIcon className="h-4 w-4" icon="search" />
               <span className="text-sm font-medium">Search ...</span>
             </div>
 
             <div className="flex items-center space-x-1">
-              <div className="px-2 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 font-medium text-xs">
+              <div className="rounded-lg bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-700">
                 {os === 'mac' ? '⌘' : 'Ctrl'}
               </div>
-              <div className="px-2 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 font-medium text-xs">K</div>
+              <div className="rounded-lg bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-700">K</div>
             </div>
           </button>
 
@@ -89,23 +89,23 @@ const Navbar = () => {
                 href={l.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center space-x-2 dark:text-white hover:opacity-80"
+                className="flex items-center space-x-2 hover:opacity-80 dark:text-white"
               >
                 <FontAwesomeIcon icon={['fab', l.name.toLowerCase() as IconName]} />
-                <span className="text-sm font-medium hidden md:inline-block">{l.name}</span>
+                <span className="hidden text-sm font-medium md:inline-block">{l.name}</span>
               </a>
             ))}
 
           {siteConfig.email && (
-            <a href={siteConfig.email} className="flex items-center space-x-2 dark:text-white hover:opacity-80">
+            <a href={siteConfig.email} className="flex items-center space-x-2 hover:opacity-80 dark:text-white">
               <FontAwesomeIcon icon={['far', 'envelope']} />
-              <span className="text-sm font-medium hidden md:inline-block">Email</span>
+              <span className="hidden text-sm font-medium md:inline-block">Email</span>
             </a>
           )}
 
           {tokenPresent && (
             <button
-              className="dark:text-white flex items-center p-2 space-x-2 hover:opacity-80"
+              className="flex items-center space-x-2 p-2 hover:opacity-80 dark:text-white"
               onClick={() => setIsOpen(true)}
             >
               <span className="text-sm font-medium">Logout</span>
@@ -127,7 +127,7 @@ const Navbar = () => {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Dialog.Overlay className="bg-gray-50 dark:bg-gray-800 fixed inset-0" />
+              <Dialog.Overlay className="fixed inset-0 bg-gray-50 dark:bg-gray-800" />
             </Transition.Child>
 
             {/* This element is to trick the browser into centering the modal contents. */}
@@ -143,8 +143,8 @@ const Navbar = () => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="dark:bg-gray-900 inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-lg">
-                <Dialog.Title className="dark:text-gray-100 text-lg font-bold text-gray-900">
+              <div className="my-8 inline-block w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle transition-all dark:bg-gray-900">
+                <Dialog.Title className="text-lg font-bold text-gray-900 dark:text-gray-100">
                   Clear all tokens?
                 </Dialog.Title>
                 <div className="mt-2">
@@ -154,7 +154,7 @@ const Navbar = () => {
                   </p>
                 </div>
 
-                <div className="dark:text-gray-100 max-h-32 mt-4 overflow-y-scroll font-mono text-sm">
+                <div className="mt-4 max-h-32 overflow-y-scroll font-mono text-sm dark:text-gray-100">
                   {siteConfig.protectedRoutes.map((r, i) => (
                     <div key={i} className="flex items-center space-x-1">
                       <FontAwesomeIcon icon="key" />
@@ -163,15 +163,15 @@ const Navbar = () => {
                   ))}
                 </div>
 
-                <div className="flex items-center justify-end mt-8">
+                <div className="mt-8 flex items-center justify-end">
                   <button
-                    className="focus:outline-none focus:ring focus:ring-blue-300 hover:bg-blue-400 inline-flex items-center justify-center px-4 py-2 mr-3 space-x-2 text-white bg-blue-500 rounded"
+                    className="mr-3 inline-flex items-center justify-center space-x-2 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300"
                     onClick={() => setIsOpen(false)}
                   >
                     Cancel
                   </button>
                   <button
-                    className="focus:outline-none focus:ring focus:ring-red-300 hover:bg-red-400 inline-flex items-center justify-center px-4 py-2 space-x-2 text-white bg-red-500 rounded"
+                    className="inline-flex items-center justify-center space-x-2 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-400 focus:outline-none focus:ring focus:ring-red-300"
                     onClick={() => clearTokens()}
                   >
                     <FontAwesomeIcon icon={['far', 'trash-alt']} />
