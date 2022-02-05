@@ -53,8 +53,8 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
       </td>
       <td>
         <a
-          href="https://drive.spencerwoo.com/%F0%9F%8D%8A%20Weibo%20emotes/Source1/%E5%BE%AE%E5%8D%9A%E2%80%9C%E9%BB%84%E8%84%B8%E2%80%9D"
-          >🖼️ Image preview</a
+          href="https://drive.spencerwoo.com/%F0%9F%8D%87%20Wallpaper"
+          >💠  List / Grid layouts</a
         >
       </td>
       <td>
@@ -66,8 +66,8 @@ Live demo at [Spencer's OneDrive](https://drive.spencerwoo.com).
     </tr>
     <tr>
       <td>PDF, EPUB, markdown, code, plain text</td>
-      <td>Also in gallery mode</td>
-      <td>mp4, mp3, ..., play online or with IINA, PotPlayer...with subtitles!</td>
+      <td>For previewing images and documents with thumbnails</td>
+      <td>mp4, mp3, ..., play online or with IINA, PotPlayer ... with subtitles!</td>
     </tr>
     <tr>
       <td>
