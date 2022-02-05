@@ -12,8 +12,8 @@ import siteConfig from '../../config/site.config'
  * @returns Sanitised query string which replaces non-alphanumeric characters with ' '
  */
 function sanitiseQuery(query: string): string {
-/**  const sanitisedQuery = query.replace(/[^a-zA-Z0-9]/g, ' ')
- * Actually this will cause problems with CJK only query words as it will remove every character.
+  const sanitisedQuery = query
+/** Actually this will cause problems with CJK only query words as it will remove every character.
  * After removing it, CJK search will be much improved.
  */
   return encodeURIComponent(sanitisedQuery)
