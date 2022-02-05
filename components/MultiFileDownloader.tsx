@@ -81,7 +81,9 @@ export async function downloadMultipleFiles({
 
   // Create zip file and download it
   const b = await zip.generateAsync({ type: 'blob' }, metadata => {
-    toast.loading(DownloadingToast(router, metadata.percent.toFixed(0)), { id: toastId })
+    toast.loading(DownloadingToast(router, metadata.percent.toFixed(0)), {
+      id: toastId,
+    })
   })
   downloadBlob({ blob: b, name: folder ? folder + '.zip' : 'download.zip' })
 }
@@ -147,7 +149,9 @@ export async function downloadTreelikeMultipleFiles({
 
   // Create zip file and download it
   const b = await zip.generateAsync({ type: 'blob' }, metadata => {
-    toast.loading(DownloadingToast(router, metadata.percent.toFixed(0)), { id: toastId })
+    toast.loading(DownloadingToast(router, metadata.percent.toFixed(0)), {
+      id: toastId,
+    })
   })
   downloadBlob({ blob: b, name: folder ? folder + '.zip' : 'download.zip' })
 }
@@ -214,7 +218,7 @@ export async function* traverseFolder(path: string): AsyncGenerator<
       isFolder: boolean
       error?: { status: number; message: string }
     }[]
-    yield * items
+    yield* items
     folderPaths = items
       .filter(({ error }) => !error)
       .filter(i => i.isFolder)

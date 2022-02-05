@@ -24,11 +24,14 @@ specifiers:
   emoji-regex: ^10.0.0
   eslint: 8.8.0
   eslint-config-next: 12.0.10
+  eslint-config-prettier: ^8.3.0
   ioredis: ^4.28.2
   jszip: ^3.7.1
   next: ^12.0.10
   nextjs-progressbar: ^0.0.13
   postcss: ^8.4.5
+  prettier: ^2.5.1
+  prettier-plugin-tailwindcss: ^0.1.4
   preview-office-docs: ^1.0.2
   prismjs: ^1.23.0
   react: ^17.0.2
@@ -102,7 +105,10 @@ devDependencies:
   autoprefixer: 10.4.2_postcss@8.4.6
   eslint: 8.8.0
   eslint-config-next: 12.0.10_9534215cc73b6f260bf33f1b86e3ae0e
+  eslint-config-prettier: 8.3.0_eslint@8.8.0
   postcss: 8.4.6
+  prettier: 2.5.1
+  prettier-plugin-tailwindcss: 0.1.4_prettier@2.5.1
   tailwindcss: 3.0.18_833e1018ad0d7954aa80c53675939269
   typescript: 4.5.5
 
@@ -1226,6 +1232,15 @@ packages:
       typescript: 4.5.5
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /eslint-config-prettier/8.3.0_eslint@8.8.0:
+    resolution: {integrity: sha512-BgZuLUSeKzvlL/VUjx/Yb787VQ26RU3gGjA3iiFvdsp/2bMfVIWUVP7tjxtjS0e+HP409cPlPvNkQloz8C91ew==}
+    hasBin: true
+    peerDependencies:
+      eslint: '>=7.0.0'
+    dependencies:
+      eslint: 8.8.0
     dev: true
 
   /eslint-import-resolver-node/0.3.6:
@@ -2873,6 +2888,20 @@ packages:
   /prelude-ls/1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
+    dev: true
+
+  /prettier-plugin-tailwindcss/0.1.4_prettier@2.5.1:
+    resolution: {integrity: sha512-kt3YFWqxcG9+bilBI0hPF7RjQZNtgBRvjJZGw6B2MNAjPqlfcYIiZnNaIEnq4XimKLTzZYxz6jQnUXmSQ/5njg==}
+    peerDependencies:
+      prettier: '>=2.2.0'
+    dependencies:
+      prettier: 2.5.1
+    dev: true
+
+  /prettier/2.5.1:
+    resolution: {integrity: sha512-vBZcPRUR5MZJwoyi3ZoyQlc1rXeEck8KgeC9AwwOn+exuxLxq5toTRDTSaVrXHxelDMHy9zlicw8u66yxoSUFg==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
     dev: true
 
   /preview-office-docs/1.0.2_react@17.0.2:
