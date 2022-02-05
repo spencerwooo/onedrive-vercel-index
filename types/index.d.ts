@@ -17,6 +17,8 @@ export type OdFolderObject = {
     folder?: { childCount: number; view: { sortBy: string; sortOrder: 'ascending'; viewType: 'thumbnails' } }
     image?: OdImageFile
     video?: OdVideoFile
+    'thumbnails@odata.context'?: string
+    thumbnails?: Array<OdThumbnail>
   }>
 }
 // A file object returned from the OneDrive API. This object may contain 'video' if the file is a video.

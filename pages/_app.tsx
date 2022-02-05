@@ -47,6 +47,7 @@ import {
   faExclamationCircle,
   faExclamationTriangle,
   faTh,
+  faThLarge,
   faThList,
   faHome,
 } from '@fortawesome/free-solid-svg-icons'
@@ -103,6 +104,7 @@ library.add(
   faSearch,
   faChevronDown,
   faTh,
+  faThLarge,
   faThList,
   ...iconList
 )

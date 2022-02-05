@@ -6,11 +6,15 @@ import { useClipboard } from 'use-clipboard-copy'
 import { ParsedUrlQuery } from 'querystring'
 import { FC, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
 
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
 
+import { layouts } from './SwitchLayout'
+
+import useLocalStorage from '../utils/useLocalStorage'
 import { humanFileSize, formatModifiedDateTime } from '../utils/fileDetails'
-import { getExtension, getFileIcon } from '../utils/getFileIcon'
+import { getFileIcon } from '../utils/getFileIcon'
 import { getPreviewType, preview } from '../utils/getPreviewType'
 import { useProtectedSWRInfinite } from '../utils/fetchWithSWR'
 import { getBaseUrl } from '../utils/getBaseUrl'
@@ -35,11 +39,12 @@ import URLPreview from './previews/URLPreview'
 import DefaultPreview from './previews/DefaultPreview'
 import { DownloadBtnContainer, PreviewContainer } from './previews/Containers'
 import DownloadButtonGroup from './DownloadBtnGtoup'
+import FolderListLayout from './FolderListLayout'
 
 import type { OdFileObject, OdFolderObject } from '../types'
-import Link from 'next/link'
+import FolderGridLayout from './FolderGridLayout'
 
-// Disabling SSR for some previews (image gallery view, and PDF view)
+// Disabling SSR for some previews
 const EPUBPreview = dynamic(() => import('./previews/EPUBPreview'), {
   ssr: false,
 })
@@ -60,36 +65,7 @@ const queryToPath = (query?: ParsedUrlQuery) => {
   return '/'
 }
 
-const FileListItem: FC<{ fileContent: OdFolderObject['value'][number] }> = ({ fileContent: c }) => {
-  const emojiIcon = emojiRegex().exec(c.name)
-  const renderEmoji = emojiIcon && !emojiIcon.index
-
-  return (
-    <div className="grid cursor-pointer grid-cols-10 items-center space-x-2 px-3 py-2.5">
-      <div className="col-span-10 flex items-center space-x-2 truncate md:col-span-6" title={c.name}>
-        {/* <div>{c.file ? c.file.mimeType : 'folder'}</div> */}
-        <div className="w-5 flex-shrink-0 text-center">
-          {renderEmoji ? (
-            <span>{emojiIcon ? emojiIcon[0] : '📁'}</span>
-          ) : (
-            <FontAwesomeIcon icon={c.file ? getFileIcon(c.name, { video: Boolean(c.video) }) : ['far', 'folder']} />
-          )}
-        </div>
-        <div className="truncate">
-          {renderEmoji ? c.name.replace(emojiIcon ? emojiIcon[0] : '', '').trim() : c.name}
-        </div>
-      </div>
-      <div className="col-span-3 hidden flex-shrink-0 font-mono text-sm text-gray-700 dark:text-gray-500 md:block">
-        {formatModifiedDateTime(c.lastModifiedDateTime)}
-      </div>
-      <div className="col-span-1 hidden flex-shrink-0 truncate font-mono text-sm text-gray-700 dark:text-gray-500 md:block">
-        {humanFileSize(c.size)}
-      </div>
-    </div>
-  )
-}
-
-const Checkbox: FC<{
+export const Checkbox: FC<{
   checked: 0 | 1 | 2
   onChange: () => void
   title: string
@@ -134,7 +110,7 @@ const Checkbox: FC<{
   )
 }
 
-const Downloading: FC<{ title: string }> = ({ title }) => {
+export const Downloading: FC<{ title: string }> = ({ title }) => {
   return (
     <span title={title} className="rounded p-2" role="status">
       <LoadingIcon
@@ -147,8 +123,6 @@ const Downloading: FC<{ title: string }> = ({ title }) => {
 }
 
 const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
-  const [imageViewerVisible, setImageViewerVisibility] = useState(false)
-  const [activeImageIdx, setActiveImageIdx] = useState(0)
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
   const [totalSelected, setTotalSelected] = useState<0 | 1 | 2>(0)
   const [totalGenerating, setTotalGenerating] = useState<boolean>(false)
@@ -157,19 +131,17 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   }>({})
 
   const router = useRouter()
-  const clipboard = useClipboard()
+  const [layout, _] = useLocalStorage('preferredLayout', layouts[0])
 
   const path = queryToPath(query)
 
   const { data, error, size, setSize } = useProtectedSWRInfinite(path)
 
   if (error) {
-    console.log(error)
-
     // If error includes 403 which means the user has not completed initial setup, redirect to OAuth page
     if (error.status === 403) {
       router.push('/onedrive-vercel-index-oauth/step-1')
-      return <div></div>
+      return <div />
     }
 
     return (
@@ -186,14 +158,6 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
     )
   }
 
-  const fileIsImage = (fileName: string) => {
-    const fileExtension = getExtension(fileName)
-    if (getPreviewType(fileExtension) === preview.image) {
-      return true
-    }
-    return false
-  }
-
   const responses: any[] = data ? [].concat(...data) : []
 
   const isLoadingInitialData = !data && !error
@@ -204,13 +168,13 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
   if ('folder' in responses[0]) {
     // Expand list of API returns into flattened file data
-    const children = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
+    const folderChildren = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
 
     // Find README.md file to render
-    const readmeFile = children.find(c => c.name.toLowerCase() === 'readme.md')
+    const readmeFile = folderChildren.find(c => c.name.toLowerCase() === 'readme.md')
 
     // Filtered file list helper
-    const getFiles = () => children.filter(c => !c.folder && c.name !== '.password')
+    const getFiles = () => folderChildren.filter(c => !c.folder && c.name !== '.password')
 
     // File selection
     const genTotalSelected = (selected: { [key: string]: boolean }) => {
@@ -311,147 +275,55 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
         })
     }
 
+    // Folder layout component props
+    const folderProps = {
+      toast,
+      path,
+      folderChildren,
+      selected,
+      toggleItemSelected,
+      totalSelected,
+      toggleTotalSelected,
+      totalGenerating,
+      handleSelectedDownload,
+      folderGenerating,
+      handleFolderDownload,
+    }
+
     return (
       <>
         <Toaster />
 
-        <div className="rounded bg-white dark:bg-gray-900 dark:text-gray-100">
-          <div className="grid grid-cols-12 items-center space-x-2 border-b border-gray-900/10 px-3 dark:border-gray-500/30">
-            <div className="col-span-12 py-2 text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:col-span-6">
-              Name
-            </div>
-            <div className="col-span-3 hidden text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:block">
-              Last Modified
-            </div>
-            <div className="hidden text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:block">
-              Size
-            </div>
-            <div className="hidden text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:block">
-              Actions
-            </div>
-            <div className="hidden text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:block">
-              <div className="hidden p-1.5 text-gray-700 dark:text-gray-400 md:flex">
-                <Checkbox
-                  checked={totalSelected}
-                  onChange={toggleTotalSelected}
-                  indeterminate={true}
-                  title={'Select files'}
-                />
-                {totalGenerating ? (
-                  <Downloading title="Downloading selected files, refresh page to cancel" />
-                ) : (
-                  <button
-                    title="Download selected files"
-                    className="cursor-pointer rounded p-1.5 hover:bg-gray-300 disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:bg-white dark:hover:bg-gray-600 disabled:dark:text-gray-600 disabled:hover:dark:bg-gray-900"
-                    disabled={totalSelected === 0}
-                    onClick={handleSelectedDownload}
-                  >
-                    <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} size="lg" />
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
+        {layout.name === 'Grid' ? <FolderGridLayout {...folderProps} /> : <FolderListLayout {...folderProps} />}
 
-          {children.map(c => (
-            <div className="grid grid-cols-12 hover:bg-gray-100 dark:hover:bg-gray-850" key={c.id}>
-              <Link href={`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`} passHref>
-                <a className="col-span-10">
-                  <FileListItem fileContent={c} />
-                </a>
-              </Link>
-
-              {c.folder ? (
-                <div className="hidden p-1.5 text-gray-700 dark:text-gray-400 md:flex">
-                  <span
-                    title="Copy folder permalink"
-                    className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
-                    onClick={() => {
-                      clipboard.copy(`${getBaseUrl()}${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)
-                      toast('Copied folder permalink.', { icon: '👌' })
-                    }}
-                  >
-                    <FontAwesomeIcon icon={['far', 'copy']} />
-                  </span>
-                  {folderGenerating[c.id] ? (
-                    <Downloading title="Downloading folder, refresh page to cancel" />
-                  ) : (
-                    <span
-                      title="Download folder"
-                      className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
-                      onClick={() => {
-                        const p = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
-                        handleFolderDownload(p, c.id, c.name)()
-                      }}
-                    >
-                      <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
-                    </span>
-                  )}
-                </div>
+        {!onlyOnePage && (
+          <div className="rounded-b bg-white dark:bg-gray-900 dark:text-gray-100">
+            <div className="border-b border-gray-200 p-3 text-center font-mono text-sm text-gray-400 dark:border-gray-700">
+              - showing {size} page{size > 1 ? 's' : ''} of {isLoadingMore ? '...' : folderChildren.length} files -
+            </div>
+            <button
+              className={`flex w-full items-center justify-center space-x-2 p-3 disabled:cursor-not-allowed ${
+                isLoadingMore || isReachingEnd ? 'opacity-60' : 'hover:bg-gray-100 dark:hover:bg-gray-850'
+              }`}
+              onClick={() => setSize(size + 1)}
+              disabled={isLoadingMore || isReachingEnd}
+            >
+              {isLoadingMore ? (
+                <>
+                  <LoadingIcon className="inline-block h-4 w-4 animate-spin" />
+                  <span>Loading ...</span>{' '}
+                </>
+              ) : isReachingEnd ? (
+                <span>No more files</span>
               ) : (
-                <div className="hidden p-1.5 text-gray-700 dark:text-gray-400 md:flex">
-                  <span
-                    title="Copy raw file permalink"
-                    className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
-                    onClick={() => {
-                      clipboard.copy(
-                        `${getBaseUrl()}/api?path=${path === '/' ? '' : path}/${encodeURIComponent(c.name)}&raw=true`
-                      )
-                      toast.success('Copied raw file permalink.')
-                    }}
-                  >
-                    <FontAwesomeIcon icon={['far', 'copy']} />
-                  </span>
-                  <a
-                    title="Download file"
-                    className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
-                    href={c['@microsoft.graph.downloadUrl']}
-                  >
-                    <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
-                  </a>
-                </div>
+                <>
+                  <span>Load more</span>
+                  <FontAwesomeIcon icon="chevron-circle-down" />
+                </>
               )}
-              <div className="hidden p-1.5 text-gray-700 dark:text-gray-400 md:flex">
-                {!c.folder && !(c.name === '.password') && (
-                  <Checkbox
-                    checked={selected[c.id] ? 2 : 0}
-                    onChange={() => toggleItemSelected(c.id)}
-                    title="Select file"
-                  />
-                )}
-              </div>
-            </div>
-          ))}
-
-          {!onlyOnePage && (
-            <div>
-              <div className="border-b border-gray-200 p-3 text-center font-mono text-sm text-gray-400 dark:border-gray-700">
-                - showing {size} page{size > 1 ? 's' : ''} of {isLoadingMore ? '...' : children.length} files -
-              </div>
-              <button
-                className={`flex w-full items-center justify-center space-x-2 p-3 disabled:cursor-not-allowed ${
-                  isLoadingMore || isReachingEnd ? 'opacity-60' : 'hover:bg-gray-100 dark:hover:bg-gray-850'
-                }`}
-                onClick={() => setSize(size + 1)}
-                disabled={isLoadingMore || isReachingEnd}
-              >
-                {isLoadingMore ? (
-                  <>
-                    <LoadingIcon className="inline-block h-4 w-4 animate-spin" />
-                    <span>Loading ...</span>{' '}
-                  </>
-                ) : isReachingEnd ? (
-                  <span>No more files</span>
-                ) : (
-                  <>
-                    <span>Load more</span>
-                    <FontAwesomeIcon icon="chevron-circle-down" />
-                  </>
-                )}
-              </button>
-            </div>
-          )}
-        </div>
+            </button>
+          </div>
+        )}
 
         {readmeFile && (
           <div className="mt-4">

@@ -5,9 +5,9 @@ import { Listbox, Transition } from '@headlessui/react'
 
 import useLocalStorage from '../utils/useLocalStorage'
 
-const layouts: Array<{ id: number; name: 'Grid' | 'List'; icon: IconProp }> = [
-  { id: 1, name: 'Grid', icon: 'th' },
-  { id: 2, name: 'List', icon: 'th-list' },
+export const layouts: Array<{ id: number; name: 'Grid' | 'List'; icon: IconProp }> = [
+  { id: 1, name: 'List', icon: 'th-list' },
+  { id: 2, name: 'Grid', icon: 'th' },
 ]
 
 export const SwitchLayout = () => {
