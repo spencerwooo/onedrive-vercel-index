@@ -27,7 +27,7 @@ export const SwitchLayout = () => {
         </Listbox.Button>
 
         <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
-          <Listbox.Options className="absolute mt-1 w-36 overflow-auto rounded border border-gray-900/10 bg-white py-1 shadow-lg focus:outline-none dark:border-gray-500/30 dark:bg-gray-800">
+          <Listbox.Options className="absolute z-20 mt-1 w-36 overflow-auto rounded border border-gray-900/10 bg-white py-1 shadow-lg focus:outline-none dark:border-gray-500/30 dark:bg-gray-800">
             {layouts.map(layout => (
               <Listbox.Option
                 key={layout.id}
