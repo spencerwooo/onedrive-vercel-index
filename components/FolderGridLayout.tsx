@@ -1,29 +1,15 @@
-import type { OdFolderObject } from '../types'
+import type { OdFolderChildren } from '../types'
 
-import { useState } from 'react'
 import Link from 'next/link'
-import emojiRegex from 'emoji-regex'
+import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useClipboard } from 'use-clipboard-copy'
 
-import { getFileIcon } from '../utils/getFileIcon'
 import { getBaseUrl } from '../utils/getBaseUrl'
 import { formatModifiedDateTime } from '../utils/fileDetails'
-import { Checkbox, Downloading } from './FileListing'
-
-type OdFolderChildren = OdFolderObject['value'][number]
+import { Checkbox, ChildIcon, Downloading, formatChildName } from './FileListing'
 
 const GridItem = ({ c }: { c: OdFolderChildren }) => {
-  const emojiIcon = emojiRegex().exec(c.name)
-  const renderEmoji = emojiIcon && !emojiIcon.index
-
-  const ChildIcon = () =>
-    renderEmoji ? (
-      <span>{emojiIcon ? emojiIcon[0] : '📁'}</span>
-    ) : (
-      <FontAwesomeIcon icon={c.file ? getFileIcon(c.name, { video: Boolean(c.video) }) : ['far', 'folder']} />
-    )
-
   // We use the generated medium thumbnail for rendering preview images
   const thumbnail = c.thumbnails && c.thumbnails.length > 0 ? c.thumbnails[0].medium : null
 
@@ -43,7 +29,7 @@ const GridItem = ({ c }: { c: OdFolderChildren }) => {
           />
         ) : (
           <div className="relative flex h-full w-full items-center justify-center rounded-lg">
-            <ChildIcon />
+            <ChildIcon child={c} />
             <span className="absolute bottom-0 right-0 m-1 font-medium text-gray-700 dark:text-gray-500">
               {c.folder?.childCount}
             </span>
@@ -53,11 +39,9 @@ const GridItem = ({ c }: { c: OdFolderChildren }) => {
 
       <div className="flex items-start justify-center space-x-2">
         <span className="w-5 flex-shrink-0 text-center">
-          <ChildIcon />
+          <ChildIcon child={c} />
         </span>
-        <span className="overflow-hidden truncate">
-          {renderEmoji ? c.name.replace(emojiIcon ? emojiIcon[0] : '', '').trim() : c.name}
-        </span>
+        <span className="overflow-hidden truncate">{formatChildName(c.name)}</span>
       </div>
       <div className="truncate text-center font-mono text-xs text-gray-700 dark:text-gray-500">
         {formatModifiedDateTime(c.lastModifiedDateTime)}
@@ -109,8 +93,11 @@ const FolderGridLayout = ({
 
       <div className="grid grid-cols-2 gap-3 p-3 md:grid-cols-4">
         {folderChildren.map((c: OdFolderChildren) => (
-          <div key={c.id} className="group relative overflow-hidden rounded hover:bg-gray-100 dark:hover:bg-gray-850">
-            <div className="absolute top-0 right-0 z-10 m-1 rounded bg-white/50 py-0.5 dark:bg-gray-900/50">
+          <div
+            key={c.id}
+            className="group relative overflow-hidden rounded transition-all duration-100 hover:bg-gray-100 dark:hover:bg-gray-850"
+          >
+            <div className="absolute top-0 right-0 z-10 m-1 rounded bg-white/50 py-0.5 opacity-0 transition-all duration-100 group-hover:opacity-100 dark:bg-gray-900/50">
               {c.folder ? (
                 <div>
                   <span
@@ -163,7 +150,11 @@ const FolderGridLayout = ({
               )}
             </div>
 
-            <div className="absolute top-0 left-0 z-10 m-1 rounded bg-white/50 py-0.5 dark:bg-gray-900/50">
+            <div
+              className={`${
+                selected[c.id] ? 'opacity-100' : 'opacity-0'
+              } absolute top-0 left-0 z-10 m-1 rounded bg-white/50 py-0.5 group-hover:opacity-100 dark:bg-gray-900/50`}
+            >
               {!c.folder && !(c.name === '.password') && (
                 <Checkbox
                   checked={selected[c.id] ? 2 : 0}

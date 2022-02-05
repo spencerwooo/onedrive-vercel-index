@@ -1,23 +1,17 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import toast, { Toaster } from 'react-hot-toast'
 import emojiRegex from 'emoji-regex'
-import { useClipboard } from 'use-clipboard-copy'
 
 import { ParsedUrlQuery } from 'querystring'
 import { FC, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
 
-import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 
-import { layouts } from './SwitchLayout'
-
 import useLocalStorage from '../utils/useLocalStorage'
-import { humanFileSize, formatModifiedDateTime } from '../utils/fileDetails'
-import { getFileIcon } from '../utils/getFileIcon'
 import { getPreviewType, preview } from '../utils/getPreviewType'
 import { useProtectedSWRInfinite } from '../utils/fetchWithSWR'
-import { getBaseUrl } from '../utils/getBaseUrl'
+import { getFileIcon } from '../utils/getFileIcon'
 import {
   DownloadingToast,
   downloadMultipleFiles,
@@ -25,6 +19,7 @@ import {
   traverseFolder,
 } from './MultiFileDownloader'
 
+import { layouts } from './SwitchLayout'
 import Loading, { LoadingIcon } from './Loading'
 import FourOhFour from './FourOhFour'
 import Auth from './Auth'
@@ -36,14 +31,13 @@ import AudioPreview from './previews/AudioPreview'
 import VideoPreview from './previews/VideoPreview'
 import PDFPreview from './previews/PDFPreview'
 import URLPreview from './previews/URLPreview'
-import DefaultPreview from './previews/DefaultPreview'
-import { DownloadBtnContainer, PreviewContainer } from './previews/Containers'
-import DownloadButtonGroup from './DownloadBtnGtoup'
-import FolderListLayout from './FolderListLayout'
-
-import type { OdFileObject, OdFolderObject } from '../types'
-import FolderGridLayout from './FolderGridLayout'
 import ImagePreview from './previews/ImagePreview'
+import DefaultPreview from './previews/DefaultPreview'
+import { PreviewContainer } from './previews/Containers'
+
+import type { OdFileObject, OdFolderChildren, OdFolderObject } from '../types'
+import FolderListLayout from './FolderListLayout'
+import FolderGridLayout from './FolderGridLayout'
 
 // Disabling SSR for some previews
 const EPUBPreview = dynamic(() => import('./previews/EPUBPreview'), {
@@ -64,6 +58,24 @@ const queryToPath = (query?: ParsedUrlQuery) => {
     return `/${path.map(p => encodeURIComponent(p)).join('/')}`
   }
   return '/'
+}
+
+// Render the icon of a folder child (may be a file or a folder), use emoji if the name of the child contains emoji
+const renderEmoji = (name: string) => {
+  const emoji = emojiRegex().exec(name)
+  return { render: emoji && !emoji.index, emoji }
+}
+export const formatChildName = (name: string) => {
+  const { render, emoji } = renderEmoji(name)
+  return render ? name.replace(emoji ? emoji[0] : '', '').trim() : name
+}
+export const ChildIcon: FC<{ child: OdFolderChildren }> = ({ child }) => {
+  const { render, emoji } = renderEmoji(child.name)
+  return render ? (
+    <span>{emoji ? emoji[0] : '📁'}</span>
+  ) : (
+    <FontAwesomeIcon icon={child.file ? getFileIcon(child.name, { video: Boolean(child.video) }) : ['far', 'folder']} />
+  )
 }
 
 export const Checkbox: FC<{

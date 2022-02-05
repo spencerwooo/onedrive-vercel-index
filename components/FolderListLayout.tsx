@@ -1,38 +1,23 @@
-import type { OdFolderObject } from '../types'
+import type { OdFolderChildren } from '../types'
 
+import Link from 'next/link'
 import { FC } from 'react'
-import emojiRegex from 'emoji-regex'
 import { useClipboard } from 'use-clipboard-copy'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import Link from 'next/link'
-
 import { getBaseUrl } from '../utils/getBaseUrl'
-import { getFileIcon } from '../utils/getFileIcon'
 import { humanFileSize, formatModifiedDateTime } from '../utils/fileDetails'
 
-import { Downloading, Checkbox } from './FileListing'
-
-type OdFolderChildren = OdFolderObject['value'][number]
+import { Downloading, Checkbox, formatChildName, ChildIcon } from './FileListing'
 
 const FileListItem: FC<{ fileContent: OdFolderChildren }> = ({ fileContent: c }) => {
-  const emojiIcon = emojiRegex().exec(c.name)
-  const renderEmoji = emojiIcon && !emojiIcon.index
-
   return (
     <div className="grid cursor-pointer grid-cols-10 items-center space-x-2 px-3 py-2.5">
       <div className="col-span-10 flex items-center space-x-2 truncate md:col-span-6" title={c.name}>
-        {/* <div>{c.file ? c.file.mimeType : 'folder'}</div> */}
         <div className="w-5 flex-shrink-0 text-center">
-          {renderEmoji ? (
-            <span>{emojiIcon ? emojiIcon[0] : '📁'}</span>
-          ) : (
-            <FontAwesomeIcon icon={c.file ? getFileIcon(c.name, { video: Boolean(c.video) }) : ['far', 'folder']} />
-          )}
+          <ChildIcon child={c} />
         </div>
-        <div className="truncate">
-          {renderEmoji ? c.name.replace(emojiIcon ? emojiIcon[0] : '', '').trim() : c.name}
-        </div>
+        <div className="truncate">{formatChildName(c.name)}</div>
       </div>
       <div className="col-span-3 hidden flex-shrink-0 font-mono text-sm text-gray-700 dark:text-gray-500 md:block">
         {formatModifiedDateTime(c.lastModifiedDateTime)}
@@ -99,7 +84,10 @@ const FolderListLayout = ({
       </div>
 
       {folderChildren.map((c: OdFolderChildren) => (
-        <div className="grid grid-cols-12 hover:bg-gray-100 dark:hover:bg-gray-850" key={c.id}>
+        <div
+          className="grid grid-cols-12 transition-all duration-100 hover:bg-gray-100 dark:hover:bg-gray-850"
+          key={c.id}
+        >
           <Link href={`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`} passHref>
             <a className="col-span-10">
               <FileListItem fileContent={c} />
