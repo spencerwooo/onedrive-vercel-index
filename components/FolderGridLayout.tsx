@@ -9,6 +9,7 @@ import { getFileIcon } from '../utils/getFileIcon'
 import { getBaseUrl } from '../utils/getBaseUrl'
 import { formatModifiedDateTime } from '../utils/fileDetails'
 import { Checkbox, Downloading } from './FileListing'
+import { useState } from 'react'
 
 type OdFolderChildren = OdFolderObject['value'][number]
 
@@ -26,12 +27,20 @@ const GridItem = ({ c }: { c: OdFolderChildren }) => {
   // We use the generated medium thumbnail for rendering preview images
   const thumbnail = c.thumbnails && c.thumbnails.length > 0 ? c.thumbnails[0].medium : null
 
+  // Some thumbnails are broken, so we check for onerror event in the image component
+  const [brokenThumbnail, setBrokenThumbnail] = useState(false)
+
   return (
     <div className="space-y-2">
       <div className="h-32 overflow-hidden rounded border border-gray-900/10 dark:border-gray-500/30">
-        {thumbnail ? (
+        {thumbnail && !brokenThumbnail ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img className="h-full w-full object-cover object-top" src={thumbnail.url} alt={c.name} />
+          <img
+            className="h-full w-full object-cover object-top"
+            src={thumbnail.url}
+            alt={c.name}
+            onError={() => setBrokenThumbnail(true)}
+          />
         ) : (
           <div className="relative flex h-full w-full items-center justify-center rounded-lg">
             <ChildIcon />
