@@ -10,12 +10,20 @@ import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 
 import siteConfig from '../config/site.config'
+import SearchModal from './SearchModal'
 import useDeviceOS from '../utils/useDeviceOS'
 
 const Navbar = () => {
   const router = useRouter()
+  const os = useDeviceOS()
+
   const [tokenPresent, setTokenPresent] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+
+  const [searchOpen, setSearchOpen] = useState(false)
+  const openSearchBox = () => setSearchOpen(true)
+
+  useHotkeys(`${os === 'mac' ? 'cmd' : 'ctrl'}+k`, openSearchBox)
 
   useEffect(() => {
     const storedToken = () => {
@@ -75,7 +83,6 @@ const Navbar = () => {
           </button>
 
           {siteConfig.links.length !== 0 &&
-            siteConfig.links.map((l: { name: string; link: string; other: string}) => (
               <a
                 key={l.name}
                 href={l.link}
@@ -83,8 +90,6 @@ const Navbar = () => {
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 hover:opacity-80 dark:text-white"
               >
-                <FontAwesomeIcon icon={['fab', l.other.toLowerCase() as IconName]} />
-                <span className="text-sm font-medium hidden md:inline-block">{l.name}</span>
               </a>
             ))}
 

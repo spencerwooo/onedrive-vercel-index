@@ -2,6 +2,7 @@ import { posix as pathPosix } from 'path'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
+import Cors from 'cors'
 
 import apiConfig from '../../config/api.config'
 import siteConfig from '../../config/site.config'
@@ -12,6 +13,20 @@ import { getOdAuthTokens, storeOdAuthTokens } from '../../utils/odAuthTokenStore
 const basePath = pathPosix.resolve('/', siteConfig.baseDirectory)
 const clientSecret = revealObfuscatedToken(apiConfig.obfuscatedClientSecret)
 
+// CORS middleware for raw links: https://nextjs.org/docs/api-routes/api-middlewares
+function runCorsMiddleware(req: NextApiRequest, res: NextApiResponse) {
+  const cors = Cors({ methods: ['GET', 'HEAD'] })
+  return new Promise((resolve, reject) => {
+    cors(req, res, result => {
+      if (result instanceof Error) {
+        return reject(result)
+      }
+
+      return resolve(result)
+    })
+  })
+}
+
 /**
  * Encode the path of the file relative to the base directory
  *
@@ -19,7 +34,7 @@ const clientSecret = revealObfuscatedToken(apiConfig.obfuscatedClientSecret)
  * @returns Absolute path of the file inside OneDrive
  */
 export function encodePath(path: string): string {
-  let encodedPath = pathPosix.join(basePath, pathPosix.resolve('/', path))
+  let encodedPath = pathPosix.join(basePath, path)
   if (encodedPath === '/' || encodedPath === '') {
     return ''
   }
@@ -109,6 +124,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(400).json({ error: 'Path query invalid.' })
     return
   }
+  const cleanPath = pathPosix.resolve('/', pathPosix.normalize(path))
 
   const accessToken = await getAccessToken()
 
@@ -122,7 +138,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const protectedRoutes = siteConfig.protectedRoutes
   let authTokenPath = ''
   for (const r of protectedRoutes) {
-    if (path.startsWith(r)) {
+    if (cleanPath.startsWith(r)) {
       authTokenPath = `${r}/.password`
       break
     }
@@ -161,14 +177,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 
-  const requestPath = encodePath(path)
+  const requestPath = encodePath(cleanPath)
   // Handle response from OneDrive API
   const requestUrl = `${apiConfig.driveApi}/root${requestPath}`
   // Whether path is root, which requires some special treatment
   const isRoot = requestPath === ''
 
-  // Go for file raw download link and query with only temporary link parameter
+  // Go for file raw download link, add CORS headers, and redirect to @microsoft.graph.downloadUrl
   if (raw) {
+    await runCorsMiddleware(req, res)
+
     const { data } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
@@ -187,8 +205,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Querying current path identity (file or folder) and follow up query childrens in folder
-  // console.log(accessToken)
-
   try {
     const { data: identityData } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
