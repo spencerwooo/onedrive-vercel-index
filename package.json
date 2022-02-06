@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier components/**/*.tsx config/*.js pages/**/*.tsx {types,utils}/**/*.ts --write",
-    "extract": "i18next-scanner"
+    "extract": "i18next"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
@@ -62,8 +62,7 @@
     "eslint": "8.8.0",
     "eslint-config-next": "12.0.10",
     "eslint-config-prettier": "^8.3.0",
-    "i18next-scanner": "^3.1.0",
-    "i18next-scanner-typescript": "^1.0.6",
+    "i18next-parser": "^5.4.0",
     "postcss": "^8.4.5",
     "prettier": "^2.5.1",
     "prettier-plugin-tailwindcss": "^0.1.4",
