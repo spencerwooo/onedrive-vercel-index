@@ -83,6 +83,7 @@ const Navbar = () => {
           </button>
 
           {siteConfig.links.length !== 0 &&
+            siteConfig.links.map((l: { name: string; link: string; other: string}) => (
               <a
                 key={l.name}
                 href={l.link}
@@ -90,6 +91,8 @@ const Navbar = () => {
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 hover:opacity-80 dark:text-white"
               >
+                <FontAwesomeIcon icon={['fab', l.other.toLowerCase() as IconName]} />
+                <span className="hidden text-sm font-medium md:inline-block">{l.name}</span>
               </a>
             ))}
 
