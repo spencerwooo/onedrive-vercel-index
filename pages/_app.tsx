@@ -20,6 +20,7 @@ import {
   faArrowAltCircleDown,
   faTrashAlt,
   faEnvelope,
+  faFlag,
   faCheckCircle,
 } from '@fortawesome/free-regular-svg-icons'
 import {
@@ -28,6 +29,7 @@ import {
   faPlus,
   faMinus,
   faCopy as faCopySolid,
+  faAngleRight,
   faDownload,
   faMusic,
   faArrowLeft,
@@ -39,10 +41,14 @@ import {
   faSignOutAlt,
   faCloud,
   faChevronCircleDown,
+  faChevronDown,
   faLink,
   faExternalLinkAlt,
   faExclamationCircle,
   faExclamationTriangle,
+  faTh,
+  faThLarge,
+  faThList,
   faHome,
 } from '@fortawesome/free-solid-svg-icons'
 import * as Icons from '@fortawesome/free-brands-svg-icons'
@@ -67,10 +73,12 @@ library.add(
   faFileCode,
   faFileAlt,
   faFile,
+  faFlag,
   faFolder,
   faMusic,
   faArrowLeft,
   faArrowRight,
+  faAngleRight,
   faFileDownload,
   faCopy,
   faCopySolid,
@@ -94,6 +102,10 @@ library.add(
   faCheck,
   faCheckCircle,
   faSearch,
+  faChevronDown,
+  faTh,
+  faThLarge,
+  faThList,
   ...iconList
 )
 

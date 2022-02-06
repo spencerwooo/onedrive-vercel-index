@@ -14,11 +14,11 @@ import DownloadButtonGroup from '../DownloadBtnGtoup'
 import useAxiosGet from '../../utils/fetchOnMount'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
-const MarkdownPreview: FC<{ file: any; path: string; standalone?: boolean }> = ({
-  file,
-  path,
-  standalone = true,
-}) => {
+const MarkdownPreview: FC<{
+  file: any
+  path: string
+  standalone?: boolean
+}> = ({ file, path, standalone = true }) => {
   const { response: content, error, validating } = useAxiosGet(file['@microsoft.graph.downloadUrl'])
 
   // The parent folder of the markdown file, which is also the relative image folder
