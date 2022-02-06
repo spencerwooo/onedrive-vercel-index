@@ -9,13 +9,10 @@ import siteConfig from '../../config/site.config'
  * Sanitize the search query
  *
  * @param query User search query, which may contain special characters
- * @returns Sanitised query string which replaces non-alphanumeric characters with ' '
+ * @returns Sanitised query string which encodes the '<' and '>' characters, replaces '?' and '/' characters with ' ', and replaces ''' with '''' accroading to https://stackoverflow.com/questions/41491222/single-quote-escaping-in-microsoft-graph. 
  */
 function sanitiseQuery(query: string): string {
-  const sanitisedQuery = query
-/** Actually this will cause problems with CJK only query words as it will remove every character.
- * After removing it, CJK search will be much improved.
- */
+  const sanitisedQuery = query.replace(/'/g, "''").replace('<', ' &lt; ').replace('>', ' &gt; ').replace('?', ' ').replace('/', ' ')
   return encodeURIComponent(sanitisedQuery)
 }
 
