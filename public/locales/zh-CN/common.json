@@ -1,5 +1,5 @@
 {
-  "- showing {{count}} page(s) of {{totalFileNum}} files -——other": "已显示 {{count}}  页，共 {{totalFileNum}} 个文件",
+  "- showing {{count}} page(s) ——other": "已显示 {{count}} 页",
   "{{count}} item(s)——other": "{{count}} 个项目",
   "Actions": "操作",
   "Cancel": "取消",
@@ -43,6 +43,8 @@
   "Name": "文件名",
   "No more files": "加载完毕",
   "Nothing here.": "无内容。",
+  "of {{count}} file(s) -——loaded——other": "共 {{count}} 个文件",
+  "of {{count}} file(s) -——loading——other": "共 ... 个文件",
   "Oops, that&apos;s a <1>four-oh-four</1>.": "Oops，这里是 <1>404</1> 页面。",
   "Press <2>F12</2> and open devtools for more details, or seek help at <6>onedrive-vercel-index discussions</6>.": "请按下 <2>F12</2> 来打开开发者工具窗口以获取详细信息，或是到 <6>onedrive-vercel-index 社区讨论</6> 处寻求帮助。",
   "Search ...": "搜索……",

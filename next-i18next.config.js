@@ -5,5 +5,10 @@ module.exports = {
     defaultLocale: 'en',
     locales: ['en', 'zh-CN']
   },
-  localePath: path.resolve('public/locales')
+  localePath: path.resolve('public/locales'),
+  reloadOnPrerender: process.env.NODE_ENV === 'development',
+  keySeparator: false,
+  namespaceSeparator: false,
+  pluralSeparator: '——',
+  contextSeparator: '——'
 }

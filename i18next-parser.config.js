@@ -9,6 +9,7 @@ module.exports = {
   keySeparator: false,
   namespaceSeparator: false,
   pluralSeparator: '——',
+  contextSeparator: '——',
   lineEnding: 'lf',
   locales: i18n.locales,
   output: path.join(localePath, '$LOCALE/$NAMESPACE.json'),
