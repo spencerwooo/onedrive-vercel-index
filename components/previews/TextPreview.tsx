@@ -1,3 +1,5 @@
+import { useTranslation } from 'next-i18next'
+
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import DownloadButtonGroup from '../DownloadBtnGtoup'
@@ -5,6 +7,8 @@ import useAxiosGet from '../../utils/fetchOnMount'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
 const TextPreview = ({ file }) => {
+  const { t } = useTranslation()
+
   const { response: content, error, validating } = useAxiosGet(file['@microsoft.graph.downloadUrl'])
   if (error) {
     return (
@@ -17,7 +21,7 @@ const TextPreview = ({ file }) => {
   if (validating) {
     return (
       <PreviewContainer>
-        <Loading loadingText="Loading file content..." />
+        <Loading loadingText={t('Loading file content...')} />
       </PreviewContainer>
     )
   }
@@ -25,7 +29,7 @@ const TextPreview = ({ file }) => {
   if (!content) {
     return (
       <PreviewContainer>
-        <FourOhFour errorMsg="File is empty." />
+        <FourOhFour errorMsg={t('File is empty.')} />
       </PreviewContainer>
     )
   }

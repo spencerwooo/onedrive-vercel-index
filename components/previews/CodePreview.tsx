@@ -1,5 +1,6 @@
 import { useEffect, FC } from 'react'
 import Prism from 'prismjs'
+import { useTranslation } from 'next-i18next'
 
 import { getExtension } from '../../utils/getFileIcon'
 import useAxiosGet from '../../utils/fetchOnMount'
@@ -10,6 +11,8 @@ import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
 const CodePreview: FC<{ file: any }> = ({ file }) => {
   const { response: content, error, validating } = useAxiosGet(file['@microsoft.graph.downloadUrl'])
+
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -27,7 +30,7 @@ const CodePreview: FC<{ file: any }> = ({ file }) => {
   if (validating) {
     return (
       <PreviewContainer>
-        <Loading loadingText="Loading file content..." />
+        <Loading loadingText={t('Loading file content...')} />
       </PreviewContainer>
     )
   }

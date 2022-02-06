@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useClipboard } from 'use-clipboard-copy'
 import DPlayer from 'react-dplayer'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'next-i18next'
 
 import { getBaseUrl } from '../../utils/getBaseUrl'
 import { DownloadButton } from '../DownloadBtnGtoup'
@@ -12,6 +13,8 @@ import { getExtension } from '../../utils/getFileIcon'
 const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const { asPath } = useRouter()
   const clipboard = useClipboard()
+
+  const { t } = useTranslation()
 
   // OneDrive generates thumbnails for its video files, we pick the thumbnail with the highest resolution
   const thumbnail = file.thumbnails && file.thumbnails.length > 0 ? file.thumbnails[0].large.url : ''
@@ -41,7 +44,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
           <DownloadButton
             onClickCallback={() => window.open(file['@microsoft.graph.downloadUrl'])}
             btnColor="blue"
-            btnText="Download"
+            btnText={t('Download')}
             btnIcon="file-download"
           />
           {/* <DownloadButton
@@ -49,16 +52,16 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
               window.open(`/api/proxy?url=${encodeURIComponent(file['@microsoft.graph.downloadUrl'])}`)
             }
             btnColor="teal"
-            btnText="Proxy download"
+            btnText={t('Proxy download')}
             btnIcon="download"
           /> */}
           <DownloadButton
             onClickCallback={() => {
               clipboard.copy(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
-              toast.success('Copied direct link to clipboard.')
+              toast.success(t('Copied direct link to clipboard.'))
             }}
             btnColor="pink"
-            btnText="Copy direct link"
+            btnText={t('Copy direct link')}
             btnIcon="copy"
           />
 
