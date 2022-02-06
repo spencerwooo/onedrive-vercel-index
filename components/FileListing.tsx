@@ -321,7 +321,10 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
         {!onlyOnePage && (
           <div className="rounded-b bg-white dark:bg-gray-900 dark:text-gray-100">
             <div className="border-b border-gray-200 p-3 text-center font-mono text-sm text-gray-400 dark:border-gray-700">
-              - showing {size} page{size > 1 ? 's' : ''} of {isLoadingMore ? '...' : folderChildren.length} files -
+              {t('- showing {{count}} page(s) of {{totalFileNum}} files -', {
+                count: size,
+                totalFileNum: isLoadingMore ? '...' : folderChildren.length
+              })}
             </div>
             <button
               className={`flex w-full items-center justify-center space-x-2 p-3 disabled:cursor-not-allowed ${
@@ -406,7 +409,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
   return (
     <PreviewContainer>
-      <FourOhFour errorMsg={`Cannot preview ${path}`} />
+      <FourOhFour errorMsg={t('Cannot preview {{path}}', { path })} />
     </PreviewContainer>
   )
 }

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
+import { useTranslation } from 'next-i18next'
 
 import { matchProtectedRoute } from '../utils/protectedRouteHandler'
 import useLocalStorage from '../utils/useLocalStorage'
@@ -14,16 +15,18 @@ const Auth: FC<{ redirect: string }> = ({ redirect }) => {
   const [token, setToken] = useState('')
   const [_, setPersistedToken] = useLocalStorage(authTokenPath, '')
 
+  const { t } = useTranslation()
+
   return (
     <div className="md:my-10 flex flex-col max-w-sm mx-auto space-y-4">
       <div className="md:w-5/6 w-3/4 mx-auto">
         <Image src={'/images/fabulous-wapmire-weekdays.png'} alt="authenticate" width={912} height={912} priority />
       </div>
-      <div className="dark:text-gray-100 text-lg font-bold text-gray-900">Enter Password</div>
+      <div className="dark:text-gray-100 text-lg font-bold text-gray-900">{t('Enter Password')}</div>
 
       <p className="text-sm text-gray-500 font-medium">
-        This route (the folder itself and the files inside) is password protected. If you know the password, please
-        enter it below.
+        {t('This route (the folder itself and the files inside) is password protected. ') +
+          t('If you know the password, please enter it below.')}
       </p>
 
       <div className="flex items-center space-x-2">

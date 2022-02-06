@@ -27,6 +27,7 @@ specifiers:
   eslint-config-next: 12.0.10
   eslint-config-prettier: ^8.3.0
   i18next-scanner: ^3.1.0
+  i18next-scanner-typescript: ^1.0.6
   ioredis: ^4.28.2
   jszip: ^3.7.1
   next: ^12.0.10
@@ -110,6 +111,7 @@ devDependencies:
   eslint-config-next: 12.0.10_9534215cc73b6f260bf33f1b86e3ae0e
   eslint-config-prettier: 8.3.0_eslint@8.8.0
   i18next-scanner: 3.1.0
+  i18next-scanner-typescript: 1.0.6
   postcss: 8.4.6
   prettier: 2.5.1
   prettier-plugin-tailwindcss: 0.1.4_prettier@2.5.1
@@ -2008,6 +2010,12 @@ packages:
   /i18next-fs-backend/1.1.4:
     resolution: {integrity: sha512-/MfAGMP0jHonV966uFf9PkWWuDjPYLIcsipnSO3NxpNtAgRUKLTwvm85fEmsF6hGeu0zbZiCQ3W74jwO6K9uXA==}
     dev: false
+
+  /i18next-scanner-typescript/1.0.6:
+    resolution: {integrity: sha512-v6kULnsv32OlFM9pnWTH+wNtRXf5owmFUNBYcX78jbZxQBFnTCUo3w99JjnxuzuXA9ch4UKNQBnt2P/o94eyeQ==}
+    dependencies:
+      typescript: 3.9.10
+    dev: true
 
   /i18next-scanner/3.1.0:
     resolution: {integrity: sha512-dHLXUJIiF1CYJNslCkJFDYJySk5fg+dzdg9O73XXqHcdZwJ2947SWusqq8HdNFB7LpkBi8oTG6TWLZPmqbAh8Q==}
@@ -4023,6 +4031,12 @@ packages:
   /type/2.5.0:
     resolution: {integrity: sha512-180WMDQaIMm3+7hGXWf12GtdniDEy7nYcyFMKJn/eZz/6tSLXrUN9V0wKSbMjej0I1WHWbpREDEKHtqPQa9NNw==}
     dev: false
+
+  /typescript/3.9.10:
+    resolution: {integrity: sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: true
 
   /typescript/4.5.5:
     resolution: {integrity: sha512-TCTIul70LyWe6IJWT8QSYeA54WQe8EjQFU4wY52Fasj5UKx88LNYKCgBEHcOMOrFF1rKGbD8v/xcNWVUq9SymA==}

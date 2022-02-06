@@ -1,4 +1,5 @@
 const path = require('path')
+const tsTransform = require('i18next-scanner-typescript')
 
 const { i18n, localePath } = require('./next-i18next.config')
 
@@ -8,8 +9,10 @@ module.exports = {
     sort: true,
     removeUnusedKeys: true,
     func: {
-      list: ['t'],
-      extensions: ['.ts', '.tsx']
+      list: ['t']
+    },
+    trans: {
+      fallbackKey: (_ns, val) => val
     },
     lngs: i18n.locales,
     ns: ['common'],
@@ -22,5 +25,6 @@ module.exports = {
     },
     nsSeparator: false,
     keySeparator: false
-  }
+  },
+  transform: tsTransform()
 }
