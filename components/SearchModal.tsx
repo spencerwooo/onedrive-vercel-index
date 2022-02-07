@@ -215,7 +215,6 @@ export default function SearchModal({
                 />
                 <div className="px-2 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 font-medium text-xs">ESC</div>
               </Dialog.Title>
-              <div className="text-center px-4 py-12 text-sm font-medium">{t('Nothing here.')}</div>
               <div
                 className="bg-white dark:text-white dark:bg-gray-900 max-h-[80vh] overflow-x-hidden overflow-y-scroll"
                 onClick={closeSearchBox}
