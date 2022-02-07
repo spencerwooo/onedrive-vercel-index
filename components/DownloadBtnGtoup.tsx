@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 
 import { getBaseUrl } from '../utils/getBaseUrl'
+import { getReadablePath } from '../utils/getReadablePath'
 
 const btnStyleMap = (btnColor?: string) => {
   const colorMap = {
@@ -81,7 +82,7 @@ const DownloadButtonGroup: React.FC<{ downloadUrl: string }> = ({ downloadUrl })
       /> */}
       <DownloadButton
         onClickCallback={() => {
-          clipboard.copy(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
+          clipboard.copy(`${getBaseUrl()}/api?path=${getReadablePath(asPath)}&raw=true`)
           toast.success('Copied direct link to clipboard.')
         }}
         btnColor="pink"

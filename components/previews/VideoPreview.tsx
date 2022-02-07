@@ -8,6 +8,7 @@ import { getBaseUrl } from '../../utils/getBaseUrl'
 import { DownloadButton } from '../DownloadBtnGtoup'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 import { getExtension } from '../../utils/getFileIcon'
+import { getReadablePath } from '../../utils/getReadablePath'
 
 const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const { asPath } = useRouter()
@@ -54,7 +55,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
           /> */}
           <DownloadButton
             onClickCallback={() => {
-              clipboard.copy(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
+              clipboard.copy(`${getBaseUrl()}/api?path=${getReadablePath(asPath)}&raw=true`)
               toast.success('Copied direct link to clipboard.')
             }}
             btnColor="pink"
