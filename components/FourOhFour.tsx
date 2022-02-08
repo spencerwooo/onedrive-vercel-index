@@ -10,7 +10,7 @@ const FourOhFour: React.FC<{ errorMsg: string }> = ({ errorMsg }) => {
       <div className="mt-6 text-gray-500 max-w-xl mx-auto">
         <div className="text-xl font-bold mb-8">
           <Trans>
-            Oops, that's a <span className="underline decoration-wavy decoration-red-500">four-oh-four</span>.
+            Oops, that{"'"}s a <span className="underline decoration-wavy decoration-red-500">four-oh-four</span>.
           </Trans>
         </div>
         <div className="font-mono border border-gray-400/20 rounded p-2 mb-4 text-xs bg-gray-50 dark:bg-gray-800">
