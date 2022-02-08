@@ -74,7 +74,8 @@ export default function OAuthStep2() {
               <Trans>
                 The OAuth link for getting the authorisation code has been created. Click on the link above to get the{' '}
                 <b className="underline decoration-yellow-400 decoration-wavy">authorisation code</b>. Your browser will
-                open a new tab to Microsoft{"'"}s account login page. After logging in and authenticating with your
+                {/* eslint-disable-next-line react/no-unescaped-entities */}
+                open a new tab to Microsoft's account login page. After logging in and authenticating with your
                 Microsoft account, you will be redirected to a blank page on localhost. Paste{' '}
                 <b className="underline decoration-teal-500 decoration-wavy">the entire redirected URL</b> down below.
               </Trans>

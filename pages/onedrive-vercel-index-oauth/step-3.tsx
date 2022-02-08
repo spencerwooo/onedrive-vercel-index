@@ -139,7 +139,8 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:underline dark:text-blue-500"
                       >
-                        Microsoft{"'"}s official explanation
+                        {/* eslint-disable-next-line react/no-unescaped-entities */}
+                        Microsoft's official explanation
                       </a>{' '}
                       on the error message.
                     </Trans>
