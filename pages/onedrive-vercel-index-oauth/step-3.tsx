@@ -118,7 +118,7 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
                   <span>
                     {t('Whoops, looks like we got a problem: {{error}}.', {
                       // t('No auth code present')
-                      error: t(error)
+                      error: t(error),
                     })}
                   </span>
                 </p>
@@ -190,7 +190,7 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
                     'Final step, click the button below to store these tokens persistently before they expire after {{minutes}} minutes {{seconds}} seconds. ',
                     {
                       minutes: Math.floor(expiryTimeLeft / 60),
-                      seconds: expiryTimeLeft - Math.floor(expiryTimeLeft / 60) * 60
+                      seconds: expiryTimeLeft - Math.floor(expiryTimeLeft / 60) * 60,
                     }
                   ) +
                     t(
