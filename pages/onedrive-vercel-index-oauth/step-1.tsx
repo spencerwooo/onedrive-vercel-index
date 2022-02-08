@@ -124,7 +124,7 @@ export default function OAuthStep1() {
               <Trans>
                 <FontAwesomeIcon icon="exclamation-triangle" className="mr-1 text-yellow-400" /> If you see anything
                 missing or incorrect, you need to reconfigure{' '}
-                <code className="font-mono text-xs">/config/api.json</code> and redeploy this instance.
+                <code className="font-mono text-xs">/config/api.config.js</code> and redeploy this instance.
               </Trans>
             </p>
 

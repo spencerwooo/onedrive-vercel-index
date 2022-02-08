@@ -5,7 +5,7 @@
   "{{count}} item(s)——other": "{{count}} items",
   "<0></0> If you are not the owner of this website, stop now, as continuing with this process may expose your personal files in OneDrive.": "<0></0> If you are not the owner of this website, stop now, as continuing with this process may expose your personal files in OneDrive.",
   "<0></0> If you have not specified a REDIS_URL inside your Vercel env variable, go initialise one at <3>Upstash</3>. Docs: <6>Vercel Integration - Upstash</6>.": "<0></0> If you have not specified a REDIS_URL inside your Vercel env variable, go initialise one at <3>Upstash</3>. Docs: <6>Vercel Integration - Upstash</6>.",
-  "<0></0> If you see anything missing or incorrect, you need to reconfigure <3>/config/api.json</3> and redeploy this instance.": "<0></0> If you see anything missing or incorrect, you need to reconfigure <3>/config/api.json</3> and redeploy this instance.",
+  "<0></0> If you see anything missing or incorrect, you need to reconfigure <3>/config/api.config.js</3> and redeploy this instance.": "<0></0> If you see anything missing or incorrect, you need to reconfigure <3>/config/api.config.js</3> and redeploy this instance.",
   "✅ You can now proceed onto the next step: requesting your access token and refresh token.": "✅ You can now proceed onto the next step: requesting your access token and refresh token.",
   "❌ No valid code extracted.": "❌ No valid code extracted.",
   "Acquired access_token: ": "Acquired access_token: ",
