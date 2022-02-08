@@ -231,6 +231,7 @@ export async function getServerSideProps({ query, locale }) {
       props: {
         error: 'No auth code present',
         description: 'Where is the auth code? Did you follow step 2 you silly donut?',
+        ...(await serverSideTranslations(locale, ['common'])),
       },
     }
   }
@@ -244,6 +245,7 @@ export async function getServerSideProps({ query, locale }) {
         error: response.error,
         description: response.errorDescription,
         errorUri: response.errorUri,
+        ...(await serverSideTranslations(locale, ['common'])),
       },
     }
   }
@@ -256,7 +258,7 @@ export async function getServerSideProps({ query, locale }) {
       expiryTime,
       accessToken,
       refreshToken,
-      ...(await serverSideTranslations(locale, ['common']))
+      ...(await serverSideTranslations(locale, ['common'])),
     },
   }
 }

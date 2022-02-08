@@ -143,7 +143,7 @@ export default function OAuthStep2() {
 export async function getServerSideProps({ locale }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ['common']))
-    }
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
   }
 }
