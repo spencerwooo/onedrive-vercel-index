@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useTranslation, Trans } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import siteConfig from '../../config/site.config'
 import Navbar from '../../components/Navbar'
@@ -137,4 +138,12 @@ export default function OAuthStep2() {
       <Footer />
     </div>
   )
+}
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common']))
+    }
+  }
 }

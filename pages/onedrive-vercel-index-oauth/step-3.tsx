@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useTranslation, Trans } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import siteConfig from '../../config/site.config'
 import Navbar from '../../components/Navbar'
@@ -221,7 +222,7 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
   )
 }
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps({ query, locale }) {
   const { authCode } = query
 
   // Return if no auth code is present
@@ -255,6 +256,7 @@ export async function getServerSideProps({ query }) {
       expiryTime,
       accessToken,
       refreshToken,
+      ...(await serverSideTranslations(locale, ['common']))
     },
   }
 }
