@@ -23,7 +23,11 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const subtitle = `/api?path=${asPath.replace(getExtension(file.name), 'vtt')}&raw=true`
 
   const isFlv = getExtension(file.name) === 'flv'
-  const { loading, error, result: flvjs } = useAsync(async () => {
+  const {
+    loading,
+    error,
+    result: flvjs,
+  } = useAsync(async () => {
     if (isFlv) {
       return (await import('flv.js')).default
     }
@@ -50,14 +54,14 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
                   customFlv: (video: HTMLVideoElement) => {
                     const flvPlayer = flvjs!.createPlayer({
                       type: 'flv',
-                      url: video.src
+                      url: video.src,
                     })
                     flvPlayer.attachMediaElement(video)
                     flvPlayer.load()
-                  }
-                }
+                  },
+                },
               },
-              subtitle: { url: subtitle }
+              subtitle: { url: subtitle },
             }}
           />
         )}
