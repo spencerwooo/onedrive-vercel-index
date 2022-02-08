@@ -7,6 +7,7 @@ import { useClipboard } from 'use-clipboard-copy'
 
 import { getBaseUrl } from '../utils/getBaseUrl'
 import { formatModifiedDateTime } from '../utils/fileDetails'
+import { getReadablePath } from '../utils/getReadablePath'
 import { Checkbox, ChildIcon, Downloading, formatChildName } from './FileListing'
 
 const GridItem = ({ c }: { c: OdFolderChildren }) => {
@@ -104,7 +105,9 @@ const FolderGridLayout = ({
                     title="Copy folder permalink"
                     className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                     onClick={() => {
-                      clipboard.copy(`${getBaseUrl()}${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)
+                      clipboard.copy(
+                        `${getBaseUrl()}${getReadablePath(`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)}`
+                      )
                       toast('Copied folder permalink.', { icon: '👌' })
                     }}
                   >
@@ -132,7 +135,9 @@ const FolderGridLayout = ({
                     className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                     onClick={() => {
                       clipboard.copy(
-                        `${getBaseUrl()}/api?path=${path === '/' ? '' : path}/${encodeURIComponent(c.name)}&raw=true`
+                        `${getBaseUrl()}/api?path=${getReadablePath(
+                          `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
+                        )}&raw=true`
                       )
                       toast.success('Copied raw file permalink.')
                     }}

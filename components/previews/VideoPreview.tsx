@@ -6,9 +6,10 @@ import toast from 'react-hot-toast'
 import { useAsync } from 'react-async-hook'
 
 import { getBaseUrl } from '../../utils/getBaseUrl'
+import { getExtension } from '../../utils/getFileIcon'
+import { getReadablePath } from '../../utils/getReadablePath'
 import { DownloadButton } from '../DownloadBtnGtoup'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
-import { getExtension } from '../../utils/getFileIcon'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 
@@ -85,7 +86,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
           /> */}
           <DownloadButton
             onClickCallback={() => {
-              clipboard.copy(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
+              clipboard.copy(`${getBaseUrl()}/api?path=${getReadablePath(asPath)}&raw=true`)
               toast.success('Copied direct link to clipboard.')
             }}
             btnColor="pink"
