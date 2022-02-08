@@ -1,6 +1,8 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { useTranslation, Trans } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import siteConfig from '../../config/site.config'
 import apiConfig from '../../config/api.config'
@@ -11,10 +13,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 export default function OAuthStep1() {
   const router = useRouter()
 
+  const { t } = useTranslation()
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
       <Head>
-        <title>{`OAuth Step 1 - ${siteConfig.title}`}</title>
+        <title>{t('OAuth Step 1 - {{title}}', { title: siteConfig.title })}</title>
       </Head>
 
       <main className="flex w-full flex-1 flex-col bg-gray-50 dark:bg-gray-800">
@@ -25,34 +29,40 @@ export default function OAuthStep1() {
             <div className="mx-auto w-52">
               <Image src="/images/fabulous-fireworks.png" width={912} height={912} alt="fabulous fireworks" priority />
             </div>
-            <h3 className="mb-4 text-center text-xl font-medium">Welcome to your new onedrive-vercel-index 🎉</h3>
+            <h3 className="mb-4 text-center text-xl font-medium">
+              {t('Welcome to your new onedrive-vercel-index 🎉')}
+            </h3>
 
-            <h3 className="mt-4 mb-2 text-lg font-medium">Step 1/3: Preparations</h3>
+            <h3 className="mt-4 mb-2 text-lg font-medium">{t('Step 1/3: Preparations')}</h3>
 
             <p className="py-1 text-sm font-medium text-yellow-400">
-              <FontAwesomeIcon icon="exclamation-triangle" className="mr-1" /> If you have not specified a REDIS_URL
-              inside your Vercel env variable, go initialise one at{' '}
-              <a href="https://upstash.com/" target="_blank" rel="noopener noreferrer" className="underline">
-                Upstash
-              </a>
-              . Docs:{' '}
-              <a
-                href="https://docs.upstash.com/redis/howto/vercelintegration"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline"
-              >
-                Vercel Integration - Upstash
-              </a>
-              .
+              <Trans>
+                <FontAwesomeIcon icon="exclamation-triangle" className="mr-1" /> If you have not specified a REDIS_URL
+                inside your Vercel env variable, go initialise one at{' '}
+                <a href="https://upstash.com/" target="_blank" rel="noopener noreferrer" className="underline">
+                  Upstash
+                </a>
+                . Docs:{' '}
+                <a
+                  href="https://docs.upstash.com/redis/howto/vercelintegration"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline"
+                >
+                  Vercel Integration - Upstash
+                </a>
+                .
+              </Trans>
             </p>
 
             <p className="py-1">
-              Authorisation is required as no valid{' '}
-              <code className="font-mono text-sm underline decoration-pink-600 decoration-wavy">access_token</code> or{' '}
-              <code className="font-mono text-sm underline decoration-green-600 decoration-wavy">refresh_token</code> is
-              present on this deployed instance. Check the following configurations before proceeding with authorising
-              onedrive-vercel-index with your own Microsoft account.
+              <Trans>
+                Authorisation is required as no valid{' '}
+                <code className="font-mono text-sm underline decoration-pink-600 decoration-wavy">access_token</code> or{' '}
+                <code className="font-mono text-sm underline decoration-green-600 decoration-wavy">refresh_token</code>{' '}
+                is present on this deployed instance. Check the following configurations before proceeding with
+                authorising onedrive-vercel-index with your own Microsoft account.
+              </Trans>
             </p>
 
             <div className="my-4 overflow-hidden">
@@ -111,9 +121,11 @@ export default function OAuthStep1() {
             </div>
 
             <p className="py-1 text-sm font-medium">
-              <FontAwesomeIcon icon="exclamation-triangle" className="mr-1 text-yellow-400" /> If you see anything
-              missing or incorrect, you need to reconfigure <code className="font-mono text-xs">/config/api.json</code>{' '}
-              and redeploy this instance.
+              <Trans>
+                <FontAwesomeIcon icon="exclamation-triangle" className="mr-1 text-yellow-400" /> If you see anything
+                missing or incorrect, you need to reconfigure{' '}
+                <code className="font-mono text-xs">/config/api.config.js</code> and redeploy this instance.
+              </Trans>
             </p>
 
             <div className="mb-2 mt-6 text-right">
@@ -123,7 +135,7 @@ export default function OAuthStep1() {
                   router.push('/onedrive-vercel-index-oauth/step-2')
                 }}
               >
-                <span>Proceed to OAuth</span> <FontAwesomeIcon icon="arrow-right" />
+                <span>{t('Proceed to OAuth')}</span> <FontAwesomeIcon icon="arrow-right" />
               </button>
             </div>
           </div>
@@ -133,4 +145,12 @@ export default function OAuthStep1() {
       <Footer />
     </div>
   )
+}
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  }
 }

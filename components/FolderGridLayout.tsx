@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useClipboard } from 'use-clipboard-copy'
+import { useTranslation } from 'next-i18next'
 
 import { getBaseUrl } from '../utils/getBaseUrl'
 import { formatModifiedDateTime } from '../utils/fileDetails'
@@ -66,22 +67,24 @@ const FolderGridLayout = ({
 }) => {
   const clipboard = useClipboard()
 
+  const { t } = useTranslation()
+
   return (
     <div className="rounded bg-white dark:bg-gray-900 dark:text-gray-100">
       <div className="flex items-center border-b border-gray-900/10 px-3 text-xs font-bold uppercase tracking-widest text-gray-600 dark:border-gray-500/30 dark:text-gray-400">
-        <div className="flex-1">{folderChildren.length} items</div>
+        <div className="flex-1">{t('{{count}} item(s)', { count: folderChildren.length })}</div>
         <div className="flex p-1.5 text-gray-700 dark:text-gray-400">
           <Checkbox
             checked={totalSelected}
             onChange={toggleTotalSelected}
             indeterminate={true}
-            title={'Select all files'}
+            title={t('Select all files')}
           />
           {totalGenerating ? (
-            <Downloading title="Downloading selected files, refresh page to cancel" />
+            <Downloading title={t('Downloading selected files, refresh page to cancel')} />
           ) : (
             <button
-              title="Download selected files"
+              title={t('Download selected files')}
               className="cursor-pointer rounded p-1.5 hover:bg-gray-300 disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:bg-white dark:hover:bg-gray-600 disabled:dark:text-gray-600 disabled:hover:dark:bg-gray-900"
               disabled={totalSelected === 0}
               onClick={handleSelectedDownload}
@@ -102,22 +105,22 @@ const FolderGridLayout = ({
               {c.folder ? (
                 <div>
                   <span
-                    title="Copy folder permalink"
+                    title={t('Copy folder permalink')}
                     className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                     onClick={() => {
                       clipboard.copy(
                         `${getBaseUrl()}${getReadablePath(`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)}`
                       )
-                      toast('Copied folder permalink.', { icon: '👌' })
+                      toast(t('Copied folder permalink.'), { icon: '👌' })
                     }}
                   >
                     <FontAwesomeIcon icon={['far', 'copy']} />
                   </span>
                   {folderGenerating[c.id] ? (
-                    <Downloading title="Downloading folder, refresh page to cancel" />
+                    <Downloading title={t('Downloading folder, refresh page to cancel')} />
                   ) : (
                     <span
-                      title="Download folder"
+                      title={t('Download folder')}
                       className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                       onClick={() => {
                         const p = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
@@ -131,7 +134,7 @@ const FolderGridLayout = ({
               ) : (
                 <div>
                   <span
-                    title="Copy raw file permalink"
+                    title={t('Copy raw file permalink')}
                     className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                     onClick={() => {
                       clipboard.copy(
@@ -139,13 +142,13 @@ const FolderGridLayout = ({
                           `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
                         )}&raw=true`
                       )
-                      toast.success('Copied raw file permalink.')
+                      toast.success(t('Copied raw file permalink.'))
                     }}
                   >
                     <FontAwesomeIcon icon={['far', 'copy']} />
                   </span>
                   <a
-                    title="Download file"
+                    title={t('Download file')}
                     className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                     href={c['@microsoft.graph.downloadUrl']}
                   >
@@ -164,7 +167,7 @@ const FolderGridLayout = ({
                 <Checkbox
                   checked={selected[c.id] ? 2 : 0}
                   onChange={() => toggleItemSelected(c.id)}
-                  title="Select file"
+                  title={t('Select file')}
                 />
               )}
             </div>

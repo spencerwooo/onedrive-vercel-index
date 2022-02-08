@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useClipboard } from 'use-clipboard-copy'
 import DPlayer from 'react-dplayer'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'next-i18next'
 import { useAsync } from 'react-async-hook'
 
 import { getBaseUrl } from '../../utils/getBaseUrl'
@@ -16,6 +17,8 @@ import Loading from '../Loading'
 const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const { asPath } = useRouter()
   const clipboard = useClipboard()
+
+  const { t } = useTranslation()
 
   // OneDrive generates thumbnails for its video files, we pick the thumbnail with the highest resolution
   const thumbnail = file.thumbnails && file.thumbnails.length > 0 ? file.thumbnails[0].large.url : ''
@@ -40,7 +43,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
         {error ? (
           <FourOhFour errorMsg={error.message} />
         ) : loading && isFlv ? (
-          <Loading loadingText="Loading FLV extension..." />
+          <Loading loadingText={t('Loading FLV extension...')} />
         ) : (
           <DPlayer
             className="aspect-video"
@@ -73,7 +76,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
           <DownloadButton
             onClickCallback={() => window.open(file['@microsoft.graph.downloadUrl'])}
             btnColor="blue"
-            btnText="Download"
+            btnText={t('Download')}
             btnIcon="file-download"
           />
           {/* <DownloadButton
@@ -81,16 +84,16 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
               window.open(`/api/proxy?url=${encodeURIComponent(file['@microsoft.graph.downloadUrl'])}`)
             }
             btnColor="teal"
-            btnText="Proxy download"
+            btnText={t('Proxy download')}
             btnIcon="download"
           /> */}
           <DownloadButton
             onClickCallback={() => {
               clipboard.copy(`${getBaseUrl()}/api?path=${getReadablePath(asPath)}&raw=true`)
-              toast.success('Copied direct link to clipboard.')
+              toast.success(t('Copied direct link to clipboard.'))
             }}
             btnColor="pink"
-            btnText="Copy direct link"
+            btnText={t('Copy direct link')}
             btnIcon="copy"
           />
 

@@ -2,6 +2,7 @@ import { Fragment } from 'react'
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Listbox, Transition } from '@headlessui/react'
+import { useTranslation } from 'next-i18next'
 
 import useLocalStorage from '../utils/useLocalStorage'
 
@@ -13,13 +14,21 @@ export const layouts: Array<{ id: number; name: 'Grid' | 'List'; icon: IconProp 
 export const SwitchLayout = () => {
   const [preferredLayout, setPreferredLayout] = useLocalStorage('preferredLayout', layouts[0])
 
+  const { t } = useTranslation()
+
   return (
     <div className="relative w-24 flex-shrink-0 text-sm text-gray-600 dark:text-gray-300 md:w-28">
       <Listbox value={preferredLayout} onChange={setPreferredLayout}>
         <Listbox.Button className="relative w-full cursor-pointer rounded pl-2">
           <span className="pointer-events-none flex items-center">
             <FontAwesomeIcon className="mr-2 h-3 w-3" icon={preferredLayout.icon} />
-            <span>{preferredLayout.name}</span>
+            <span>
+              {
+                // t('Grid')
+                // t('List')
+                t(preferredLayout.name)
+              }
+            </span>
           </span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <FontAwesomeIcon className="h-3 w-3" icon="chevron-down" />
@@ -39,7 +48,11 @@ export const SwitchLayout = () => {
               >
                 <FontAwesomeIcon className="mr-2 h-3 w-3" icon={layout.icon} />
                 <span className={layout.name === preferredLayout.name ? 'font-medium' : 'font-normal'}>
-                  {layout.name}
+                  {
+                    // t('Grid')
+                    // t('List')
+                    t(layout.name)
+                  }
                 </span>
                 {layout.name === preferredLayout.name && (
                   <span className="absolute inset-y-0 right-3 flex items-center">

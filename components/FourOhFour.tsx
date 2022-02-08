@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { Trans } from 'next-i18next'
 
 const FourOhFour: React.FC<{ errorMsg: string }> = ({ errorMsg }) => {
   return (
@@ -8,24 +9,31 @@ const FourOhFour: React.FC<{ errorMsg: string }> = ({ errorMsg }) => {
       </div>
       <div className="mt-6 text-gray-500 max-w-xl mx-auto">
         <div className="text-xl font-bold mb-8">
-          Oops, that&apos;s a <span className="underline decoration-wavy decoration-red-500">four-oh-four</span>.
+          <Trans>
+            {/* eslint-disable-next-line react/no-unescaped-entities */}
+            Oops, that's a <span className="underline decoration-wavy decoration-red-500">four-oh-four</span>.
+          </Trans>
         </div>
         <div className="font-mono border border-gray-400/20 rounded p-2 mb-4 text-xs bg-gray-50 dark:bg-gray-800">
           {errorMsg}
         </div>
         <div className="text-sm">
-          Press{' '}
-          <kbd className="border-opacity-20 font-mono text-xs p-1 bg-gray-100 dark:bg-gray-800 border rounded">F12</kbd>{' '}
-          and open devtools for more details, or seek help at{' '}
-          <a
-            className="text-blue-600 hover:text-blue-700 hover:underline"
-            href="https://github.com/spencerwooo/onedrive-vercel-index/discussions"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            onedrive-vercel-index discussions
-          </a>
-          .
+          <Trans>
+            Press{' '}
+            <kbd className="border-opacity-20 font-mono text-xs p-1 bg-gray-100 dark:bg-gray-800 border rounded">
+              F12
+            </kbd>{' '}
+            and open devtools for more details, or seek help at{' '}
+            <a
+              className="text-blue-600 hover:text-blue-700 hover:underline"
+              href="https://github.com/spencerwooo/onedrive-vercel-index/discussions"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              onedrive-vercel-index discussions
+            </a>
+            .
+          </Trans>
         </div>
       </div>
     </div>

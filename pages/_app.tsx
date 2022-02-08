@@ -55,6 +55,7 @@ import * as Icons from '@fortawesome/free-brands-svg-icons'
 
 import type { AppProps } from 'next/app'
 import NextNProgress from 'nextjs-progressbar'
+import { appWithTranslation } from 'next-i18next'
 
 // import all brand icons with tree-shaking so all icons can be referenced in the app
 const iconList = Object.keys(Icons)
@@ -117,4 +118,4 @@ function MyApp({ Component, pageProps }: AppProps) {
     </>
   )
 }
-export default MyApp
+export default appWithTranslation(MyApp)

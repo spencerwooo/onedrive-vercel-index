@@ -4,6 +4,7 @@ import { Dispatch, Fragment, SetStateAction, useState } from 'react'
 import AwesomeDebouncePromise from 'awesome-debounce-promise'
 import { useAsync } from 'react-async-hook'
 import useConstant from 'use-constant'
+import { useTranslation } from 'next-i18next'
 
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -112,12 +113,19 @@ function SearchResultItemTemplate({
 function SearchResultItemLoadRemote({ result }: { result: OdSearchResult[number] }) {
   const { data, error }: SWRResponse<OdDriveItem, string> = useSWR(`/api/item?id=${result.id}`, fetcher)
 
+  const { t } = useTranslation()
+
   if (error) {
     return <SearchResultItemTemplate driveItem={result} driveItemPath={''} itemDescription={error} disabled={true} />
   }
   if (!data) {
     return (
-      <SearchResultItemTemplate driveItem={result} driveItemPath={''} itemDescription={'Loading ...'} disabled={true} />
+      <SearchResultItemTemplate
+        driveItem={result}
+        driveItemPath={''}
+        itemDescription={t('Loading ...')}
+        disabled={true}
+      />
     )
   }
 
@@ -159,6 +167,8 @@ export default function SearchModal({
 }) {
   const { query, setQuery, results } = useDriveItemSearch()
 
+  const { t } = useTranslation()
+
   const closeSearchBox = () => {
     setSearchOpen(false)
     setQuery('')
@@ -199,13 +209,12 @@ export default function SearchModal({
                   type="text"
                   id="search-box"
                   className="w-full bg-transparent focus:outline-none focus-visible:outline-none"
-                  placeholder="Search ..."
+                  placeholder={t('Search ...')}
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                 />
                 <div className="px-2 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 font-medium text-xs">ESC</div>
               </Dialog.Title>
-
               <div
                 className="bg-white dark:text-white dark:bg-gray-900 max-h-[80vh] overflow-x-hidden overflow-y-scroll"
                 onClick={closeSearchBox}
@@ -213,16 +222,18 @@ export default function SearchModal({
                 {results.loading && (
                   <div className="text-center px-4 py-12 text-sm font-medium">
                     <LoadingIcon className="animate-spin w-4 h-4 mr-2 inline-block svg-inline--fa" />
-                    <span>Loading ...</span>
+                    <span>{t('Loading ...')}</span>
                   </div>
                 )}
                 {results.error && (
-                  <div className="text-center px-4 py-12 text-sm font-medium">Error: {results.error.message}</div>
+                  <div className="text-center px-4 py-12 text-sm font-medium">
+                    {t('Error: {{message}}', { message: results.error.message })}
+                  </div>
                 )}
                 {results.result && (
                   <>
                     {results.result.length === 0 ? (
-                      <div className="text-center px-4 py-12 text-sm font-medium">Nothing here.</div>
+                      <div className="text-center px-4 py-12 text-sm font-medium">{t('Nothing here.')}</div>
                     ) : (
                       results.result.map(result => <SearchResultItem key={result.id} result={result} />)
                     )}

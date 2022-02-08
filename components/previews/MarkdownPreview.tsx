@@ -5,6 +5,7 @@ import gfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import rehypeRaw from 'rehype-raw'
+import { useTranslation } from 'next-i18next'
 
 import 'katex/dist/katex.min.css'
 
@@ -20,6 +21,8 @@ const MarkdownPreview: FC<{
   standalone?: boolean
 }> = ({ file, path, standalone = true }) => {
   const { response: content, error, validating } = useAxiosGet(file['@microsoft.graph.downloadUrl'])
+
+  const { t } = useTranslation()
 
   // The parent folder of the markdown file, which is also the relative image folder
   const parentPath = path.substring(0, path.lastIndexOf('/'))
@@ -76,7 +79,7 @@ const MarkdownPreview: FC<{
   if (validating) {
     return (
       <PreviewContainer>
-        <Loading loadingText="Loading file content..." />
+        <Loading loadingText={t('Loading file content...')} />
       </PreviewContainer>
     )
   }
