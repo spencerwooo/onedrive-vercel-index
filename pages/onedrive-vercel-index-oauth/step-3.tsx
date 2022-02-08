@@ -139,7 +139,7 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:underline dark:text-blue-500"
                       >
-                        Microsoft&apos;s official explanation
+                        Microsoft's official explanation
                       </a>{' '}
                       on the error message.
                     </Trans>
@@ -195,7 +195,7 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
                     }
                   ) +
                     t(
-                      'Don&apos;t worry, after storing them, onedrive-vercel-index will take care of token refreshes and updates after your site goes live.'
+                      "Don't worry, after storing them, onedrive-vercel-index will take care of token refreshes and updates after your site goes live."
                     )}
                 </p>
 
