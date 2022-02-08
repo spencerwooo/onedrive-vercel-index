@@ -43,7 +43,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
         {error ? (
           <FourOhFour errorMsg={error.message} />
         ) : loading && isFlv ? (
-          <Loading loadingText="Loading FLV extension..." />
+          <Loading loadingText={t('Loading FLV extension...')} />
         ) : (
           <DPlayer
             className="aspect-video"
