@@ -20,7 +20,7 @@ import {
   traverseFolder,
 } from './MultiFileDownloader'
 
-import { layouts } from './SwitchLayout'
+import layouts from './SwitchLayout'
 import Loading, { LoadingIcon } from './Loading'
 import FourOhFour from './FourOhFour'
 import Auth from './Auth'
@@ -263,7 +263,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
               t('Failed to download folder {{path}}: {{status}} {{message}} Skipped it to continue.', {
                 path: p,
                 status: error.status,
-                message: error.message
+                message: error.message,
               })
             )
             continue
@@ -323,7 +323,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
             <div className="border-b border-gray-200 p-3 text-center font-mono text-sm text-gray-400 dark:border-gray-700">
               {t('- showing {{count}} page(s) ', {
                 count: size,
-                totalFileNum: isLoadingMore ? '...' : folderChildren.length
+                totalFileNum: isLoadingMore ? '...' : folderChildren.length,
               }) +
                 (isLoadingMore
                   ? t('of {{count}} file(s) -', { count: folderChildren.length, context: 'loading' })

@@ -50,6 +50,7 @@ import {
   faThLarge,
   faThList,
   faHome,
+  faLanguage,
 } from '@fortawesome/free-solid-svg-icons'
 import * as Icons from '@fortawesome/free-brands-svg-icons'
 
@@ -107,6 +108,7 @@ library.add(
   faTh,
   faThLarge,
   faThList,
+  faLanguage,
   ...iconList
 )
 

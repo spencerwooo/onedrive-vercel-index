@@ -11,7 +11,7 @@ export const layouts: Array<{ id: number; name: 'Grid' | 'List'; icon: IconProp 
   { id: 2, name: 'Grid', icon: 'th' },
 ]
 
-export const SwitchLayout = () => {
+const SwitchLayout = () => {
   const [preferredLayout, setPreferredLayout] = useLocalStorage('preferredLayout', layouts[0])
 
   const { t } = useTranslation()
@@ -35,7 +35,15 @@ export const SwitchLayout = () => {
           </span>
         </Listbox.Button>
 
-        <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+        <Transition
+          as={Fragment}
+          enter="transition duration-100 ease-out"
+          enterFrom="transform scale-95 opacity-0"
+          enterTo="transform scale-100 opacity-100"
+          leave="transition duration-75 ease-out"
+          leaveFrom="transform scale-100 opacity-100"
+          leaveTo="transform scale-95 opacity-0"
+        >
           <Listbox.Options className="absolute right-0 z-20 mt-1 w-32 overflow-auto rounded border border-gray-900/10 bg-white py-1 shadow-lg focus:outline-none dark:border-gray-500/30 dark:bg-gray-800">
             {layouts.map(layout => (
               <Listbox.Option
@@ -67,3 +75,5 @@ export const SwitchLayout = () => {
     </div>
   )
 }
+
+export default SwitchLayout

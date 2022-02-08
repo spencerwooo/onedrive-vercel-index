@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar'
 import FileListing from '../components/FileListing'
 import Footer from '../components/Footer'
 import Breadcrumb from '../components/Breadcrumb'
-import { SwitchLayout } from '../components/SwitchLayout'
+import SwitchLayout from '../components/SwitchLayout'
 
 export default function Home() {
   return (
@@ -34,7 +34,7 @@ export default function Home() {
 export async function getServerSideProps({ locale }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ['common']))
-    }
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
   }
 }
