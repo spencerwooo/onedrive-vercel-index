@@ -8,6 +8,7 @@ import { useTranslation } from 'next-i18next'
 import DownloadButtonGroup from '../DownloadBtnGtoup'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 import { LoadingIcon } from '../Loading'
+import { formatModifiedDateTime } from '../../utils/fileDetails'
 
 enum PlayerState {
   Loading,
@@ -39,11 +40,7 @@ const AudioPreview: FC<{ file: OdFileObject }> = ({ file }) => {
           <div className="flex w-full flex-col space-y-2">
             <div>{file.name}</div>
             <div className="pb-4 text-sm text-gray-500">
-              {t('Last modified:') + ' '}
-              {new Date(file.lastModifiedDateTime).toLocaleString(undefined, {
-                dateStyle: 'short',
-                timeStyle: 'short',
-              })}
+              {t('Last modified:') + ' ' + formatModifiedDateTime(file.lastModifiedDateTime)}
             </div>
 
             <ReactAudioPlayer
