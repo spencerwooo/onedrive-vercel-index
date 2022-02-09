@@ -67,7 +67,7 @@ const renderEmoji = (name: string) => {
 }
 export const formatChildName = (name: string) => {
   const { render, emoji } = renderEmoji(name)
-  return render ? name.replace(/[0-9][0-9]?#/,'').replace(emoji ? emoji[0] : '', '').trim() : name
+  return render ? name.replace(/[0-9][0-9][0-9]?#/,'').replace(emoji ? emoji[0] : '', '').trim() : name
 }
 export const ChildIcon: FC<{ child: OdFolderChildren }> = ({ child }) => {
   const { render, emoji } = renderEmoji(child.name)
