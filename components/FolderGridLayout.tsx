@@ -17,11 +17,9 @@ const GridItem = ({ c, path }: { c: OdFolderChildren; path: string }) => {
     'folder' in c
       ? // Folders don't have thumbnails
         null
-      : c.thumbnails
+      : c.thumbnails && c.thumbnails.length > 0
       ? // Most OneDrive versions, including E5 developer, should have thumbnails returned
-        c.thumbnails.length > 0
-        ? c.thumbnails[0].medium.url
-        : null
+        c.thumbnails[0].medium.url
       : // According to OneDrive docs, OneDrive for Business and SharePoint does not
         // (can not retrieve thumbnails via expand). But currently we only see OneDrive 世纪互联 really does not.
         `/api/thumbnail?path=${path}`
