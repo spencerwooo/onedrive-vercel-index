@@ -90,6 +90,23 @@ export async function getAccessToken(): Promise<string> {
   return ''
 }
 
+/**
+ * Match protected routes in site config to get path to required auth token
+ * @param path Path cleaned in advance
+ * @returns Path to required auth token. If not required, return empty string.
+ */
+export function getAuthTokenPath(path: string) {
+  const protectedRoutes = siteConfig.protectedRoutes
+  let authTokenPath = ''
+  for (const r of protectedRoutes) {
+    if (path.startsWith(r)) {
+      authTokenPath = `${r}/.password`
+      break
+    }
+  }
+  return authTokenPath
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // If method is POST, then the API is called by the client to store acquired tokens
   if (req.method === 'POST') {
@@ -135,14 +152,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Handle authentication through .password
-  const protectedRoutes = siteConfig.protectedRoutes
-  let authTokenPath = ''
-  for (const r of protectedRoutes) {
-    if (cleanPath.startsWith(r)) {
-      authTokenPath = `${r}/.password`
-      break
-    }
-  }
+  const authTokenPath = getAuthTokenPath(cleanPath)
 
   // Fetch password from remote file content
   if (authTokenPath !== '') {

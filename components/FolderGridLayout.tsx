@@ -11,9 +11,20 @@ import { formatModifiedDateTime } from '../utils/fileDetails'
 import { getReadablePath } from '../utils/getReadablePath'
 import { Checkbox, ChildIcon, Downloading, formatChildName } from './FileListing'
 
-const GridItem = ({ c }: { c: OdFolderChildren }) => {
+const GridItem = ({ c, path }: { c: OdFolderChildren; path: string }) => {
   // We use the generated medium thumbnail for rendering preview images
-  const thumbnail = c.thumbnails && c.thumbnails.length > 0 ? c.thumbnails[0].medium : null
+  const thumbnailUrl =
+    'folder' in c
+      ? // Folders don't have thumbnails
+        null
+      : c.thumbnails
+      ? // Most OneDrive versions, including E5 developer, should have thumbnails returned
+        c.thumbnails.length > 0
+        ? c.thumbnails[0].medium.url
+        : null
+      : // According to OneDrive docs, OneDrive for Business and SharePoint does not
+        // (can not retrieve thumbnails via expand). But currently we only see OneDrive 世纪互联 really does not.
+        `/api/thumbnail?path=${path}`
 
   // Some thumbnails are broken, so we check for onerror event in the image component
   const [brokenThumbnail, setBrokenThumbnail] = useState(false)
@@ -21,11 +32,11 @@ const GridItem = ({ c }: { c: OdFolderChildren }) => {
   return (
     <div className="space-y-2">
       <div className="h-32 overflow-hidden rounded border border-gray-900/10 dark:border-gray-500/30">
-        {thumbnail && !brokenThumbnail ? (
+        {thumbnailUrl && !brokenThumbnail ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             className="h-full w-full object-cover object-top"
-            src={thumbnail.url}
+            src={thumbnailUrl}
             alt={c.name}
             onError={() => setBrokenThumbnail(true)}
           />
@@ -69,6 +80,9 @@ const FolderGridLayout = ({
 
   const { t } = useTranslation()
 
+  // Get item path from item name
+  const getItemPath = (name: string) => `${path === '/' ? '' : path}/${encodeURIComponent(name)}`
+
   return (
     <div className="rounded bg-white dark:bg-gray-900 dark:text-gray-100">
       <div className="flex items-center border-b border-gray-900/10 px-3 text-xs font-bold uppercase tracking-widest text-gray-600 dark:border-gray-500/30 dark:text-gray-400">
@@ -108,9 +122,7 @@ const FolderGridLayout = ({
                     title={t('Copy folder permalink')}
                     className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                     onClick={() => {
-                      clipboard.copy(
-                        `${getBaseUrl()}${getReadablePath(`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`)}`
-                      )
+                      clipboard.copy(`${getBaseUrl()}${getReadablePath(getItemPath(c.name))}`)
                       toast(t('Copied folder permalink.'), { icon: '👌' })
                     }}
                   >
@@ -122,10 +134,7 @@ const FolderGridLayout = ({
                     <span
                       title={t('Download folder')}
                       className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
-                      onClick={() => {
-                        const p = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
-                        handleFolderDownload(p, c.id, c.name)()
-                      }}
+                      onClick={handleFolderDownload(getItemPath(c.name), c.id, c.name)}
                     >
                       <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
                     </span>
@@ -137,11 +146,7 @@ const FolderGridLayout = ({
                     title={t('Copy raw file permalink')}
                     className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                     onClick={() => {
-                      clipboard.copy(
-                        `${getBaseUrl()}/api?path=${getReadablePath(
-                          `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
-                        )}&raw=true`
-                      )
+                      clipboard.copy(`${getBaseUrl()}/api?path=${getReadablePath(getItemPath(c.name))}&raw=true`)
                       toast.success(t('Copied raw file permalink.'))
                     }}
                   >
@@ -172,9 +177,9 @@ const FolderGridLayout = ({
               )}
             </div>
 
-            <Link href={`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`} passHref>
+            <Link href={getItemPath(c.name)} passHref>
               <a>
-                <GridItem c={c} />
+                <GridItem c={c} path={getItemPath(c.name)} />
               </a>
             </Link>
           </div>
