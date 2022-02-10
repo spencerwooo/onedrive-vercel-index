@@ -10,7 +10,7 @@ import { getBaseUrl } from '../utils/getBaseUrl'
 import { humanFileSize, formatModifiedDateTime } from '../utils/fileDetails'
 import { getReadablePath } from '../utils/getReadablePath'
 
-import { Downloading, Checkbox, formatChildName, ChildIcon } from './FileListing'
+import { Downloading, Checkbox, ChildIcon, ChildName } from './FileListing'
 
 const FileListItem: FC<{ fileContent: OdFolderChildren }> = ({ fileContent: c }) => {
   return (
@@ -19,7 +19,7 @@ const FileListItem: FC<{ fileContent: OdFolderChildren }> = ({ fileContent: c })
         <div className="w-5 flex-shrink-0 text-center">
           <ChildIcon child={c} />
         </div>
-        <div className="truncate">{formatChildName(c.name)}</div>
+        <ChildName name={c.name} />
       </div>
       <div className="col-span-3 hidden flex-shrink-0 font-mono text-sm text-gray-700 dark:text-gray-500 md:block">
         {formatModifiedDateTime(c.lastModifiedDateTime)}

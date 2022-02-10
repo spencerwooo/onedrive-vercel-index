@@ -12,7 +12,7 @@ import { useTranslation } from 'next-i18next'
 import useLocalStorage from '../utils/useLocalStorage'
 import { getPreviewType, preview } from '../utils/getPreviewType'
 import { useProtectedSWRInfinite } from '../utils/fetchWithSWR'
-import { getFileIcon } from '../utils/getFileIcon'
+import { getExtension, getFileIcon } from '../utils/getFileIcon'
 import {
   DownloadingToast,
   downloadMultipleFiles,
@@ -66,9 +66,19 @@ const renderEmoji = (name: string) => {
   const emoji = emojiRegex().exec(name)
   return { render: emoji && !emoji.index, emoji }
 }
-export const formatChildName = (name: string) => {
+const formatChildName = (name: string) => {
   const { render, emoji } = renderEmoji(name)
   return render ? name.replace(emoji ? emoji[0] : '', '').trim() : name
+}
+export const ChildName: FC<{ name: string }> = ({ name }) => {
+  let basename = formatChildName(name)
+  const extension = getExtension(basename)
+  basename = basename.substring(0, basename.length - extension.length)
+  return (
+    <span className="truncate before:float-right before:content-[attr(data-tail)]" data-tail={extension}>
+      {basename}
+    </span>
+  )
 }
 export const ChildIcon: FC<{ child: OdFolderChildren }> = ({ child }) => {
   const { render, emoji } = renderEmoji(child.name)
