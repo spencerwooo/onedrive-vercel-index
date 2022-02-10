@@ -239,7 +239,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       } else if (files.length > 1) {
         setTotalGenerating(true)
 
-        const toastId = toast.loading(DownloadingToast(router))
+        const toastId = toast.loading(<DownloadingToast router={router} />)
         downloadMultipleFiles({ toastId, router, files, folder })
           .then(() => {
             setTotalGenerating(false)
@@ -278,7 +278,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       })()
 
       setFolderGenerating({ ...folderGenerating, [id]: true })
-      const toastId = toast.loading(DownloadingToast(router))
+      const toastId = toast.loading(<DownloadingToast router={router} />)
 
       downloadTreelikeMultipleFiles({
         toastId,
