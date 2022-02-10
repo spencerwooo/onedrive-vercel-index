@@ -24,7 +24,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const thumbnail = `/api/thumbnail?path=${asPath}&size=large`
 
   // We assume subtitle files are beside the video with the same name, only webvtt '.vtt' files are supported
-  const subtitle = `/api?path=${asPath.replace(getExtension(file.name), 'vtt')}&raw=true`
+  const subtitle = `/api?path=${asPath.substring(0, asPath.lastIndexOf('.'))}.vtt&raw=true`
 
   const isFlv = getExtension(file.name) === 'flv'
   const {
