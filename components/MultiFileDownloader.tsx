@@ -159,27 +159,28 @@ export async function downloadTreelikeMultipleFiles({
   downloadBlob({ blob: b, name: folder ? folder + '.zip' : 'download.zip' })
 }
 
+interface TraverseItem {
+  path: string
+  meta: any
+  isFolder: boolean
+  error?: { status: number; message: string }
+}
+
 /**
  * One-shot concurrent top-down file traversing for the folder.
  * Due to react hook limit, we cannot reuse SWR utils for recursive actions.
  * We will directly fetch API and arrange responses instead.
  * In folder tree, we visit folders top-down as concurrently as possible.
  * Every time we visit a folder, we fetch and return meta of all its children.
+ * If folders have pagination, partically retrieved items are not returned immediately,
+ * but after all children of the folder have been successfully retrieved.
+ * If an error occurred in paginated fetching, all children will be dropped.
  * @param path Folder to be traversed. The path should be cleaned in advance.
  * @returns Array of items representing folders and files of traversed folder top-down and excluding root folder.
  * Due to top-down, Folder items are ALWAYS in front of its children items.
  * Error key in the item will contain the error when there is a handleable error.
  */
-export async function* traverseFolder(path: string): AsyncGenerator<
-  {
-    path: string
-    meta: any
-    isFolder: boolean
-    error?: { status: number; message: string }
-  },
-  void,
-  undefined
-> {
+export async function* traverseFolder(path: string): AsyncGenerator<TraverseItem, void, undefined> {
   const hashedToken = getStoredToken(path)
 
   // Generate the task passed to Promise.race to request a folder
@@ -196,6 +197,9 @@ export async function* traverseFolder(path: string): AsyncGenerator<
 
   // Pool containing Promises of folder requests
   let pool = [genTask(0, path)]
+
+  // Map as item buffer for folders with pagination
+  const buf: { [k: string]: TraverseItem[] } = {}
 
   // filter(() => true) removes gaps in the array
   while (pool.filter(() => true).length > 0) {
@@ -228,19 +232,28 @@ export async function* traverseFolder(path: string): AsyncGenerator<
     const items = data.folder.value.map((c: any) => {
       const p = `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
       return { path: p, meta: c, isFolder: Boolean(c.folder) }
-    }) as {
-      path: string
-      meta: any
-      isFolder: boolean
-      error?: { status: number; message: string }
-    }[]
-    yield* items
-    items
-      .filter(item => item.isFolder)
-      .forEach(item => {
-        // Append new folder tasks to the pool at the end
-        const i = pool.length
-        pool[i] = genTask(i, item.path)
-      })
+    }) as TraverseItem[]
+
+    if (data.next) {
+      buf[path] = (buf[path] ?? []).concat(items)
+
+      // Append next page task to the pool at the end
+      const i = pool.length
+      pool[i] = genTask(i, path, data.next)
+    } else {
+      const allItems = (buf[path] ?? []).concat(items)
+      if (buf[path]) {
+        delete buf[path]
+      }
+
+      allItems
+        .filter(item => item.isFolder)
+        .forEach(item => {
+          // Append new folder tasks to the pool at the end
+          const i = pool.length
+          pool[i] = genTask(i, item.path)
+        })
+      yield* allItems
+    }
   }
 }
