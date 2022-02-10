@@ -15,6 +15,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Get item thumbnails by its path since we will later check if it is protected
   const { path = '', size = 'medium' } = req.query
 
+  // Set edge function caching for faster load times, check docs:
+  // https://vercel.com/docs/concepts/functions/edge-caching
+  res.setHeader('Cache-Control', 'max-age=60, s-maxage=3600, stale-while-revalidate')
+
   // Check whether the size is valid - must be one of 'large', 'medium', or 'small'
   if (size !== 'large' && size !== 'medium' && size !== 'small') {
     res.status(400).json({ error: 'Invalid size' })
