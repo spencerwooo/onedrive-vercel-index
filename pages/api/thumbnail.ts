@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // Set edge function caching for faster load times, check docs:
   // https://vercel.com/docs/concepts/functions/edge-caching
-  res.setHeader('Cache-Control', 'max-age=60, s-maxage=3600, stale-while-revalidate')
+  res.setHeader('Cache-Control', 'max-age=0, s-maxage=600, stale-while-revalidate')
 
   // Check whether the size is valid - must be one of 'large', 'medium', or 'small'
   if (size !== 'large' && size !== 'medium' && size !== 'small') {

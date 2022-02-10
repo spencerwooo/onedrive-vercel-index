@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // Set edge function caching for faster load times, check docs:
   // https://vercel.com/docs/concepts/functions/edge-caching
-  res.setHeader('Cache-Control', 'max-age=60, s-maxage=3600, stale-while-revalidate')
+  res.setHeader('Cache-Control', 'max-age=0, s-maxage=600, stale-while-revalidate')
 
   if (typeof searchQuery === 'string') {
     // Construct Microsoft Graph Search API URL, and perform search only under the base directory
