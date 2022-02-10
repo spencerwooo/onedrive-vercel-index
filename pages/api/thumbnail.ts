@@ -13,8 +13,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const accessToken = await getAccessToken()
 
   // Get item thumbnails by its path since we will later check if it is protected
-  const { path = '' } = req.query
+  const { path = '', size = 'medium' } = req.query
 
+  // Check whether the size is valid - must be one of 'large', 'medium', or 'small'
+  if (size !== 'large' && size !== 'medium' && size !== 'small') {
+    res.status(400).json({ error: 'Invalid size' })
+    return
+  }
   // Sometimes the path parameter is defaulted to '[...path]' which we need to handle
   if (path === '[...path]') {
     res.status(400).json({ error: 'No path specified.' })
@@ -47,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       headers: { Authorization: `Bearer ${accessToken}` },
     })
 
-    const thumbnailUrl = data.value && data.value.length > 0 ? (data.value[0] as OdThumbnail).medium.url : null
+    const thumbnailUrl = data.value && data.value.length > 0 ? (data.value[0] as OdThumbnail)[size].url : null
     if (thumbnailUrl) {
       res.redirect(thumbnailUrl)
     } else {

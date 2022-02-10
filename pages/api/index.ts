@@ -220,7 +220,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
         select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file,video,image',
-        $expand: 'thumbnails',
       },
     })
 
@@ -230,13 +229,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         params: next
           ? {
               select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file,video,image',
-              $expand: 'thumbnails',
               top: siteConfig.maxItems,
               $skipToken: next,
             }
           : {
               select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file,video,image',
-              $expand: 'thumbnails',
               top: siteConfig.maxItems,
             },
       })

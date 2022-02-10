@@ -12,17 +12,8 @@ import { getReadablePath } from '../utils/getReadablePath'
 import { Checkbox, ChildIcon, Downloading, formatChildName } from './FileListing'
 
 const GridItem = ({ c, path }: { c: OdFolderChildren; path: string }) => {
-  // We use the generated medium thumbnail for rendering preview images
-  const thumbnailUrl =
-    'folder' in c
-      ? // Folders don't have thumbnails
-        null
-      : c.thumbnails && c.thumbnails.length > 0
-      ? // Most OneDrive versions, including E5 developer, should have thumbnails returned
-        c.thumbnails[0].medium.url
-      : // According to OneDrive docs, OneDrive for Business and SharePoint does not
-        // (can not retrieve thumbnails via expand). But currently we only see OneDrive 世纪互联 really does not.
-        `/api/thumbnail?path=${path}`
+  // We use the generated medium thumbnail for rendering preview images (excluding folders)
+  const thumbnailUrl = 'folder' in c ? null : `/api/thumbnail?path=${path}&size=medium`
 
   // Some thumbnails are broken, so we check for onerror event in the image component
   const [brokenThumbnail, setBrokenThumbnail] = useState(false)
