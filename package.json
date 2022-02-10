@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier components/**/*.tsx config/*.js pages/**/*.{ts,tsx} {types,utils}/**/*.ts --write",
+    "format": "prettier 'components/**/*.tsx' 'config/*.js' 'pages/**/*.{ts,tsx}' '{types,utils}/**/*.ts' --write",
     "extract": "i18next"
   },
   "dependencies": {
