@@ -17,8 +17,8 @@ export type OdFolderObject = {
     folder?: { childCount: number; view: { sortBy: string; sortOrder: 'ascending'; viewType: 'thumbnails' } }
     image?: OdImageFile
     video?: OdVideoFile
-    'thumbnails@odata.context'?: string
-    thumbnails?: Array<OdThumbnail>
+    // 'thumbnails@odata.context'?: string
+    // thumbnails?: Array<OdThumbnail>
   }>
 }
 export type OdFolderChildren = OdFolderObject['value'][number]
@@ -33,8 +33,8 @@ export type OdFileObject = {
   file: { mimeType: string; hashes: { quickXorHash: string; sha1Hash?: string; sha256Hash?: string } }
   image?: OdImageFile
   video?: OdVideoFile
-  'thumbnails@odata.context'?: string
-  thumbnails?: Array<OdThumbnail>
+  // 'thumbnails@odata.context'?: string
+  // thumbnails?: Array<OdThumbnail>
 }
 // A representation of a OneDrive image file. Some images do not return a width and height, so types are optional.
 export type OdImageFile = {
