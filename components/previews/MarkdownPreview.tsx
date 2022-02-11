@@ -25,7 +25,7 @@ const MarkdownPreview: FC<{
   const { t } = useTranslation()
 
   // The parent folder of the markdown file, which is also the relative image folder
-  const parentPath = path.substring(0, path.lastIndexOf('/'))
+  const parentPath = standalone ? path.substring(0, path.lastIndexOf('/')) : path
   // Check if the image is relative path instead of a absolute url
   const isUrlAbsolute = (url: string | string[]) => url.indexOf('://') > 0 || url.indexOf('//') === 0
   // Custom renderer to render images with relative path
