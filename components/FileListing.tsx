@@ -374,11 +374,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
   if ('file' in responses[0] && responses.length === 1) {
     const file = responses[0].file as OdFileObject
-    const downloadUrl = file['@microsoft.graph.downloadUrl']
-    const fileName = file.name
-    const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
-
-    const previewType = getPreviewType(fileExtension, { video: Boolean(file.video) })
+    const previewType = getPreviewType(getExtension(file.name), { video: Boolean(file.video) })
 
     if (previewType) {
       switch (previewType) {
