@@ -71,12 +71,12 @@ const formatChildName = (name: string) => {
   return render ? name.replace(emoji ? emoji[0] : '', '').trim() : name
 }
 export const ChildName: FC<{ name: string }> = ({ name }) => {
-  let basename = formatChildName(name)
-  const extension = getExtension(basename)
-  basename = basename.substring(0, basename.length - extension.length)
+  const original = formatChildName(name)
+  const extension = getExtension(original)
+  const prename = original.substring(0, original.length - extension.length)
   return (
     <span className="truncate before:float-right before:content-[attr(data-tail)]" data-tail={extension}>
-      {basename}
+      {prename}
     </span>
   )
 }

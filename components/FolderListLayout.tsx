@@ -93,7 +93,7 @@ const FolderListLayout = ({
           key={c.id}
         >
           <Link href={`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`} passHref>
-            <a className="col-span-10">
+            <a className="col-span-12 md:col-span-10">
               <FileListItem fileContent={c} />
             </a>
           </Link>
