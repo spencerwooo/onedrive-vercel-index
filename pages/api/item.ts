@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // Set edge function caching for faster load times, check docs:
   // https://vercel.com/docs/concepts/functions/edge-caching
-  res.setHeader('Cache-Control', 'max-age=0, s-maxage=600, stale-while-revalidate')
+  res.setHeader('Cache-Control', apiConfig.cacheControlHeader)
 
   if (typeof id === 'string') {
     const itemApi = `${apiConfig.driveApi}/items/${id}`
