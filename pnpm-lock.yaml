@@ -22,15 +22,16 @@ specifiers:
   axios: ^0.25.0
   cors: ^2.8.5
   crypto-js: ^4.1.1
+  csstype: ^2.6.2
   dayjs: ^1.10.7
   emoji-regex: ^10.0.0
   eslint: 8.8.0
   eslint-config-next: 12.0.10
   eslint-config-prettier: ^8.3.0
-  flv.js: ^1.6.2
   i18next-parser: ^5.4.0
   ioredis: ^4.28.2
   jszip: ^3.7.1
+  mpegts.js: ^1.6.10
   next: ^12.0.10
   next-i18next: ^10.2.0
   nextjs-progressbar: ^0.0.13
@@ -72,11 +73,12 @@ dependencies:
   axios: 0.25.0
   cors: 2.8.5
   crypto-js: 4.1.1
+  csstype: 2.6.19
   dayjs: 1.10.7
   emoji-regex: 10.0.0
-  flv.js: 1.6.2
   ioredis: 4.28.3
   jszip: 3.7.1
+  mpegts.js: 1.6.10
   next: 12.0.10_react-dom@17.0.2+react@17.0.2
   next-i18next: 10.2.0_61390be992b634a688f7c2555547b55b
   nextjs-progressbar: 0.0.13_next@12.0.10+react@17.0.2
@@ -87,7 +89,7 @@ dependencies:
   react-copy-to-clipboard: 5.0.4_react@17.0.2
   react-dom: 17.0.2_react@17.0.2
   react-dplayer: 0.4.2_react@17.0.2
-  react-hot-toast: 2.2.0_react-dom@17.0.2+react@17.0.2
+  react-hot-toast: 2.2.0_6bba596ee6fb84e656d75c53902ecf01
   react-hotkeys-hook: 3.4.4_react-dom@17.0.2+react@17.0.2
   react-markdown: 8.0.0_b08e3c15324cbe90a6ff8fcd416c932c
   react-reader: 0.20.5_react@17.0.2
@@ -1138,6 +1140,10 @@ packages:
     hasBin: true
     dev: true
 
+  /csstype/2.6.19:
+    resolution: {integrity: sha512-ZVxXaNy28/k3kJg0Fou5MiYpp88j7H9hLZp8PDC3jV0WFjfH5E9xHb56L0W59cPbKbcHXeP4qyT8PrHp8t6LcQ==}
+    dev: false
+
   /csstype/3.0.10:
     resolution: {integrity: sha512-2u44ZG2OcNUO9HDp/Jl8C07x6pU/eTR3ncV91SiK3dhG9TWvRVsCoJw14Ckx5DgWkzGA3waZWO3d7pgqpUI/XA==}
 
@@ -1783,13 +1789,6 @@ packages:
       readable-stream: 2.3.7
     dev: true
 
-  /flv.js/1.6.2:
-    resolution: {integrity: sha512-xre4gUbX1MPtgQRKj2pxJENp/RnaHaxYvy3YToVVCrSmAWUu85b9mug6pTXF6zakUjNP2lFWZ1rkSX7gxhB/2A==}
-    dependencies:
-      es6-promise: 4.2.8
-      webworkify-webpack: 2.1.5
-    dev: false
-
   /follow-redirects/1.14.7:
     resolution: {integrity: sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==}
     engines: {node: '>=4.0'}
@@ -1977,10 +1976,12 @@ packages:
       slash: 3.0.0
     dev: true
 
-  /goober/2.1.7:
+  /goober/2.1.7_csstype@2.6.19:
     resolution: {integrity: sha512-aCR8u3A/tTgSrZAHfJObhYC0xgdKoYm4GvE/UFmxmzgvj3TSF+3oFYWtmJ459WBewjOIoEsoOG81sDs1rn+W5w==}
     peerDependencies:
       csstype: ^2.6.2
+    dependencies:
+      csstype: 2.6.19
     dev: false
 
   /graceful-fs/4.2.9:
@@ -3102,6 +3103,13 @@ packages:
     engines: {node: '>0.9'}
     dev: true
 
+  /mpegts.js/1.6.10:
+    resolution: {integrity: sha512-ZgX4b93cWk+EazOFRV4lekLqmc4rV7P+WMisG8N0F2M4/EiluPMNNWjuaurQfitak++AIc/ZVQ3IgM3cBcH7WA==}
+    dependencies:
+      es6-promise: 4.2.8
+      webworkify-webpack: 2.1.5
+    dev: false
+
   /mri/1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
     engines: {node: '>=4'}
@@ -3670,14 +3678,14 @@ packages:
       react: 17.0.2
     dev: false
 
-  /react-hot-toast/2.2.0_react-dom@17.0.2+react@17.0.2:
+  /react-hot-toast/2.2.0_6bba596ee6fb84e656d75c53902ecf01:
     resolution: {integrity: sha512-248rXw13uhf/6TNDVzagX+y7R8J183rp7MwUMNkcrBRyHj/jWOggfXTGlM8zAOuh701WyVW+eUaWG2LeSufX9g==}
     engines: {node: '>=10'}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
     dependencies:
-      goober: 2.1.7
+      goober: 2.1.7_csstype@2.6.19
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     transitivePeerDependencies:

@@ -30,10 +30,10 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const {
     loading,
     error,
-    result: flvjs,
+    result: mpegts,
   } = useAsync(async () => {
     if (isFlv) {
-      return (await import('flv.js')).default
+      return (await import('mpegts.js')).default
     }
   }, [isFlv])
 
@@ -56,7 +56,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
                 type: isFlv ? 'customFlv' : 'auto',
                 customType: {
                   customFlv: (video: HTMLVideoElement) => {
-                    const flvPlayer = flvjs!.createPlayer({
+                    const flvPlayer = mpegts!.createPlayer({
                       type: 'flv',
                       url: video.src,
                     })
