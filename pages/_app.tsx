@@ -20,6 +20,7 @@ import {
   faArrowAltCircleDown,
   faTrashAlt,
   faEnvelope,
+  faFlag,
   faCheckCircle,
 } from '@fortawesome/free-regular-svg-icons'
 import {
@@ -28,6 +29,7 @@ import {
   faPlus,
   faMinus,
   faCopy as faCopySolid,
+  faAngleRight,
   faDownload,
   faMusic,
   faArrowLeft,
@@ -39,16 +41,22 @@ import {
   faSignOutAlt,
   faCloud,
   faChevronCircleDown,
+  faChevronDown,
   faLink,
   faExternalLinkAlt,
   faExclamationCircle,
   faExclamationTriangle,
+  faTh,
+  faThLarge,
+  faThList,
   faHome,
+  faLanguage,
 } from '@fortawesome/free-solid-svg-icons'
 import * as Icons from '@fortawesome/free-brands-svg-icons'
 
 import type { AppProps } from 'next/app'
 import NextNProgress from 'nextjs-progressbar'
+import { appWithTranslation } from 'next-i18next'
 
 // import all brand icons with tree-shaking so all icons can be referenced in the app
 const iconList = Object.keys(Icons)
@@ -67,10 +75,12 @@ library.add(
   faFileCode,
   faFileAlt,
   faFile,
+  faFlag,
   faFolder,
   faMusic,
   faArrowLeft,
   faArrowRight,
+  faAngleRight,
   faFileDownload,
   faCopy,
   faCopySolid,
@@ -94,6 +104,11 @@ library.add(
   faCheck,
   faCheckCircle,
   faSearch,
+  faChevronDown,
+  faTh,
+  faThLarge,
+  faThList,
+  faLanguage,
   ...iconList
 )
 
@@ -105,4 +120,4 @@ function MyApp({ Component, pageProps }: AppProps) {
     </>
   )
 }
-export default MyApp
+export default appWithTranslation(MyApp)

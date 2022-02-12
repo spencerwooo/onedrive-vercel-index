@@ -2,6 +2,7 @@ import type { OdFileObject } from '../../types'
 
 import { FC, useEffect, useRef, useState } from 'react'
 import { ReactReader } from 'react-reader'
+import { useTranslation } from 'next-i18next'
 
 import Loading from '../Loading'
 import DownloadButtonGroup from '../DownloadBtnGtoup'
@@ -17,6 +18,8 @@ const EPUBPreview: FC<{ file: OdFileObject }> = ({ file }) => {
 
   const [location, setLocation] = useState<string>()
   const onLocationChange = (cfiStr: string) => setLocation(cfiStr)
+
+  const { t } = useTranslation()
 
   // Fix for not valid epub files according to
   // https://github.com/gerhardsletten/react-reader/issues/33#issuecomment-673964947
@@ -36,15 +39,21 @@ const EPUBPreview: FC<{ file: OdFileObject }> = ({ file }) => {
   return (
     <div>
       <div
-        className="dark:bg-gray-900 md:p-3 no-scrollbar flex flex-col w-full overflow-scroll bg-white rounded"
+        className="no-scrollbar flex w-full flex-col overflow-scroll rounded bg-white dark:bg-gray-900 md:p-3"
         style={{ maxHeight: '90vh' }}
       >
-        <div className="no-scrollbar flex-1 w-full overflow-scroll" ref={epubContainer} style={{ minHeight: '70vh' }}>
-          <div style={{ position: 'absolute', width: epubContainerWidth, height: '70vh' }}>
+        <div className="no-scrollbar w-full flex-1 overflow-scroll" ref={epubContainer} style={{ minHeight: '70vh' }}>
+          <div
+            style={{
+              position: 'absolute',
+              width: epubContainerWidth,
+              height: '70vh',
+            }}
+          >
             <ReactReader
               url={file['@microsoft.graph.downloadUrl']}
               getRendition={rendition => fixEpub(rendition)}
-              loadingView={<Loading loadingText="Loading EPUB ..." />}
+              loadingView={<Loading loadingText={t('Loading EPUB ...')} />}
               location={location}
               locationChanged={onLocationChange}
               epubInitOptions={{ openAs: 'epub' }}

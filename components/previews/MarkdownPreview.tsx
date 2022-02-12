@@ -5,6 +5,7 @@ import gfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import rehypeRaw from 'rehype-raw'
+import { useTranslation } from 'next-i18next'
 
 import 'katex/dist/katex.min.css'
 
@@ -14,15 +15,17 @@ import DownloadButtonGroup from '../DownloadBtnGtoup'
 import useAxiosGet from '../../utils/fetchOnMount'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
-const MarkdownPreview: FC<{ file: any; path: string; standalone?: boolean }> = ({
-  file,
-  path,
-  standalone = true,
-}) => {
+const MarkdownPreview: FC<{
+  file: any
+  path: string
+  standalone?: boolean
+}> = ({ file, path, standalone = true }) => {
   const { response: content, error, validating } = useAxiosGet(file['@microsoft.graph.downloadUrl'])
 
+  const { t } = useTranslation()
+
   // The parent folder of the markdown file, which is also the relative image folder
-  const parentPath = path.substring(0, path.lastIndexOf('/'))
+  const parentPath = standalone ? path.substring(0, path.lastIndexOf('/')) : path
   // Check if the image is relative path instead of a absolute url
   const isUrlAbsolute = (url: string | string[]) => url.indexOf('://') > 0 || url.indexOf('//') === 0
   // Custom renderer to render images with relative path
@@ -76,7 +79,7 @@ const MarkdownPreview: FC<{ file: any; path: string; standalone?: boolean }> = (
   if (validating) {
     return (
       <PreviewContainer>
-        <Loading loadingText="Loading file content..." />
+        <Loading loadingText={t('Loading file content...')} />
       </PreviewContainer>
     )
   }

@@ -19,13 +19,13 @@ module.exports = {
 
   // These are the URLs of the OneDrive API endpoints. You would not need to change anything here if you are using OneDrive International
   // or E5 Subscription OneDrive for Business. You may need to change these if you are using OneDrive 世纪互联.
-  authApi: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
-  driveApi: "https://graph.microsoft.com/v1.0/me/drive",
+  authApi: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+  driveApi: 'https://graph.microsoft.com/v1.0/me/drive',
 
   // The scope we require are listed here, in most cases you would not need to change this as well.
-  scope: "user.read files.read.all offline_access",
+  scope: 'user.read files.read.all offline_access',
 
   // The directLinkRegex is used to match the direct link of the file from the response of the API. We originally use this to prevent
   // unauthorised use of the proxied download feature - but that is disabled for now. So you can safely ignore this settings.
-  directLinkRegex: "public[.].*[.]files[.]1drv[.]com"
+  directLinkRegex: 'public[.].*[.]files[.]1drv[.]com',
 }
