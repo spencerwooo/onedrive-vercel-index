@@ -12,7 +12,7 @@ import { useTranslation } from 'next-i18next'
 import useLocalStorage from '../utils/useLocalStorage'
 import { getPreviewType, preview } from '../utils/getPreviewType'
 import { useProtectedSWRInfinite } from '../utils/fetchWithSWR'
-import { getFileIcon } from '../utils/getFileIcon'
+import { getExtension, getFileIcon } from '../utils/getFileIcon'
 import {
   DownloadingToast,
   downloadMultipleFiles,
@@ -66,9 +66,19 @@ const renderEmoji = (name: string) => {
   const emoji = emojiRegex().exec(name)
   return { render: emoji && !emoji.index, emoji }
 }
-export const formatChildName = (name: string) => {
+const formatChildName = (name: string) => {
   const { render, emoji } = renderEmoji(name)
   return render ? name.replace(emoji ? emoji[0] : '', '').trim() : name
+}
+export const ChildName: FC<{ name: string }> = ({ name }) => {
+  const original = formatChildName(name)
+  const extension = getExtension(original)
+  const prename = original.substring(0, original.length - extension.length)
+  return (
+    <span className="truncate before:float-right before:content-[attr(data-tail)]" data-tail={extension}>
+      {prename}
+    </span>
+  )
 }
 export const ChildIcon: FC<{ child: OdFolderChildren }> = ({ child }) => {
   const { render, emoji } = renderEmoji(child.name)
@@ -364,11 +374,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
   if ('file' in responses[0] && responses.length === 1) {
     const file = responses[0].file as OdFileObject
-    const downloadUrl = file['@microsoft.graph.downloadUrl']
-    const fileName = file.name
-    const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
-
-    const previewType = getPreviewType(fileExtension, { video: Boolean(file.video) })
+    const previewType = getPreviewType(getExtension(file.name), { video: Boolean(file.video) })
 
     if (previewType) {
       switch (previewType) {

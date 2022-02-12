@@ -9,7 +9,7 @@ import { useTranslation } from 'next-i18next'
 import { getBaseUrl } from '../utils/getBaseUrl'
 import { formatModifiedDateTime } from '../utils/fileDetails'
 import { getReadablePath } from '../utils/getReadablePath'
-import { Checkbox, ChildIcon, Downloading, formatChildName } from './FileListing'
+import { Checkbox, ChildIcon, ChildName, Downloading } from './FileListing'
 
 const GridItem = ({ c, path }: { c: OdFolderChildren; path: string }) => {
   // We use the generated medium thumbnail for rendering preview images (excluding folders)
@@ -43,7 +43,7 @@ const GridItem = ({ c, path }: { c: OdFolderChildren; path: string }) => {
         <span className="w-5 flex-shrink-0 text-center">
           <ChildIcon child={c} />
         </span>
-        <span className="overflow-hidden truncate">{formatChildName(c.name)}</span>
+        <ChildName name={c.name} />
       </div>
       <div className="truncate text-center font-mono text-xs text-gray-700 dark:text-gray-500">
         {formatModifiedDateTime(c.lastModifiedDateTime)}
