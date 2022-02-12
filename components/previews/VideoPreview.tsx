@@ -1,4 +1,5 @@
 import type { OdFileObject } from '../../types'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useClipboard } from 'use-clipboard-copy'
 import DPlayer from 'react-dplayer'
@@ -13,11 +14,13 @@ import { DownloadButton } from '../DownloadBtnGtoup'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
+import CustomEmbedLinkMenu from '../CustomEmbedLinkMenu'
 
 const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const { asPath } = useRouter()
   const clipboard = useClipboard()
 
+  const [menuOpen, setMenuOpen] = useState(false)
   const { t } = useTranslation()
 
   // OneDrive generates thumbnails for its video files, we pick the thumbnail with the highest resolution
@@ -39,6 +42,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
 
   return (
     <>
+      <CustomEmbedLinkMenu path={getReadablePath(asPath)} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <PreviewContainer>
         {error ? (
           <FourOhFour errorMsg={error.message} />
@@ -95,6 +99,12 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
             btnColor="pink"
             btnText={t('Copy direct link')}
             btnIcon="copy"
+          />
+          <DownloadButton
+            onClickCallback={() => setMenuOpen(true)}
+            btnColor="teal"
+            btnText={t('Customise link')}
+            btnIcon="pen"
           />
 
           <DownloadButton
