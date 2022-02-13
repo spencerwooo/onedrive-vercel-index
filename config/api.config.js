@@ -31,5 +31,5 @@ module.exports = {
 
   // Cache-Control header, check Vercel documentation for more details.
   // https://vercel.com/docs/concepts/edge-network/caching
-  cacheControlHeader: 'max-age=0, s-maxage=3600, must-revalidate'
+  cacheControlHeader: 'max-age=0, s-maxage=3600, stale-while-revalidate=3540'
 }
