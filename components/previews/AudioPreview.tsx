@@ -90,19 +90,13 @@ const AudioPreview: FC<{ file: OdFileObject }> = ({ file }) => {
               </div>
             </div>
 
-            <ReactAudioPlayer
-              className="h-11 w-full"
-              src={file['@microsoft.graph.downloadUrl']}
-              ref={rapRef}
-              controls
-              preload="auto"
-            />
+            <ReactAudioPlayer className="h-11 w-full" src={`/api/raw?path=${asPath}`} ref={rapRef} controls preload="auto" />
           </div>
         </div>
       </PreviewContainer>
 
       <DownloadBtnContainer>
-        <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadButtonGroup />
       </DownloadBtnContainer>
     </>
   )

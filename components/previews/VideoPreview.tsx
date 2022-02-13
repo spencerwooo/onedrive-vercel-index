@@ -55,7 +55,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
               volume: 1.0,
               lang: 'en',
               video: {
-                url: file['@microsoft.graph.downloadUrl'],
+                url: `/api/raw?path=${asPath}`,
                 pic: thumbnail,
                 type: isFlv ? 'customFlv' : 'auto',
                 customType: {
@@ -78,14 +78,14 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
       <DownloadBtnContainer>
         <div className="flex flex-wrap justify-center gap-2">
           <DownloadButton
-            onClickCallback={() => window.open(file['@microsoft.graph.downloadUrl'])}
+            onClickCallback={() => window.open(`/api/raw?path=${asPath}`)}
             btnColor="blue"
             btnText={t('Download')}
             btnIcon="file-download"
           />
           {/* <DownloadButton
             onClickCallback={() =>
-              window.open(`/api/proxy?url=${encodeURIComponent(file['@microsoft.graph.downloadUrl'])}`)
+              window.open(`/api/proxy?url=${encodeURIComponent(...)}`)
             }
             btnColor="teal"
             btnText={t('Proxy download')}
@@ -93,7 +93,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
           /> */}
           <DownloadButton
             onClickCallback={() => {
-              clipboard.copy(`${getBaseUrl()}/api?path=${getReadablePath(asPath)}&raw=true`)
+              clipboard.copy(`${getBaseUrl()}/api/raw?path=${getReadablePath(asPath)}`)
               toast.success(t('Copied direct link to clipboard.'))
             }}
             btnColor="pink"
@@ -108,17 +108,17 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
           />
 
           <DownloadButton
-            onClickCallback={() => window.open(`iina://weblink?url=${file['@microsoft.graph.downloadUrl']}`)}
+            onClickCallback={() => window.open(`iina://weblink?url=${getBaseUrl()}/api/raw?path=${asPath}`)}
             btnText="IINA"
             btnImage="/players/iina.png"
           />
           <DownloadButton
-            onClickCallback={() => window.open(`vlc://${file['@microsoft.graph.downloadUrl']}`)}
+            onClickCallback={() => window.open(`vlc://${getBaseUrl()}/api/raw?path=${asPath}`)}
             btnText="VLC"
             btnImage="/players/vlc.png"
           />
           <DownloadButton
-            onClickCallback={() => window.open(`potplayer://${file['@microsoft.graph.downloadUrl']}`)}
+            onClickCallback={() => window.open(`potplayer://${getBaseUrl()}/api/raw?path=${asPath}`)}
             btnText="PotPlayer"
             btnImage="/players/potplayer.png"
           />

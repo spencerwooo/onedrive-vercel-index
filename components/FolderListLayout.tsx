@@ -48,6 +48,9 @@ const FolderListLayout = ({
 
   const { t } = useTranslation()
 
+  // Get item path from item name
+  const getItemPath = (name: string) => `${path === '/' ? '' : path}/${encodeURIComponent(name)}`
+
   return (
     <div className="rounded bg-white dark:bg-gray-900 dark:text-gray-100">
       <div className="grid grid-cols-12 items-center space-x-2 border-b border-gray-900/10 px-3 dark:border-gray-500/30">
@@ -72,7 +75,7 @@ const FolderListLayout = ({
               title={t('Select files')}
             />
             {totalGenerating ? (
-              <Downloading title={t('Downloading selected files, refresh page to cancel')} />
+              <Downloading title={t('Downloading selected files, refresh page to cancel')} style="p-1.5" />
             ) : (
               <button
                 title={t('Download selected files')}
@@ -113,7 +116,7 @@ const FolderListLayout = ({
                 <FontAwesomeIcon icon={['far', 'copy']} />
               </span>
               {folderGenerating[c.id] ? (
-                <Downloading title={t('Downloading folder, refresh page to cancel')} />
+                <Downloading title={t('Downloading folder, refresh page to cancel')} style="px-1.5 py-1" />
               ) : (
                 <span
                   title={t('Download folder')}
@@ -133,11 +136,7 @@ const FolderListLayout = ({
                 title={t('Copy raw file permalink')}
                 className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                 onClick={() => {
-                  clipboard.copy(
-                    `${getBaseUrl()}/api?path=${getReadablePath(
-                      `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
-                    )}&raw=true`
-                  )
+                  clipboard.copy(`${getBaseUrl()}/api/raw?path=${getReadablePath(getItemPath(c.name))}`)
                   toast.success(t('Copied raw file permalink.'))
                 }}
               >
@@ -146,7 +145,7 @@ const FolderListLayout = ({
               <a
                 title={t('Download file')}
                 className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
-                href={c['@microsoft.graph.downloadUrl']}
+                href={`/api/raw?path=${getItemPath(c.name)}`}
               >
                 <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
               </a>

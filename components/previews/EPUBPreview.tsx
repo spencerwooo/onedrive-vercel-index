@@ -2,6 +2,7 @@ import type { OdFileObject } from '../../types'
 
 import { FC, useEffect, useRef, useState } from 'react'
 import { ReactReader } from 'react-reader'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import Loading from '../Loading'
@@ -9,6 +10,7 @@ import DownloadButtonGroup from '../DownloadBtnGtoup'
 import { DownloadBtnContainer } from './Containers'
 
 const EPUBPreview: FC<{ file: OdFileObject }> = ({ file }) => {
+  const { asPath } = useRouter()
   const [epubContainerWidth, setEpubContainerWidth] = useState(400)
   const epubContainer = useRef<HTMLDivElement>(null)
 
@@ -51,7 +53,7 @@ const EPUBPreview: FC<{ file: OdFileObject }> = ({ file }) => {
             }}
           >
             <ReactReader
-              url={file['@microsoft.graph.downloadUrl']}
+              url={`/api/raw?path=${asPath}`}
               getRendition={rendition => fixEpub(rendition)}
               loadingView={<Loading loadingText={t('Loading EPUB ...')} />}
               location={location}
@@ -63,7 +65,7 @@ const EPUBPreview: FC<{ file: OdFileObject }> = ({ file }) => {
         </div>
       </div>
       <DownloadBtnContainer>
-        <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadButtonGroup />
       </DownloadBtnContainer>
     </div>
   )

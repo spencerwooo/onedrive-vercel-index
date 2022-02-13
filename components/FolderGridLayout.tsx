@@ -84,7 +84,7 @@ const FolderGridLayout = ({
             title={t('Select all files')}
           />
           {totalGenerating ? (
-            <Downloading title={t('Downloading selected files, refresh page to cancel')} />
+            <Downloading title={t('Downloading selected files, refresh page to cancel')} style="p-1.5" />
           ) : (
             <button
               title={t('Download selected files')}
@@ -118,7 +118,7 @@ const FolderGridLayout = ({
                     <FontAwesomeIcon icon={['far', 'copy']} />
                   </span>
                   {folderGenerating[c.id] ? (
-                    <Downloading title={t('Downloading folder, refresh page to cancel')} />
+                    <Downloading title={t('Downloading folder, refresh page to cancel')} style="px-1.5 py-1" />
                   ) : (
                     <span
                       title={t('Download folder')}
@@ -135,7 +135,7 @@ const FolderGridLayout = ({
                     title={t('Copy raw file permalink')}
                     className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                     onClick={() => {
-                      clipboard.copy(`${getBaseUrl()}/api?path=${getReadablePath(getItemPath(c.name))}&raw=true`)
+                      clipboard.copy(`${getBaseUrl()}/api/raw?path=${getReadablePath(getItemPath(c.name))}`)
                       toast.success(t('Copied raw file permalink.'))
                     }}
                   >
@@ -144,7 +144,7 @@ const FolderGridLayout = ({
                   <a
                     title={t('Download file')}
                     className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
-                    href={c['@microsoft.graph.downloadUrl']}
+                    href={`${getBaseUrl()}/api/raw?path=${getReadablePath(getItemPath(c.name))}`}
                   >
                     <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
                   </a>

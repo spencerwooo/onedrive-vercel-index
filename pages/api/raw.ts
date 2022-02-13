@@ -1,0 +1,83 @@
+import { posix as pathPosix } from 'path'
+
+import type { NextApiRequest, NextApiResponse } from 'next'
+import axios from 'axios'
+import Cors from 'cors'
+
+import { driveApi } from '../../config/api.config'
+import { encodePath, getAccessToken, checkAuthRoute } from '.'
+
+// CORS middleware for raw links: https://nextjs.org/docs/api-routes/api-middlewares
+export function runCorsMiddleware(req: NextApiRequest, res: NextApiResponse) {
+  const cors = Cors({ methods: ['GET', 'HEAD'] })
+  return new Promise((resolve, reject) => {
+    cors(req, res, result => {
+      if (result instanceof Error) {
+        return reject(result)
+      }
+
+      return resolve(result)
+    })
+  })
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const accessToken = await getAccessToken()
+  const { path = '/' } = req.query
+
+  // Sometimes the path parameter is defaulted to '[...path]' which we need to handle
+  if (path === '[...path]') {
+    res.status(400).json({ error: 'No path specified.' })
+    return
+  }
+  // If the path is not a valid path, return 400
+  if (typeof path !== 'string') {
+    res.status(400).json({ error: 'Path query invalid.' })
+    return
+  }
+  const cleanPath = pathPosix.resolve('/', pathPosix.normalize(path))
+
+  // Return error 403 if access_token is empty
+  if (!accessToken) {
+    res.status(403).json({ error: 'No access token.' })
+    return
+  }
+
+  // Handle protected routes authentication
+  const { code, message } = await checkAuthRoute(cleanPath, accessToken, req)
+  // Status code other than 200 means user has not authenticated yet
+  if (code !== 200) {
+    res.status(code).json({ error: message })
+    return
+  }
+  // If message is empty, then the path is not protected.
+  // Conversely, protected routes are not allowed to serve from cache.
+  if (message !== '') {
+    res.setHeader('Cache-Control', 'no-cache')
+  }
+
+  await runCorsMiddleware(req, res)
+  try {
+    // Handle response from OneDrive API
+    const requestUrl = `${driveApi}/root${encodePath(cleanPath)}`
+    const { data } = await axios.get(requestUrl, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      params: {
+        select: '@microsoft.graph.downloadUrl',
+      },
+    })
+
+    if ('@microsoft.graph.downloadUrl' in data) {
+      res.redirect(data['@microsoft.graph.downloadUrl'])
+      return
+    }
+
+    throw { response: { status: 400, data: 'No download url found.' } }
+  } catch (error: any) {
+    console.log(error)
+
+    // res.status(error.response.status).json({ error: error.response.data })
+    res.status(400)
+    return
+  }
+}

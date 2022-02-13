@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import FourOhFour from '../FourOhFour'
@@ -14,9 +15,10 @@ const parseDotUrl = (content: string): string | undefined => {
 }
 
 const TextPreview = ({ file }) => {
+  const { asPath } = useRouter()
   const { t } = useTranslation()
 
-  const { response: content, error, validating } = useAxiosGet(file['@microsoft.graph.downloadUrl'])
+  const { response: content, error, validating } = useAxiosGet(`/api/raw?path=${asPath}`)
   if (error) {
     return (
       <PreviewContainer>

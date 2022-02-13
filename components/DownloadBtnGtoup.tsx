@@ -62,7 +62,7 @@ export const DownloadButton = ({
   )
 }
 
-const DownloadButtonGroup: React.FC<{ downloadUrl: string }> = ({ downloadUrl }) => {
+const DownloadButtonGroup = () => {
   const { asPath } = useRouter()
   const clipboard = useClipboard()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -74,7 +74,7 @@ const DownloadButtonGroup: React.FC<{ downloadUrl: string }> = ({ downloadUrl })
       <CustomEmbedLinkMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} path={asPath} />
       <div className="flex flex-wrap justify-center gap-2">
         <DownloadButton
-          onClickCallback={() => window.open(downloadUrl)}
+          onClickCallback={() => window.open(`/api/raw?path=${asPath}`)}
           btnColor="blue"
           btnText={t('Download')}
           btnIcon="file-download"
@@ -89,7 +89,7 @@ const DownloadButtonGroup: React.FC<{ downloadUrl: string }> = ({ downloadUrl })
       /> */}
         <DownloadButton
           onClickCallback={() => {
-            clipboard.copy(`${getBaseUrl()}/api?path=${getReadablePath(asPath)}&raw=true`)
+            clipboard.copy(`${getBaseUrl()}/api/raw?path=${getReadablePath(asPath)}`)
             toast.success(t('Copied direct link to clipboard.'))
           }}
           btnColor="pink"

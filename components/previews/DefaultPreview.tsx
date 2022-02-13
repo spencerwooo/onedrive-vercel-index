@@ -73,7 +73,7 @@ const DefaultPreview: FC<{ file: OdFileObject }> = ({ file }) => {
         </div>
       </PreviewContainer>
       <DownloadBtnContainer>
-        <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadButtonGroup />
       </DownloadBtnContainer>
     </div>
   )

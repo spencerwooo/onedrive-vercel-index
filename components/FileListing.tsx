@@ -134,9 +134,9 @@ export const Checkbox: FC<{
   )
 }
 
-export const Downloading: FC<{ title: string }> = ({ title }) => {
+export const Downloading: FC<{ title: string; style: string }> = ({ title, style }) => {
   return (
-    <span title={title} className="rounded p-2" role="status">
+    <span title={title} className={`${style} rounded`} role="status">
       <LoadingIcon
         // Use fontawesome far theme via class `svg-inline--fa` to get style `vertical-align` only
         // for consistent icon alignment, as class `align-*` cannot satisfy it
@@ -237,7 +237,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       const folder = folderName ? decodeURIComponent(folderName) : undefined
       const files = getFiles()
         .filter(c => selected[c.id])
-        .map(c => ({ name: c.name, url: c['@microsoft.graph.downloadUrl'] }))
+        .map(c => ({ name: c.name, url: `/api/raw?path=${path}` }))
 
       if (files.length == 1) {
         const el = document.createElement('a')
@@ -280,7 +280,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
           }
           yield {
             name: c?.name,
-            url: c ? c['@microsoft.graph.downloadUrl'] : undefined,
+            url: `/api/raw?path=${p}`,
             path: p,
             isFolder,
           }
