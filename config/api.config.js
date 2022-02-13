@@ -28,4 +28,8 @@ module.exports = {
   // The directLinkRegex is used to match the direct link of the file from the response of the API. We originally use this to prevent
   // unauthorised use of the proxied download feature - but that is disabled for now. So you can safely ignore this settings.
   directLinkRegex: 'public[.].*[.]files[.]1drv[.]com',
+
+  // Cache-Control header, check Vercel documentation for more details.
+  // https://vercel.com/docs/concepts/edge-network/caching
+  cacheControlHeader: 'max-age=0, s-maxage=3540, stale-while-revalidate=60'
 }
