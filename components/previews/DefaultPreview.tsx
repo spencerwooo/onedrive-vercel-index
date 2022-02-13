@@ -2,6 +2,7 @@ import type { OdFileObject } from '../../types'
 import { FC } from 'react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useTranslation } from 'next-i18next'
 
 import { getFileIcon } from '../../utils/getFileIcon'
 import { formatModifiedDateTime, humanFileSize } from '../../utils/fileDetails'
@@ -10,6 +11,8 @@ import DownloadButtonGroup from '../DownloadBtnGtoup'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
 const DefaultPreview: FC<{ file: OdFileObject }> = ({ file }) => {
+  const { t } = useTranslation()
+
   return (
     <div>
       <PreviewContainer>
@@ -21,22 +24,22 @@ const DefaultPreview: FC<{ file: OdFileObject }> = ({ file }) => {
 
           <div className="flex flex-col space-y-2 py-4 md:flex-1">
             <div>
-              <div className="py-2 text-xs font-medium uppercase opacity-80">Last modified</div>
+              <div className="py-2 text-xs font-medium uppercase opacity-80">{t('Last modified')}</div>
               <div>{formatModifiedDateTime(file.lastModifiedDateTime)}</div>
             </div>
 
             <div>
-              <div className="py-2 text-xs font-medium uppercase opacity-80">File size</div>
+              <div className="py-2 text-xs font-medium uppercase opacity-80">{t('File size')}</div>
               <div>{humanFileSize(file.size)}</div>
             </div>
 
             <div>
-              <div className="py-2 text-xs font-medium uppercase opacity-80">MIME type</div>
-              <div>{file.file?.mimeType || 'Unavailable'}</div>
+              <div className="py-2 text-xs font-medium uppercase opacity-80">{t('MIME type')}</div>
+              <div>{file.file?.mimeType || t('Unavailable')}</div>
             </div>
 
             <div>
-              <div className="py-2 text-xs font-medium uppercase opacity-80">Hashes</div>
+              <div className="py-2 text-xs font-medium uppercase opacity-80">{t('Hashes')}</div>
               <table className="block w-full overflow-scroll whitespace-nowrap text-sm md:table">
                 <tbody>
                   <tr className="border-y bg-white dark:border-gray-700 dark:bg-gray-900">
@@ -44,7 +47,7 @@ const DefaultPreview: FC<{ file: OdFileObject }> = ({ file }) => {
                       Quick XOR
                     </td>
                     <td className="whitespace-nowrap py-1 px-3 font-mono text-gray-500 dark:text-gray-400">
-                      {file.file.hashes?.quickXorHash || 'Unavailable'}
+                      {file.file.hashes?.quickXorHash || t('Unavailable')}
                     </td>
                   </tr>
                   <tr className="border-y bg-white dark:border-gray-700 dark:bg-gray-900">
@@ -52,7 +55,7 @@ const DefaultPreview: FC<{ file: OdFileObject }> = ({ file }) => {
                       SHA1
                     </td>
                     <td className="whitespace-nowrap py-1 px-3 font-mono text-gray-500 dark:text-gray-400">
-                      {file.file.hashes?.sha1Hash || 'Unavailable'}
+                      {file.file.hashes?.sha1Hash || t('Unavailable')}
                     </td>
                   </tr>
                   <tr className="border-y bg-white dark:border-gray-700 dark:bg-gray-900">
@@ -60,7 +63,7 @@ const DefaultPreview: FC<{ file: OdFileObject }> = ({ file }) => {
                       SHA256
                     </td>
                     <td className="whitespace-nowrap py-1 px-3 font-mono text-gray-500 dark:text-gray-400">
-                      {file.file.hashes?.sha256Hash || 'Unavailable'}
+                      {file.file.hashes?.sha256Hash || t('Unavailable')}
                     </td>
                   </tr>
                 </tbody>

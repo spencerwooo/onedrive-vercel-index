@@ -4,6 +4,7 @@ import { Dispatch, Fragment, SetStateAction, useState } from 'react'
 import AwesomeDebouncePromise from 'awesome-debounce-promise'
 import { useAsync } from 'react-async-hook'
 import useConstant from 'use-constant'
+import { useTranslation } from 'next-i18next'
 
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -90,14 +91,14 @@ function SearchResultItemTemplate({
     <Link href={driveItemPath} passHref>
       <a
         className={`flex items-center space-x-4 border-b border-gray-400/30 px-4 py-1.5 hover:bg-gray-50 dark:hover:bg-gray-850 ${
-          disabled ? 'cursor-not-allowed pointer-events-none' : 'cursor-pointer'
+          disabled ? 'pointer-events-none cursor-not-allowed' : 'cursor-pointer'
         }`}
       >
         <FontAwesomeIcon icon={driveItem.file ? getFileIcon(driveItem.name) : ['far', 'folder']} />
         <div>
           <div className="text-sm font-medium leading-8">{driveItem.name}</div>
           <div
-            className={`text-xs font-mono opacity-60 truncate overflow-hidden ${
+            className={`overflow-hidden truncate font-mono text-xs opacity-60 ${
               itemDescription === 'Loading ...' && 'animate-pulse'
             }`}
           >
@@ -112,12 +113,19 @@ function SearchResultItemTemplate({
 function SearchResultItemLoadRemote({ result }: { result: OdSearchResult[number] }) {
   const { data, error }: SWRResponse<OdDriveItem, string> = useSWR(`/api/item?id=${result.id}`, fetcher)
 
+  const { t } = useTranslation()
+
   if (error) {
     return <SearchResultItemTemplate driveItem={result} driveItemPath={''} itemDescription={error} disabled={true} />
   }
   if (!data) {
     return (
-      <SearchResultItemTemplate driveItem={result} driveItemPath={''} itemDescription={'Loading ...'} disabled={true} />
+      <SearchResultItemTemplate
+        driveItem={result}
+        driveItemPath={''}
+        itemDescription={t('Loading ...')}
+        disabled={true}
+      />
     )
   }
 
@@ -159,6 +167,8 @@ export default function SearchModal({
 }) {
   const { query, setQuery, results } = useDriveItemSearch()
 
+  const { t } = useTranslation()
+
   const closeSearchBox = () => {
     setSearchOpen(false)
     setQuery('')
@@ -166,8 +176,8 @@ export default function SearchModal({
 
   return (
     <Transition appear show={searchOpen} as={Fragment}>
-      <Dialog as="div" className="inset-0 z-[200] fixed overflow-y-auto" onClose={closeSearchBox}>
-        <div className="min-h-screen text-center px-4">
+      <Dialog as="div" className="fixed inset-0 z-[200] overflow-y-auto" onClose={closeSearchBox}>
+        <div className="min-h-screen px-4 text-center">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-100"
@@ -177,7 +187,7 @@ export default function SearchModal({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="bg-white/80 inset-0 fixed dark:bg-gray-800/80" />
+            <Dialog.Overlay className="fixed inset-0 bg-white/80 dark:bg-gray-800/80" />
           </Transition.Child>
 
           <Transition.Child
@@ -189,40 +199,41 @@ export default function SearchModal({
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="border rounded border-gray-400/30 shadow-xl my-12 text-left w-full max-w-3xl transform transition-all inline-block overflow-hidden">
+            <div className="my-12 inline-block w-full max-w-3xl transform overflow-hidden rounded border border-gray-400/30 text-left shadow-xl transition-all">
               <Dialog.Title
                 as="h3"
-                className="flex items-center space-x-4 dark:text-white border-b bg-gray-50 border-gray-400/30 p-4 dark:bg-gray-800"
+                className="flex items-center space-x-4 border-b border-gray-400/30 bg-gray-50 p-4 dark:bg-gray-800 dark:text-white"
               >
-                <FontAwesomeIcon icon="search" className="w-4 h-4" />
+                <FontAwesomeIcon icon="search" className="h-4 w-4" />
                 <input
                   type="text"
                   id="search-box"
                   className="w-full bg-transparent focus:outline-none focus-visible:outline-none"
-                  placeholder="Search ..."
+                  placeholder={t('Search ...')}
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                 />
-                <div className="px-2 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 font-medium text-xs">ESC</div>
+                <div className="rounded-lg bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-700">ESC</div>
               </Dialog.Title>
-
               <div
-                className="bg-white dark:text-white dark:bg-gray-900 max-h-[80vh] overflow-x-hidden overflow-y-scroll"
+                className="max-h-[80vh] overflow-x-hidden overflow-y-scroll bg-white dark:bg-gray-900 dark:text-white"
                 onClick={closeSearchBox}
               >
                 {results.loading && (
-                  <div className="text-center px-4 py-12 text-sm font-medium">
-                    <LoadingIcon className="animate-spin w-4 h-4 mr-2 inline-block svg-inline--fa" />
-                    <span>Loading ...</span>
+                  <div className="px-4 py-12 text-center text-sm font-medium">
+                    <LoadingIcon className="svg-inline--fa mr-2 inline-block h-4 w-4 animate-spin" />
+                    <span>{t('Loading ...')}</span>
                   </div>
                 )}
                 {results.error && (
-                  <div className="text-center px-4 py-12 text-sm font-medium">Error: {results.error.message}</div>
+                  <div className="px-4 py-12 text-center text-sm font-medium">
+                    {t('Error: {{message}}', { message: results.error.message })}
+                  </div>
                 )}
                 {results.result && (
                   <>
                     {results.result.length === 0 ? (
-                      <div className="text-center px-4 py-12 text-sm font-medium">Nothing here.</div>
+                      <div className="px-4 py-12 text-center text-sm font-medium">{t('Nothing here.')}</div>
                     ) : (
                       results.result.map(result => <SearchResultItem key={result.id} result={result} />)
                     )}

@@ -13,8 +13,6 @@
 
 ## TL;DR
 
-#### update flv
-
 Showcase, share, preview, and download files inside *your* OneDrive with onedrive-vercel-index -
 
 - Completely free to host 💸

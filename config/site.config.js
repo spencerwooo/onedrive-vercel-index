@@ -57,5 +57,6 @@ module.exports = {
       "link": "https://space.bilibili.com/36184593",
       "other": "youtube"
     }
-  ]
+  ],
+  datetimeFormat: 'YYYY-MM-DD HH:mm:ss'
 }

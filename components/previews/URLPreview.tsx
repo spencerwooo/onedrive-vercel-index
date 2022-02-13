@@ -1,3 +1,5 @@
+import { useTranslation } from 'next-i18next'
+
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import { DownloadButton } from '../DownloadBtnGtoup'
@@ -12,6 +14,8 @@ const parseDotUrl = (content: string): string | undefined => {
 }
 
 const TextPreview = ({ file }) => {
+  const { t } = useTranslation()
+
   const { response: content, error, validating } = useAxiosGet(file['@microsoft.graph.downloadUrl'])
   if (error) {
     return (
@@ -24,7 +28,7 @@ const TextPreview = ({ file }) => {
   if (validating) {
     return (
       <PreviewContainer>
-        <Loading loadingText="Loading file content..." />
+        <Loading loadingText={t('Loading file content...')} />
       </PreviewContainer>
     )
   }
@@ -32,7 +36,7 @@ const TextPreview = ({ file }) => {
   if (!content) {
     return (
       <PreviewContainer>
-        <FourOhFour errorMsg="File is empty." />
+        <FourOhFour errorMsg={t('File is empty.')} />
       </PreviewContainer>
     )
   }
@@ -47,9 +51,9 @@ const TextPreview = ({ file }) => {
           <DownloadButton
             onClickCallback={() => window.open(parseDotUrl(content) || '')}
             btnColor="blue"
-            btnText="Open URL"
+            btnText={t('Open URL')}
             btnIcon="external-link-alt"
-            btnTitle={`Open URL ${parseDotUrl(content) || ''}`}
+            btnTitle={t('Open URL{{url}}', { url: ' ' + parseDotUrl(content) || '' })}
           />
         </div>
       </DownloadBtnContainer>

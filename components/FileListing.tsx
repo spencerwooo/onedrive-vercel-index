@@ -7,11 +7,12 @@ import { FC, MouseEventHandler, SetStateAction, useEffect, useRef, useState } fr
 
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 
 import useLocalStorage from '../utils/useLocalStorage'
 import { getPreviewType, preview } from '../utils/getPreviewType'
 import { useProtectedSWRInfinite } from '../utils/fetchWithSWR'
-import { getFileIcon } from '../utils/getFileIcon'
+import { getExtension, getFileIcon } from '../utils/getFileIcon'
 import {
   DownloadingToast,
   downloadMultipleFiles,
@@ -65,9 +66,19 @@ const renderEmoji = (name: string) => {
   const emoji = emojiRegex().exec(name)
   return { render: emoji && !emoji.index, emoji }
 }
-export const formatChildName = (name: string) => {
+const formatChildName = (name: string) => {
   const { render, emoji } = renderEmoji(name)
   return render ? name.replace(/[0-9][0-9][0-9]?#/,'').replace(emoji ? emoji[0] : '', '').trim() : name
+}
+export const ChildName: FC<{ name: string }> = ({ name }) => {
+  const original = formatChildName(name)
+  const extension = getExtension(original)
+  const prename = original.substring(0, original.length - extension.length)
+  return (
+    <span className="truncate before:float-right before:content-[attr(data-tail)]" data-tail={extension}>
+      {prename}
+    </span>
+  )
 }
 export const ChildIcon: FC<{ child: OdFolderChildren }> = ({ child }) => {
   const { render, emoji } = renderEmoji(child.name)
@@ -146,6 +157,8 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   const router = useRouter()
   const [layout, _] = useLocalStorage('preferredLayout', layouts[0])
 
+  const { t } = useTranslation()
+
   const path = queryToPath(query)
 
   const { data, error, size, setSize } = useProtectedSWRInfinite(path)
@@ -166,7 +179,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   if (!data) {
     return (
       <PreviewContainer>
-        <Loading loadingText="Loading ..." />
+        <Loading loadingText={t('Loading ...')} />
       </PreviewContainer>
     )
   }
@@ -236,17 +249,17 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       } else if (files.length > 1) {
         setTotalGenerating(true)
 
-        const toastId = toast.loading(DownloadingToast(router))
+        const toastId = toast.loading(<DownloadingToast router={router} />)
         downloadMultipleFiles({ toastId, router, files, folder })
           .then(() => {
             setTotalGenerating(false)
-            toast.success('Finished downloading selected files.', {
+            toast.success(t('Finished downloading selected files.'), {
               id: toastId,
             })
           })
           .catch(() => {
             setTotalGenerating(false)
-            toast.error('Failed to download selected files.', { id: toastId })
+            toast.error(t('Failed to download selected files.'), { id: toastId })
           })
       }
     }
@@ -256,7 +269,13 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       const files = (async function* () {
         for await (const { meta: c, path: p, isFolder, error } of traverseFolder(path)) {
           if (error) {
-            toast.error(`Failed to download folder ${p}: ${error.status} ${error.message} Skipped it to continue.`)
+            toast.error(
+              t('Failed to download folder {{path}}: {{status}} {{message}} Skipped it to continue.', {
+                path: p,
+                status: error.status,
+                message: error.message,
+              })
+            )
             continue
           }
           yield {
@@ -269,7 +288,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       })()
 
       setFolderGenerating({ ...folderGenerating, [id]: true })
-      const toastId = toast.loading(DownloadingToast(router))
+      const toastId = toast.loading(<DownloadingToast router={router} />)
 
       downloadTreelikeMultipleFiles({
         toastId,
@@ -280,11 +299,11 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       })
         .then(() => {
           setFolderGenerating({ ...folderGenerating, [id]: false })
-          toast.success('Finished downloading folder.', { id: toastId })
+          toast.success(t('Finished downloading folder.'), { id: toastId })
         })
         .catch(() => {
           setFolderGenerating({ ...folderGenerating, [id]: false })
-          toast.error('Failed to download folder.', { id: toastId })
+          toast.error(t('Failed to download folder.'), { id: toastId })
         })
     }
 
@@ -312,7 +331,13 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
         {!onlyOnePage && (
           <div className="rounded-b bg-white dark:bg-gray-900 dark:text-gray-100">
             <div className="border-b border-gray-200 p-3 text-center font-mono text-sm text-gray-400 dark:border-gray-700">
-              - showing {size} page{size > 1 ? 's' : ''} of {isLoadingMore ? '...' : folderChildren.length} files -
+              {t('- showing {{count}} page(s) ', {
+                count: size,
+                totalFileNum: isLoadingMore ? '...' : folderChildren.length,
+              }) +
+                (isLoadingMore
+                  ? t('of {{count}} file(s) -', { count: folderChildren.length, context: 'loading' })
+                  : t('of {{count}} file(s) -', { count: folderChildren.length, context: 'loaded' }))}
             </div>
             <button
               className={`flex w-full items-center justify-center space-x-2 p-3 disabled:cursor-not-allowed ${
@@ -324,13 +349,13 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
               {isLoadingMore ? (
                 <>
                   <LoadingIcon className="inline-block h-4 w-4 animate-spin" />
-                  <span>Loading ...</span>{' '}
+                  <span>{t('Loading ...')}</span>{' '}
                 </>
               ) : isReachingEnd ? (
-                <span>No more files</span>
+                <span>{t('No more files')}</span>
               ) : (
                 <>
-                  <span>Load more</span>
+                  <span>{t('Load more')}</span>
                   <FontAwesomeIcon icon="chevron-circle-down" />
                 </>
               )}
@@ -349,11 +374,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
   if ('file' in responses[0] && responses.length === 1) {
     const file = responses[0].file as OdFileObject
-    const downloadUrl = file['@microsoft.graph.downloadUrl']
-    const fileName = file.name
-    const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
-
-    const previewType = getPreviewType(fileExtension, { video: Boolean(file.video) })
+    const previewType = getPreviewType(getExtension(file.name), { video: Boolean(file.video) })
 
     if (previewType) {
       switch (previewType) {
@@ -397,7 +418,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
   return (
     <PreviewContainer>
-      <FourOhFour errorMsg={`Cannot preview ${path}`} />
+      <FourOhFour errorMsg={t('Cannot preview {{path}}', { path })} />
     </PreviewContainer>
   )
 }

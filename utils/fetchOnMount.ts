@@ -9,8 +9,10 @@ export default function useAxiosGet(fetchUrl: string): { response: any; error: s
 
   useEffect(() => {
     axios
-      .get(fetchUrl)
-      .then(res => setResponse(res.data))
+      // Using 'blob' as response type to get the response as a raw file blob, which is later parsed as a string.
+      // Axios defaults response parsing to JSON, which causes issues when parsing JSON files.
+      .get(fetchUrl, { responseType: 'blob' })
+      .then(async res => setResponse(await res.data.text()))
       .catch(e => setError(e.message))
       .finally(() => {
         setValidating(false)

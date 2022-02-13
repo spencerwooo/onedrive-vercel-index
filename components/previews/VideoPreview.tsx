@@ -1,41 +1,53 @@
 import type { OdFileObject } from '../../types'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useClipboard } from 'use-clipboard-copy'
 import DPlayer from 'react-dplayer'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'next-i18next'
 import { useAsync } from 'react-async-hook'
 
 import { getBaseUrl } from '../../utils/getBaseUrl'
+import { getExtension } from '../../utils/getFileIcon'
+import { getReadablePath } from '../../utils/getReadablePath'
 import { DownloadButton } from '../DownloadBtnGtoup'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
-import { getExtension } from '../../utils/getFileIcon'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
+import CustomEmbedLinkMenu from '../CustomEmbedLinkMenu'
 
 const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const { asPath } = useRouter()
   const clipboard = useClipboard()
 
+  const [menuOpen, setMenuOpen] = useState(false)
+  const { t } = useTranslation()
+
   // OneDrive generates thumbnails for its video files, we pick the thumbnail with the highest resolution
-  const thumbnail = file.thumbnails && file.thumbnails.length > 0 ? file.thumbnails[0].large.url : ''
+  const thumbnail = `/api/thumbnail?path=${asPath}&size=large`
 
   // We assume subtitle files are beside the video with the same name, only webvtt '.vtt' files are supported
-  const subtitle = `/api?path=${asPath.replace(getExtension(file.name), 'vtt')}&raw=true`
+  const subtitle = `/api?path=${asPath.substring(0, asPath.lastIndexOf('.'))}.vtt&raw=true`
 
   const isFlv = getExtension(file.name) === 'flv'
-  const { loading, error, result: flvjs } = useAsync(async () => {
+  const {
+    loading,
+    error,
+    result: mpegts,
+  } = useAsync(async () => {
     if (isFlv) {
-      return (await import('flv.js')).default
+      return (await import('mpegts.js')).default
     }
   }, [isFlv])
 
   return (
     <>
+      <CustomEmbedLinkMenu path={getReadablePath(asPath)} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <PreviewContainer>
         {error ? (
           <FourOhFour errorMsg={error.message} />
         ) : loading && isFlv ? (
-          <Loading loadingText="Loading FLV extension..." />
+          <Loading loadingText={t('Loading FLV extension...')} />
         ) : (
           <DPlayer
             className="aspect-video"
@@ -48,16 +60,16 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
                 type: isFlv ? 'customFlv' : 'auto',
                 customType: {
                   customFlv: (video: HTMLVideoElement) => {
-                    const flvPlayer = flvjs!.createPlayer({
+                    const flvPlayer = mpegts!.createPlayer({
                       type: 'flv',
-                      url: video.src
+                      url: video.src,
                     })
                     flvPlayer.attachMediaElement(video)
                     flvPlayer.load()
-                  }
-                }
+                  },
+                },
               },
-              subtitle: { url: subtitle }
+              subtitle: { url: subtitle },
             }}
           />
         )}
@@ -68,7 +80,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
           <DownloadButton
             onClickCallback={() => window.open(file['@microsoft.graph.downloadUrl'])}
             btnColor="blue"
-            btnText="Download"
+            btnText={t('Download')}
             btnIcon="file-download"
           />
           {/* <DownloadButton
@@ -76,17 +88,23 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
               window.open(`/api/proxy?url=${encodeURIComponent(file['@microsoft.graph.downloadUrl'])}`)
             }
             btnColor="teal"
-            btnText="Proxy download"
+            btnText={t('Proxy download')}
             btnIcon="download"
           /> */}
           <DownloadButton
             onClickCallback={() => {
-              clipboard.copy(`${getBaseUrl()}/api?path=${asPath}&raw=true`)
-              toast.success('Copied direct link to clipboard.')
+              clipboard.copy(`${getBaseUrl()}/api?path=${getReadablePath(asPath)}&raw=true`)
+              toast.success(t('Copied direct link to clipboard.'))
             }}
             btnColor="pink"
-            btnText="Copy direct link"
+            btnText={t('Copy direct link')}
             btnIcon="copy"
+          />
+          <DownloadButton
+            onClickCallback={() => setMenuOpen(true)}
+            btnColor="teal"
+            btnText={t('Customise link')}
+            btnIcon="pen"
           />
 
           <DownloadButton

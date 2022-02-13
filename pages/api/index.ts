@@ -90,6 +90,23 @@ export async function getAccessToken(): Promise<string> {
   return ''
 }
 
+/**
+ * Match protected routes in site config to get path to required auth token
+ * @param path Path cleaned in advance
+ * @returns Path to required auth token. If not required, return empty string.
+ */
+export function getAuthTokenPath(path: string) {
+  const protectedRoutes = siteConfig.protectedRoutes
+  let authTokenPath = ''
+  for (const r of protectedRoutes) {
+    if (path.startsWith(r)) {
+      authTokenPath = `${r}/.password`
+      break
+    }
+  }
+  return authTokenPath
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // If method is POST, then the API is called by the client to store acquired tokens
   if (req.method === 'POST') {
@@ -114,6 +131,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // If method is GET, then the API is a normal request to the OneDrive API for files or folders
   const { path = '/', raw = false, next = '' } = req.query
 
+  // Set edge function caching for faster load times, check docs:
+  // https://vercel.com/docs/concepts/functions/edge-caching
+  res.setHeader('Cache-Control', apiConfig.cacheControlHeader)
+
   // Sometimes the path parameter is defaulted to '[...path]' which we need to handle
   if (path === '[...path]') {
     res.status(400).json({ error: 'No path specified.' })
@@ -135,17 +156,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Handle authentication through .password
-  const protectedRoutes = siteConfig.protectedRoutes
-  let authTokenPath = ''
-  for (const r of protectedRoutes) {
-    if (cleanPath.startsWith(r)) {
-      authTokenPath = `${r}/.password`
-      break
-    }
-  }
+  const authTokenPath = getAuthTokenPath(cleanPath)
 
   // Fetch password from remote file content
   if (authTokenPath !== '') {
+    // Don't server cached response for password protected folders
+    res.setHeader('Cache-Control', 'no-cache')
+
     try {
       const token = await axios.get(`${apiConfig.driveApi}/root${encodePath(authTokenPath)}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -210,7 +227,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
         select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file,video,image',
-        $expand: 'thumbnails',
       },
     })
 
@@ -220,13 +236,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         params: next
           ? {
               select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file,video,image',
-              $expand: 'thumbnails',
               top: siteConfig.maxItems,
               $skipToken: next,
             }
           : {
               select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file,video,image',
-              $expand: 'thumbnails',
               top: siteConfig.maxItems,
             },
       })

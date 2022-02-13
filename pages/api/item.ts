@@ -11,6 +11,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Get item details (specifically, its path) by its unique ID in OneDrive
   const { id = '' } = req.query
 
+  // Set edge function caching for faster load times, check docs:
+  // https://vercel.com/docs/concepts/functions/edge-caching
+  res.setHeader('Cache-Control', apiConfig.cacheControlHeader)
+
   if (typeof id === 'string') {
     const itemApi = `${apiConfig.driveApi}/items/${id}`
 
