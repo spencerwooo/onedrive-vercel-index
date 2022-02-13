@@ -160,6 +160,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // Fetch password from remote file content
   if (authTokenPath !== '') {
+    // Don't server cached response for password protected folders
+    res.setHeader('Cache-Control', 'no-cache')
+
     try {
       const token = await axios.get(`${apiConfig.driveApi}/root${encodePath(authTokenPath)}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
