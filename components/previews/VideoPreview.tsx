@@ -26,7 +26,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const { t } = useTranslation()
 
   // OneDrive generates thumbnails for its video files, we pick the thumbnail with the highest resolution
-  const thumbnail = `/api/thumbnail?path=${asPath}&size=large`
+  const thumbnail = `/api/thumbnail?path=${asPath}&size=large${hashedToken ? `&odpt=${hashedToken}` : ''}`
 
   // We assume subtitle files are beside the video with the same name, only webvtt '.vtt' files are supported
   const vtt = `${asPath.substring(0, asPath.lastIndexOf('.'))}.vtt`

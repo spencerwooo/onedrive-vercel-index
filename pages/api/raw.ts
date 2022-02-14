@@ -23,6 +23,11 @@ export function runCorsMiddleware(req: NextApiRequest, res: NextApiResponse) {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const accessToken = await getAccessToken()
+  if (!accessToken) {
+    res.status(403).json({ error: 'No access token.' })
+    return
+  }
+
   const { path = '/', odpt = '' } = req.query
 
   // Sometimes the path parameter is defaulted to '[...path]' which we need to handle
@@ -36,12 +41,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return
   }
   const cleanPath = pathPosix.resolve('/', pathPosix.normalize(path))
-
-  // Return error 403 if access_token is empty
-  if (!accessToken) {
-    res.status(403).json({ error: 'No access token.' })
-    return
-  }
 
   // Handle protected routes authentication
   const odTokenHeader = (req.headers['od-protected-token'] as string) ?? odpt

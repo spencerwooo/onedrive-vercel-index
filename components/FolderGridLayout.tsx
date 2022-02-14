@@ -10,10 +10,13 @@ import { getBaseUrl } from '../utils/getBaseUrl'
 import { formatModifiedDateTime } from '../utils/fileDetails'
 import { getReadablePath } from '../utils/getReadablePath'
 import { Checkbox, ChildIcon, ChildName, Downloading } from './FileListing'
+import { getStoredToken } from '../utils/protectedRouteHandler'
 
 const GridItem = ({ c, path }: { c: OdFolderChildren; path: string }) => {
   // We use the generated medium thumbnail for rendering preview images (excluding folders)
-  const thumbnailUrl = 'folder' in c ? null : `/api/thumbnail?path=${path}&size=medium`
+  const hashedToken = getStoredToken(path)
+  const thumbnailUrl =
+    'folder' in c ? null : `/api/thumbnail?path=${path}&size=medium${hashedToken ? `&odpt=${hashedToken}` : ''}`
 
   // Some thumbnails are broken, so we check for onerror event in the image component
   const [brokenThumbnail, setBrokenThumbnail] = useState(false)
