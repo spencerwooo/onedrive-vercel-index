@@ -223,7 +223,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { data } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
-        select: '@microsoft.graph.downloadUrl',
+        // OneDrive international version fails when only selecting the downloadUrl (what a stupid bug)
+        select: 'id,@microsoft.graph.downloadUrl',
       },
     })
 
