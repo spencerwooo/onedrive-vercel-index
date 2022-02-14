@@ -1,9 +1,11 @@
-import Image from 'next/image'
-import { Trans } from 'next-i18next'
+import Script from 'next/script'
 
 const FourOhFour: React.FC<{ errorMsg: string }> = ({ errorMsg }) => {
   return (
-    <script src="/js.js"></script>
+    <div class="container">
+    <Script src="https://third-party-script.js"></Script>
+    <div>Home Page</div>
+  </div>
   )
 }
 
