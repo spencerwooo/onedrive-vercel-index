@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import { DownloadButton } from '../DownloadBtnGtoup'
-import useAxiosGet from '../../utils/fetchOnMount'
+import useFileContent from '../../utils/fetchOnMount'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
 const parseDotUrl = (content: string): string | undefined => {
@@ -18,7 +18,7 @@ const TextPreview = ({ file }) => {
   const { asPath } = useRouter()
   const { t } = useTranslation()
 
-  const { response: content, error, validating } = useAxiosGet(`/api/raw?path=${asPath}`)
+  const { response: content, error, validating } = useFileContent(`/api/raw?path=${asPath}`, asPath)
   if (error) {
     return (
       <PreviewContainer>

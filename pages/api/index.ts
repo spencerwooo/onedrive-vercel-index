@@ -129,7 +129,7 @@ export async function checkAuthRoute(
 
     // Handle request and check for header 'od-protected-token'
     const odProtectedToken = await axios.get(token.data['@microsoft.graph.downloadUrl'])
-    // console.log(req.headers['od-protected-token'], odProtectedToken.data.trim())
+    // console.log(odTokenHeader, odProtectedToken.data.trim())
 
     if (
       !compareHashedToken({
@@ -137,12 +137,12 @@ export async function checkAuthRoute(
         dotPassword: odProtectedToken.data,
       })
     ) {
-      return { code: 401, message: 'Password required for this folder.' }
+      return { code: 401, message: 'Password required.' }
     }
   } catch (error: any) {
     // Password file not found, fallback to 404
     if (error?.response?.status === 404) {
-      return { code: 404, message: "You didn't set a password for your protected folder." }
+      return { code: 404, message: "You didn't set a password." }
     } else {
       return { code: 500, message: 'Internal server error.' }
     }

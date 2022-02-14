@@ -8,9 +8,12 @@ import { useTranslation } from 'next-i18next'
 import Loading from '../Loading'
 import DownloadButtonGroup from '../DownloadBtnGtoup'
 import { DownloadBtnContainer } from './Containers'
+import { getStoredToken } from '../../utils/protectedRouteHandler'
 
 const EPUBPreview: FC<{ file: OdFileObject }> = ({ file }) => {
   const { asPath } = useRouter()
+  const hashedToken = getStoredToken(asPath)
+
   const [epubContainerWidth, setEpubContainerWidth] = useState(400)
   const epubContainer = useRef<HTMLDivElement>(null)
 
@@ -53,7 +56,7 @@ const EPUBPreview: FC<{ file: OdFileObject }> = ({ file }) => {
             }}
           >
             <ReactReader
-              url={`/api/raw?path=${asPath}`}
+              url={`/api/raw?path=${asPath}${hashedToken ? '&token=' + hashedToken : ''}`}
               getRendition={rendition => fixEpub(rendition)}
               loadingView={<Loading loadingText={t('Loading EPUB ...')} />}
               location={location}

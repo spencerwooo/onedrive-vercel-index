@@ -12,7 +12,7 @@ import 'katex/dist/katex.min.css'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import DownloadButtonGroup from '../DownloadBtnGtoup'
-import useAxiosGet from '../../utils/fetchOnMount'
+import useFileContent from '../../utils/fetchOnMount'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
 const MarkdownPreview: FC<{
@@ -23,7 +23,7 @@ const MarkdownPreview: FC<{
   // The parent folder of the markdown file, which is also the relative image folder
   const parentPath = standalone ? path.substring(0, path.lastIndexOf('/')) : path
 
-  const { response: content, error, validating } = useAxiosGet(`/api/raw?path=${parentPath}/${file.name}`)
+  const { response: content, error, validating } = useFileContent(`/api/raw?path=${parentPath}/${file.name}`, path)
   const { t } = useTranslation()
 
   // Check if the image is relative path instead of a absolute url

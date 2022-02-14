@@ -45,6 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // Handle protected routes authentication
   const odTokenHeader = (req.headers['od-protected-token'] as string) ?? odpt
+
   const { code, message } = await checkAuthRoute(cleanPath, accessToken, odTokenHeader)
   // Status code other than 200 means user has not authenticated yet
   if (code !== 200) {

@@ -10,6 +10,7 @@ import { useAsync } from 'react-async-hook'
 import { getBaseUrl } from '../../utils/getBaseUrl'
 import { getExtension } from '../../utils/getFileIcon'
 import { getReadablePath } from '../../utils/getReadablePath'
+import { getStoredToken } from '../../utils/protectedRouteHandler'
 import { DownloadButton } from '../DownloadBtnGtoup'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 import FourOhFour from '../FourOhFour'
@@ -18,6 +19,7 @@ import CustomEmbedLinkMenu from '../CustomEmbedLinkMenu'
 
 const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const { asPath } = useRouter()
+  const hashedToken = getStoredToken(asPath)
   const clipboard = useClipboard()
 
   const [menuOpen, setMenuOpen] = useState(false)
@@ -27,7 +29,11 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
   const thumbnail = `/api/thumbnail?path=${asPath}&size=large`
 
   // We assume subtitle files are beside the video with the same name, only webvtt '.vtt' files are supported
-  const subtitle = `/api?path=${asPath.substring(0, asPath.lastIndexOf('.'))}.vtt&raw=true`
+  const vtt = `${asPath.substring(0, asPath.lastIndexOf('.'))}.vtt`
+  const subtitle = `/api/raw?path=${vtt}${hashedToken ? `&odpt=${hashedToken}` : ''}`
+
+  // We also format the raw video file for the in-browser player as well as all other players
+  const videoUrl = `/api/raw?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`
 
   const isFlv = getExtension(file.name) === 'flv'
   const {
@@ -55,7 +61,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
               volume: 1.0,
               lang: 'en',
               video: {
-                url: `/api/raw?path=${asPath}`,
+                url: videoUrl,
                 pic: thumbnail,
                 type: isFlv ? 'customFlv' : 'auto',
                 customType: {
@@ -78,7 +84,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
       <DownloadBtnContainer>
         <div className="flex flex-wrap justify-center gap-2">
           <DownloadButton
-            onClickCallback={() => window.open(`/api/raw?path=${asPath}`)}
+            onClickCallback={() => window.open(videoUrl)}
             btnColor="blue"
             btnText={t('Download')}
             btnIcon="file-download"
@@ -93,7 +99,9 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
           /> */}
           <DownloadButton
             onClickCallback={() => {
-              clipboard.copy(`${getBaseUrl()}/api/raw?path=${getReadablePath(asPath)}`)
+              clipboard.copy(
+                `${getBaseUrl()}/api/raw?path=${getReadablePath(asPath)}${hashedToken ? `&odpt=${hashedToken}` : ''}`
+              )
               toast.success(t('Copied direct link to clipboard.'))
             }}
             btnColor="pink"
@@ -108,17 +116,17 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
           />
 
           <DownloadButton
-            onClickCallback={() => window.open(`iina://weblink?url=${getBaseUrl()}/api/raw?path=${asPath}`)}
+            onClickCallback={() => window.open(`iina://weblink?url=${getBaseUrl()}${videoUrl}`)}
             btnText="IINA"
             btnImage="/players/iina.png"
           />
           <DownloadButton
-            onClickCallback={() => window.open(`vlc://${getBaseUrl()}/api/raw?path=${asPath}`)}
+            onClickCallback={() => window.open(`vlc://${getBaseUrl()}${videoUrl}`)}
             btnText="VLC"
             btnImage="/players/vlc.png"
           />
           <DownloadButton
-            onClickCallback={() => window.open(`potplayer://${getBaseUrl()}/api/raw?path=${asPath}`)}
+            onClickCallback={() => window.open(`potplayer://${getBaseUrl()}/${videoUrl}`)}
             btnText="PotPlayer"
             btnImage="/players/potplayer.png"
           />

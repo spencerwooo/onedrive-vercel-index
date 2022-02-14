@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { LightAsync as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { tomorrowNightEighties, tomorrow } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
 
-import useAxiosGet from '../../utils/fetchOnMount'
+import useFileContent from '../../utils/fetchOnMount'
 import { getLanguageByFileName } from '../../utils/getPreviewType'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
@@ -15,7 +15,7 @@ import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
 const CodePreview: FC<{ file: any }> = ({ file }) => {
   const { asPath } = useRouter()
-  const { response: content, error, validating } = useAxiosGet(`/api/raw?path=${asPath}`)
+  const { response: content, error, validating } = useFileContent(`/api/raw?path=${asPath}`, asPath)
 
   const theme = useSystemTheme('dark')
   const { t } = useTranslation()
