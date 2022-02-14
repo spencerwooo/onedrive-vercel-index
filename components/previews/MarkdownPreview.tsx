@@ -1,18 +1,19 @@
-import { useEffect, FC, CSSProperties } from 'react'
-import Prism from 'prismjs'
+import { FC, CSSProperties, ReactNode } from 'react'
 import ReactMarkdown from 'react-markdown'
 import gfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import rehypeRaw from 'rehype-raw'
 import { useTranslation } from 'next-i18next'
+import { LightAsync as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { tomorrowNight } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
 
 import 'katex/dist/katex.min.css'
 
+import useFileContent from '../../utils/fetchOnMount'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import DownloadButtonGroup from '../DownloadBtnGtoup'
-import useFileContent from '../../utils/fetchOnMount'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
 const MarkdownPreview: FC<{
@@ -28,8 +29,9 @@ const MarkdownPreview: FC<{
 
   // Check if the image is relative path instead of a absolute url
   const isUrlAbsolute = (url: string | string[]) => url.indexOf('://') > 0 || url.indexOf('//') === 0
-  // Custom renderer to render images with relative path
-  const relativeImagePathRenderer = {
+  // Custom renderer:
+  const customRenderer = {
+    // img: to render images in markdown with relative file paths
     img: ({
       alt,
       src,
@@ -45,17 +47,11 @@ const MarkdownPreview: FC<{
       height?: string | number
       style?: CSSProperties
     }) => {
-      if (isUrlAbsolute(src as string)) {
-        return (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img alt={alt} src={src} title={title} width={width} height={height} style={style} />
-        )
-      }
       return (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           alt={alt}
-          src={`/api/?path=${parentPath}/${src}&raw=true`}
+          src={isUrlAbsolute(src as string) ? src : `/api/?path=${parentPath}/${src}&raw=true`}
           title={title}
           width={width}
           height={height}
@@ -63,11 +59,33 @@ const MarkdownPreview: FC<{
         />
       )
     },
-  }
+    // code: to render code blocks with react-syntax-highlighter
+    code({
+      className,
+      children,
+      inline,
+      ...props
+    }: {
+      className?: string | undefined
+      children: ReactNode
+      inline?: boolean
+    }) {
+      if (inline) {
+        return (
+          <code className={className} {...props}>
+            {children}
+          </code>
+        )
+      }
 
-  useEffect(() => {
-    Prism.highlightAll()
-  }, [content])
+      const match = /language-(\w+)/.exec(className || '')
+      return (
+        <SyntaxHighlighter language={match ? match[1] : 'language-text'} style={tomorrowNight} PreTag="div" {...props}>
+          {String(children).replace(/\n$/, '')}
+        </SyntaxHighlighter>
+      )
+    },
+  }
 
   if (error) {
     return (
@@ -91,8 +109,8 @@ const MarkdownPreview: FC<{
           {/* Using rehypeRaw to render HTML inside Markdown is potentially dangerous, use under safe environments. (#18) */}
           <ReactMarkdown
             remarkPlugins={[gfm, remarkMath]}
-            rehypePlugins={[rehypeKatex, rehypeRaw as any]}
-            components={relativeImagePathRenderer}
+            rehypePlugins={[rehypeKatex, rehypeRaw]}
+            components={customRenderer}
           >
             {content}
           </ReactMarkdown>

@@ -20,7 +20,7 @@ const FourOhFour: React.FC<{ errorMsg: string }> = ({ errorMsg }) => {
         <div className="text-sm">
           <Trans>
             Press{' '}
-            <kbd className="rounded border border-opacity-20 bg-gray-100 p-1 font-mono text-xs dark:bg-gray-800">
+            <kbd className="rounded border border-gray-400/20 bg-gray-100 px-1 font-mono text-xs dark:bg-gray-800">
               F12
             </kbd>{' '}
             and open devtools for more details, or seek help at{' '}

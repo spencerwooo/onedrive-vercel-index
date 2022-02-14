@@ -1,4 +1,4 @@
-import { Dispatch, Fragment, SetStateAction, useState } from 'react'
+import { Dispatch, Fragment, SetStateAction, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'next-i18next'
 import { Dialog, Transition } from '@headlessui/react'
@@ -23,6 +23,8 @@ export default function CustomEmbedLinkMenu({
 
   const hashedToken = getStoredToken(path)
 
+  // Focus on input automatically when menu modal opens
+  const focusInputRef = useRef<HTMLInputElement>(null)
   const closeMenu = () => setMenuOpen(false)
 
   const filename = path.substring(path.lastIndexOf('/') + 1)
@@ -30,7 +32,7 @@ export default function CustomEmbedLinkMenu({
 
   return (
     <Transition appear show={menuOpen} as={Fragment}>
-      <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={closeMenu}>
+      <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={closeMenu} initialFocus={focusInputRef}>
         <div className="min-h-screen px-4 text-center">
           <Transition.Child
             as={Fragment}
@@ -77,15 +79,16 @@ export default function CustomEmbedLinkMenu({
                 <h4 className="py-2 text-xs font-medium uppercase tracking-wider">{t('Filename')}</h4>
                 <input
                   className="mb-2 w-full rounded border border-gray-600/10 p-1 font-mono focus:outline-none focus:ring focus:ring-blue-300 dark:bg-gray-600 dark:text-white dark:focus:ring-blue-700"
+                  ref={focusInputRef}
                   value={name}
                   onChange={e => setName(e.target.value)}
                 />
                 <h4 className="py-2 text-xs font-medium uppercase tracking-wider">{t('Default')}</h4>
-                <div className="mb-2 rounded border border-gray-400/20 bg-gray-50 p-1 font-mono dark:bg-gray-800">
+                <div className="mb-2 overflow-hidden rounded border border-gray-400/20 bg-gray-50 p-1 font-mono dark:bg-gray-800">
                   {`${getBaseUrl()}/api/raw/?path=${getReadablePath(path)}${hashedToken ? `&odpt=${hashedToken}` : ''}`}
                 </div>
                 <h4 className="py-2 text-xs font-medium uppercase tracking-wider">{t('Customised')}</h4>
-                <div className="mb-2 rounded border border-gray-400/20 bg-gray-50 p-1 font-mono dark:bg-gray-800">
+                <div className="mb-2 overflow-hidden rounded border border-gray-400/20 bg-gray-50 p-1 font-mono dark:bg-gray-800">
                   <span>{`${getBaseUrl()}/api/name/`}</span>
                   <span className="underline decoration-blue-400 decoration-wavy">{name}</span>
                   <span>{`/?path=${getReadablePath(path)}${hashedToken ? `&odpt=${hashedToken}` : ''}`}</span>
