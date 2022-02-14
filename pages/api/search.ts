@@ -53,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
       res.status(200).json(data.value)
     } catch (error: any) {
-      res.status(error.response.status).json({ error: error.response.data })
+      res.status(error?.response?.status ?? 500).json({ error: error?.response?.data ?? 'Internal server error.' })
     }
   } else {
     res.status(200).json([])

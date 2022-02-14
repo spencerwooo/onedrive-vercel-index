@@ -51,11 +51,11 @@ const TextPreview = ({ file }) => {
       <DownloadBtnContainer>
         <div className="flex justify-center">
           <DownloadButton
-            onClickCallback={() => window.open(parseDotUrl(content) || '')}
+            onClickCallback={() => window.open(parseDotUrl(content) ?? '')}
             btnColor="blue"
             btnText={t('Open URL')}
             btnIcon="external-link-alt"
-            btnTitle={t('Open URL{{url}}', { url: ' ' + parseDotUrl(content) || '' })}
+            btnTitle={t('Open URL{{url}}', { url: ' ' + parseDotUrl(content) ?? '' })}
           />
         </div>
       </DownloadBtnContainer>

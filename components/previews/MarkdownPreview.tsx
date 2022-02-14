@@ -23,7 +23,7 @@ const MarkdownPreview: FC<{
   // The parent folder of the markdown file, which is also the relative image folder
   const parentPath = standalone ? path.substring(0, path.lastIndexOf('/')) : path
 
-  const { response: content, error, validating } = useAxiosGet(`/api/raw?path=${parentPath}%2F${file.name}`)
+  const { response: content, error, validating } = useAxiosGet(`/api/raw?path=${parentPath}/${file.name}`)
   const { t } = useTranslation()
 
   // Check if the image is relative path instead of a absolute url

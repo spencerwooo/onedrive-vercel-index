@@ -43,7 +43,7 @@ export function extractAuthCodeFromRedirected(url: string): string {
 
   // New URL search parameter
   const params = new URLSearchParams(url.split('?')[1])
-  return params.get('code') || ''
+  return params.get('code') ?? ''
 }
 
 // After a successful authorisation, the code returned from the Microsoft OAuth 2.0 authorization URL

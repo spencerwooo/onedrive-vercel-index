@@ -109,7 +109,7 @@ export function getAuthTokenPath(path: string) {
 export async function checkAuthRoute(
   cleanPath: string,
   accessToken: string,
-  req: NextApiRequest
+  odTokenHeader: string
 ): Promise<{ code: 200 | 401 | 404 | 500; message: string }> {
   // Handle authentication through .password
   const authTokenPath = getAuthTokenPath(cleanPath)
@@ -133,7 +133,7 @@ export async function checkAuthRoute(
 
     if (
       !compareHashedToken({
-        odTokenHeader: req.headers['od-protected-token'] as string,
+        odTokenHeader: odTokenHeader,
         dotPassword: odProtectedToken.data,
       })
     ) {
@@ -141,7 +141,7 @@ export async function checkAuthRoute(
     }
   } catch (error: any) {
     // Password file not found, fallback to 404
-    if (error.response.status === 404) {
+    if (error?.response?.status === 404) {
       return { code: 404, message: "You didn't set a password for your protected folder." }
     } else {
       return { code: 500, message: 'Internal server error.' }
@@ -196,7 +196,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Handle protected routes authentication
-  const { code, message } = await checkAuthRoute(cleanPath, accessToken, req)
+  const { code, message } = await checkAuthRoute(cleanPath, accessToken, req.headers['od-protected-token'] as string)
   // Status code other than 200 means user has not authenticated yet
   if (code !== 200) {
     res.status(code).json({ error: message })
@@ -229,10 +229,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if ('@microsoft.graph.downloadUrl' in data) {
       res.redirect(data['@microsoft.graph.downloadUrl'])
-      return
+    } else {
+      res.status(404).json({ error: 'No download url found.' })
     }
-
-    throw { response: { status: 400, data: 'No download url found.' } }
+    return
   }
 
   // Querying current path identity (file or folder) and follow up query childrens in folder
@@ -275,7 +275,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json({ file: identityData })
     return
   } catch (error: any) {
-    res.status(error.response.status).json({ error: error.response.data })
+    res.status(error?.response?.code ?? 500).json({ error: error?.response?.data ?? 'Internal server error.' })
     return
   }
 }
