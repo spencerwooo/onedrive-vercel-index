@@ -10,8 +10,8 @@ import { useRouter } from 'next/router'
 
 import { getBaseUrl } from '../utils/getBaseUrl'
 import { getReadablePath } from '../utils/getReadablePath'
-import CustomEmbedLinkMenu from './CustomEmbedLinkMenu'
 import { getStoredToken } from '../utils/protectedRouteHandler'
+import CustomEmbedLinkMenu from './CustomEmbedLinkMenu'
 
 const btnStyleMap = (btnColor?: string) => {
   const colorMap = {
@@ -84,12 +84,12 @@ const DownloadButtonGroup = () => {
           btnTitle={t('Download the file directly through OneDrive')}
         />
         {/* <DownloadButton
-        onClickCallback={() => window.open(`/api/proxy?url=${encodeURIComponent(downloadUrl)}`)}
-        btnColor="teal"
-        btnText={t('Proxy download')}
-        btnIcon="download"
-        btnTitle={t('Download the file with the stream proxied through Vercel Serverless')}
-      /> */}
+          onClickCallback={() => window.open(`/api/proxy?url=${encodeURIComponent(downloadUrl)}`)}
+          btnColor="teal"
+          btnText={t('Proxy download')}
+          btnIcon="download"
+          btnTitle={t('Download the file with the stream proxied through Vercel Serverless')}
+        /> */}
         <DownloadButton
           onClickCallback={() => {
             clipboard.copy(
