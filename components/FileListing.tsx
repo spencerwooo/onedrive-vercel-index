@@ -237,7 +237,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       const folder = folderName ? decodeURIComponent(folderName) : undefined
       const files = getFiles()
         .filter(c => selected[c.id])
-        .map(c => ({ name: c.name, url: `/api/raw?path=${path}` }))
+        .map(c => ({ name: c.name, url: `/api/raw/?path=${path}` }))
 
       if (files.length == 1) {
         const el = document.createElement('a')
@@ -280,7 +280,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
           }
           yield {
             name: c?.name,
-            url: `/api/raw?path=${p}`,
+            url: `/api/raw/?path=${p}`,
             path: p,
             isFolder,
           }

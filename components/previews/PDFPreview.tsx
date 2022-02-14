@@ -10,7 +10,7 @@ const PDFEmbedPreview: React.FC<{ file: any }> = ({ file }) => {
 
   // const url = `/api/proxy?url=${encodeURIComponent(...)}&inline=true`
   const pdfPath = encodeURIComponent(
-    `${getBaseUrl()}/api/raw?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`
+    `${getBaseUrl()}/api/raw/?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`
   )
   const url = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${pdfPath}`
 

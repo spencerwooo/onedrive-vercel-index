@@ -1,4 +1,4 @@
-// API response object for /api?path=<path_to_file_or_folder>, this may return either a file or a folder.
+// API response object for /api/?path=<path_to_file_or_folder>, this may return either a file or a folder.
 // Pagination is also declared here with the 'next' parameter.
 export type OdAPIResponse = { file?: OdFileObject; folder?: OdFolderObject; next?: string }
 // A folder object returned from the OneDrive API. This contains the parameter 'value', which is an array of items
@@ -53,7 +53,7 @@ export type OdThumbnail = {
   medium: { height: number; width: number; url: string }
   small: { height: number; width: number; url: string }
 }
-// API response object for /api/search?q=<query>. Likewise, this array of items may also contain either files or folders.
+// API response object for /api/search/?q=<query>. Likewise, this array of items may also contain either files or folders.
 export type OdSearchResult = Array<{
   id: string
   name: string
@@ -62,7 +62,7 @@ export type OdSearchResult = Array<{
   path: string
   parentReference: { id: string; name: string; path: string }
 }>
-// API response object for /api/item?id={id}. This is primarily used for determining the path of the driveItem by ID.
+// API response object for /api/item/?id={id}. This is primarily used for determining the path of the driveItem by ID.
 export type OdDriveItem = {
   '@odata.context': string
   '@odata.etag': string

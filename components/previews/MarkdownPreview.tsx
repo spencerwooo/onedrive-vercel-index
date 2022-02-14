@@ -23,7 +23,7 @@ const MarkdownPreview: FC<{
   // The parent folder of the markdown file, which is also the relative image folder
   const parentPath = standalone ? path.substring(0, path.lastIndexOf('/')) : path
 
-  const { response: content, error, validating } = useFileContent(`/api/raw?path=${parentPath}/${file.name}`, path)
+  const { response: content, error, validating } = useFileContent(`/api/raw/?path=${parentPath}/${file.name}`, path)
   const { t } = useTranslation()
 
   // Check if the image is relative path instead of a absolute url
@@ -55,7 +55,7 @@ const MarkdownPreview: FC<{
         // eslint-disable-next-line @next/next/no-img-element
         <img
           alt={alt}
-          src={`/api?path=${parentPath}/${src}&raw=true`}
+          src={`/api/?path=${parentPath}/${src}&raw=true`}
           title={title}
           width={width}
           height={height}

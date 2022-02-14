@@ -24,7 +24,7 @@ const OfficePreview: FC<{ file: OdFileObject }> = ({ file }) => {
     <div>
       <div className="overflow-scroll" ref={docContainer} style={{ maxHeight: '90vh' }}>
         <Preview
-          url={`${getBaseUrl()}/api/raw?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`}
+          url={`${getBaseUrl()}/api/raw/?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`}
           width={docContainerWidth.toString()}
           height="600"
         />
