@@ -66,7 +66,7 @@ export default function CustomEmbedLinkMenu({
               <Dialog.Description as="p" className="py-2 opacity-80">
                 {t('Change the raw file direct link to a URL ending with the extension of the file.')}{' '}
                 <a
-                  href="https://onedrive-vercel-index.spencerwoo.com/docs/features/customise-direct-link"
+                  href="https://ovi.swo.moe/docs/features/customise-direct-link"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-400 underline"
@@ -84,11 +84,11 @@ export default function CustomEmbedLinkMenu({
                   onChange={e => setName(e.target.value)}
                 />
                 <h4 className="py-2 text-xs font-medium uppercase tracking-wider">{t('Default')}</h4>
-                <div className="mb-2 overflow-hidden rounded border border-gray-400/20 bg-gray-50 p-1 font-mono dark:bg-gray-800">
+                <div className="mb-2 overflow-hidden break-all rounded border border-gray-400/20 bg-gray-50 p-1 font-mono dark:bg-gray-800">
                   {`${getBaseUrl()}/api/raw/?path=${getReadablePath(path)}${hashedToken ? `&odpt=${hashedToken}` : ''}`}
                 </div>
                 <h4 className="py-2 text-xs font-medium uppercase tracking-wider">{t('Customised')}</h4>
-                <div className="mb-2 overflow-hidden rounded border border-gray-400/20 bg-gray-50 p-1 font-mono dark:bg-gray-800">
+                <div className="mb-2 overflow-hidden break-all rounded border border-gray-400/20 bg-gray-50 p-1 font-mono dark:bg-gray-800">
                   <span>{`${getBaseUrl()}/api/name/`}</span>
                   <span className="underline decoration-blue-400 decoration-wavy">{name}</span>
                   <span>{`/?path=${getReadablePath(path)}${hashedToken ? `&odpt=${hashedToken}` : ''}`}</span>
