@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import { getBaseUrl } from '../utils/getBaseUrl'
 import { getReadablePath } from '../utils/getReadablePath'
 import CustomEmbedLinkMenu from './CustomEmbedLinkMenu'
+import { getStoredToken } from '../utils/protectedRouteHandler'
 
 const btnStyleMap = (btnColor?: string) => {
   const colorMap = {
@@ -64,6 +65,8 @@ export const DownloadButton = ({
 
 const DownloadButtonGroup = () => {
   const { asPath } = useRouter()
+  const hashedToken = getStoredToken(asPath)
+
   const clipboard = useClipboard()
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -74,7 +77,7 @@ const DownloadButtonGroup = () => {
       <CustomEmbedLinkMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} path={asPath} />
       <div className="flex flex-wrap justify-center gap-2">
         <DownloadButton
-          onClickCallback={() => window.open(`/api/raw?path=${asPath}`)}
+          onClickCallback={() => window.open(`/api/raw?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`)}
           btnColor="blue"
           btnText={t('Download')}
           btnIcon="file-download"
@@ -89,7 +92,9 @@ const DownloadButtonGroup = () => {
       /> */}
         <DownloadButton
           onClickCallback={() => {
-            clipboard.copy(`${getBaseUrl()}/api/raw?path=${getReadablePath(asPath)}`)
+            clipboard.copy(
+              `${getBaseUrl()}/api/raw?path=${getReadablePath(asPath)}${hashedToken ? `&odpt=${hashedToken}` : ''}`
+            )
             toast.success(t('Copied direct link to clipboard.'))
           }}
           btnColor="pink"
