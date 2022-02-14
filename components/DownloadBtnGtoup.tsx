@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 
 import { getBaseUrl } from '../utils/getBaseUrl'
 import { getReadablePath } from '../utils/getReadablePath'
+import { getStoredToken } from '../utils/protectedRouteHandler'
 import CustomEmbedLinkMenu from './CustomEmbedLinkMenu'
 
 const btnStyleMap = (btnColor?: string) => {
@@ -62,8 +63,10 @@ export const DownloadButton = ({
   )
 }
 
-const DownloadButtonGroup: React.FC<{ downloadUrl: string }> = ({ downloadUrl }) => {
+const DownloadButtonGroup = () => {
   const { asPath } = useRouter()
+  const hashedToken = getStoredToken(asPath)
+
   const clipboard = useClipboard()
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -74,22 +77,24 @@ const DownloadButtonGroup: React.FC<{ downloadUrl: string }> = ({ downloadUrl })
       <CustomEmbedLinkMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} path={asPath} />
       <div className="flex flex-wrap justify-center gap-2">
         <DownloadButton
-          onClickCallback={() => window.open(downloadUrl)}
+          onClickCallback={() => window.open(`/api/raw/?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`)}
           btnColor="blue"
           btnText={t('Download')}
           btnIcon="file-download"
           btnTitle={t('Download the file directly through OneDrive')}
         />
         {/* <DownloadButton
-        onClickCallback={() => window.open(`/api/proxy?url=${encodeURIComponent(downloadUrl)}`)}
-        btnColor="teal"
-        btnText={t('Proxy download')}
-        btnIcon="download"
-        btnTitle={t('Download the file with the stream proxied through Vercel Serverless')}
-      /> */}
+          onClickCallback={() => window.open(`/api/proxy?url=${encodeURIComponent(downloadUrl)}`)}
+          btnColor="teal"
+          btnText={t('Proxy download')}
+          btnIcon="download"
+          btnTitle={t('Download the file with the stream proxied through Vercel Serverless')}
+        /> */}
         <DownloadButton
           onClickCallback={() => {
-            clipboard.copy(`${getBaseUrl()}/api?path=${getReadablePath(asPath)}&raw=true`)
+            clipboard.copy(
+              `${getBaseUrl()}/api/raw/?path=${getReadablePath(asPath)}${hashedToken ? `&odpt=${hashedToken}` : ''}`
+            )
             toast.success(t('Copied direct link to clipboard.'))
           }}
           btnColor="pink"

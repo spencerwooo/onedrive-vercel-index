@@ -12,7 +12,7 @@ import 'katex/dist/katex.min.css'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import DownloadButtonGroup from '../DownloadBtnGtoup'
-import useAxiosGet from '../../utils/fetchOnMount'
+import useFileContent from '../../utils/fetchOnMount'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
 const MarkdownPreview: FC<{
@@ -20,12 +20,12 @@ const MarkdownPreview: FC<{
   path: string
   standalone?: boolean
 }> = ({ file, path, standalone = true }) => {
-  const { response: content, error, validating } = useAxiosGet(file['@microsoft.graph.downloadUrl'])
-
-  const { t } = useTranslation()
-
   // The parent folder of the markdown file, which is also the relative image folder
   const parentPath = standalone ? path.substring(0, path.lastIndexOf('/')) : path
+
+  const { response: content, error, validating } = useFileContent(`/api/raw/?path=${parentPath}/${file.name}`, path)
+  const { t } = useTranslation()
+
   // Check if the image is relative path instead of a absolute url
   const isUrlAbsolute = (url: string | string[]) => url.indexOf('://') > 0 || url.indexOf('//') === 0
   // Custom renderer to render images with relative path
@@ -55,7 +55,7 @@ const MarkdownPreview: FC<{
         // eslint-disable-next-line @next/next/no-img-element
         <img
           alt={alt}
-          src={`/api?path=${parentPath}/${src}&raw=true`}
+          src={`/api/?path=${parentPath}/${src}&raw=true`}
           title={title}
           width={width}
           height={height}
@@ -100,7 +100,7 @@ const MarkdownPreview: FC<{
       </PreviewContainer>
       {standalone && (
         <DownloadBtnContainer>
-          <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
+          <DownloadButtonGroup />
         </DownloadBtnContainer>
       )}
     </div>

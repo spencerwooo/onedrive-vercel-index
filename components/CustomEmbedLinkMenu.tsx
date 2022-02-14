@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useClipboard } from 'use-clipboard-copy'
 
 import { getBaseUrl } from '../utils/getBaseUrl'
+import { getStoredToken } from '../utils/protectedRouteHandler'
+import { getReadablePath } from '../utils/getReadablePath'
 
 export default function CustomEmbedLinkMenu({
   path,
@@ -18,6 +20,9 @@ export default function CustomEmbedLinkMenu({
 }) {
   const { t } = useTranslation()
   const clipboard = useClipboard()
+
+  const hashedToken = getStoredToken(path)
+
   const closeMenu = () => setMenuOpen(false)
 
   const filename = path.substring(path.lastIndexOf('/') + 1)
@@ -77,13 +82,13 @@ export default function CustomEmbedLinkMenu({
                 />
                 <h4 className="py-2 text-xs font-medium uppercase tracking-wider">{t('Default')}</h4>
                 <div className="mb-2 rounded border border-gray-400/20 bg-gray-50 p-1 font-mono dark:bg-gray-800">
-                  {`${getBaseUrl()}/api?path=${path}&raw=true`}
+                  {`${getBaseUrl()}/api/raw/?path=${getReadablePath(path)}${hashedToken ? `&odpt=${hashedToken}` : ''}`}
                 </div>
                 <h4 className="py-2 text-xs font-medium uppercase tracking-wider">{t('Customised')}</h4>
                 <div className="mb-2 rounded border border-gray-400/20 bg-gray-50 p-1 font-mono dark:bg-gray-800">
                   <span>{`${getBaseUrl()}/api/name/`}</span>
                   <span className="underline decoration-blue-400 decoration-wavy">{name}</span>
-                  <span>{`?path=${path}&raw=true`}</span>
+                  <span>{`/?path=${getReadablePath(path)}${hashedToken ? `&odpt=${hashedToken}` : ''}`}</span>
                 </div>
               </div>
 
@@ -91,7 +96,11 @@ export default function CustomEmbedLinkMenu({
                 <button
                   className="rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-2 text-center text-sm font-medium text-white hover:bg-gradient-to-bl focus:ring-4 focus:ring-cyan-300 dark:focus:ring-cyan-800"
                   onClick={() => {
-                    clipboard.copy(`${getBaseUrl()}/api/name/${name}?path=${path}&raw=true`)
+                    clipboard.copy(
+                      `${getBaseUrl()}/api/name/${name}/?path=${getReadablePath(path)}${
+                        hashedToken ? `&odpt=${hashedToken}` : ''
+                      }`
+                    )
                     toast.success(t('Copied customised link to clipboard.'))
                     closeMenu()
                   }}

@@ -2,30 +2,16 @@ import { posix as pathPosix } from 'path'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import Cors from 'cors'
 
 import apiConfig from '../../config/api.config'
 import siteConfig from '../../config/site.config'
 import { revealObfuscatedToken } from '../../utils/oAuthHandler'
 import { compareHashedToken } from '../../utils/protectedRouteHandler'
 import { getOdAuthTokens, storeOdAuthTokens } from '../../utils/odAuthTokenStore'
+import { runCorsMiddleware } from './raw'
 
 const basePath = pathPosix.resolve('/', siteConfig.baseDirectory)
 const clientSecret = revealObfuscatedToken(apiConfig.obfuscatedClientSecret)
-
-// CORS middleware for raw links: https://nextjs.org/docs/api-routes/api-middlewares
-function runCorsMiddleware(req: NextApiRequest, res: NextApiResponse) {
-  const cors = Cors({ methods: ['GET', 'HEAD'] })
-  return new Promise((resolve, reject) => {
-    cors(req, res, result => {
-      if (result instanceof Error) {
-        return reject(result)
-      }
-
-      return resolve(result)
-    })
-  })
-}
 
 /**
  * Encode the path of the file relative to the base directory
@@ -107,6 +93,64 @@ export function getAuthTokenPath(path: string) {
   return authTokenPath
 }
 
+/**
+ * Handles protected route authentication:
+ * - Match the cleanPath against an array of user defined protected routes
+ * - If a match is found:
+ * - 1. Download the .password file stored inside the protected route and parse its contents
+ * - 2. Check if the od-protected-token header is present in the request
+ * - The request is continued only if these two contents are exactly the same
+ *
+ * @param cleanPath Sanitised directory path, used for matching whether route is protected
+ * @param accessToken OneDrive API access token
+ * @param req Next.js request object
+ * @param res Next.js response object
+ */
+export async function checkAuthRoute(
+  cleanPath: string,
+  accessToken: string,
+  odTokenHeader: string
+): Promise<{ code: 200 | 401 | 404 | 500; message: string }> {
+  // Handle authentication through .password
+  const authTokenPath = getAuthTokenPath(cleanPath)
+
+  // Fetch password from remote file content
+  if (authTokenPath === '') {
+    return { code: 200, message: '' }
+  }
+
+  try {
+    const token = await axios.get(`${apiConfig.driveApi}/root${encodePath(authTokenPath)}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      params: {
+        select: '@microsoft.graph.downloadUrl,file',
+      },
+    })
+
+    // Handle request and check for header 'od-protected-token'
+    const odProtectedToken = await axios.get(token.data['@microsoft.graph.downloadUrl'])
+    // console.log(odTokenHeader, odProtectedToken.data.trim())
+
+    if (
+      !compareHashedToken({
+        odTokenHeader: odTokenHeader,
+        dotPassword: odProtectedToken.data,
+      })
+    ) {
+      return { code: 401, message: 'Password required.' }
+    }
+  } catch (error: any) {
+    // Password file not found, fallback to 404
+    if (error?.response?.status === 404) {
+      return { code: 404, message: "You didn't set a password." }
+    } else {
+      return { code: 500, message: 'Internal server error.' }
+    }
+  }
+
+  return { code: 200, message: 'Authenticated.' }
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // If method is POST, then the API is called by the client to store acquired tokens
   if (req.method === 'POST') {
@@ -119,11 +163,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return
     }
 
-    await storeOdAuthTokens({
-      accessToken,
-      accessTokenExpiry,
-      refreshToken,
-    })
+    await storeOdAuthTokens({ accessToken, accessTokenExpiry, refreshToken })
     res.status(200).send('OK')
     return
   }
@@ -155,43 +195,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return
   }
 
-  // Handle authentication through .password
-  const authTokenPath = getAuthTokenPath(cleanPath)
-
-  // Fetch password from remote file content
-  if (authTokenPath !== '') {
-    // Don't server cached response for password protected folders
+  // Handle protected routes authentication
+  const { code, message } = await checkAuthRoute(cleanPath, accessToken, req.headers['od-protected-token'] as string)
+  // Status code other than 200 means user has not authenticated yet
+  if (code !== 200) {
+    res.status(code).json({ error: message })
+    return
+  }
+  // If message is empty, then the path is not protected.
+  // Conversely, protected routes are not allowed to serve from cache.
+  if (message !== '') {
     res.setHeader('Cache-Control', 'no-cache')
-
-    try {
-      const token = await axios.get(`${apiConfig.driveApi}/root${encodePath(authTokenPath)}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        params: {
-          select: '@microsoft.graph.downloadUrl,file',
-        },
-      })
-
-      // Handle request and check for header 'od-protected-token'
-      const odProtectedToken = await axios.get(token.data['@microsoft.graph.downloadUrl'])
-      // console.log(req.headers['od-protected-token'], odProtectedToken.data.trim())
-
-      if (
-        !compareHashedToken({
-          odTokenHeader: req.headers['od-protected-token'] as string,
-          dotPassword: odProtectedToken.data,
-        })
-      ) {
-        res.status(401).json({ error: 'Password required for this folder.' })
-        return
-      }
-    } catch (error: any) {
-      // Password file not found, fallback to 404
-      if (error.response.status === 404) {
-        res.status(404).json({ error: "You didn't set a password for your protected folder." })
-      }
-      res.status(500).end()
-      return
-    }
   }
 
   const requestPath = encodePath(cleanPath)
@@ -201,24 +215,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const isRoot = requestPath === ''
 
   // Go for file raw download link, add CORS headers, and redirect to @microsoft.graph.downloadUrl
+  // (kept here for backwards compatibility, and cache headers will be reverted to no-cache)
   if (raw) {
     await runCorsMiddleware(req, res)
+    res.setHeader('Cache-Control', 'no-cache')
 
     const { data } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
-        select: '@microsoft.graph.downloadUrl,folder,file',
+        select: '@microsoft.graph.downloadUrl',
       },
     })
 
-    if ('folder' in data) {
-      res.status(400).json({ error: "Folders doesn't have raw download urls." })
-      return
-    }
-    if ('file' in data) {
+    if ('@microsoft.graph.downloadUrl' in data) {
       res.redirect(data['@microsoft.graph.downloadUrl'])
-      return
+    } else {
+      res.status(404).json({ error: 'No download url found.' })
     }
+    return
   }
 
   // Querying current path identity (file or folder) and follow up query childrens in folder
@@ -226,7 +240,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { data: identityData } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
-        select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file,video,image',
+        select: 'name,size,id,lastModifiedDateTime,folder,file,video,image',
       },
     })
 
@@ -235,12 +249,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         headers: { Authorization: `Bearer ${accessToken}` },
         params: next
           ? {
-              select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file,video,image',
+              select: 'name,size,id,lastModifiedDateTime,folder,file,video,image',
               top: siteConfig.maxItems,
               $skipToken: next,
             }
           : {
-              select: '@microsoft.graph.downloadUrl,name,size,id,lastModifiedDateTime,folder,file,video,image',
+              select: 'name,size,id,lastModifiedDateTime,folder,file,video,image',
               top: siteConfig.maxItems,
             },
       })
@@ -261,7 +275,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json({ file: identityData })
     return
   } catch (error: any) {
-    res.status(error.response.status).json({ error: error.response.data })
+    res.status(error?.response?.code ?? 500).json({ error: error?.response?.data ?? 'Internal server error.' })
     return
   }
 }

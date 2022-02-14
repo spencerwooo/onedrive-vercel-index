@@ -45,7 +45,7 @@ function mapAbsolutePath(path: string): string {
 function useDriveItemSearch() {
   const [query, setQuery] = useState('')
   const searchDriveItem = async (q: string) => {
-    const { data } = await axios.get<OdSearchResult>(`/api/search?q=${q}`)
+    const { data } = await axios.get<OdSearchResult>(`/api/search/?q=${q}`)
 
     // Map parentReference to the absolute path of the search result
     data.map(item => {
@@ -111,7 +111,7 @@ function SearchResultItemTemplate({
 }
 
 function SearchResultItemLoadRemote({ result }: { result: OdSearchResult[number] }) {
-  const { data, error }: SWRResponse<OdDriveItem, string> = useSWR(`/api/item?id=${result.id}`, fetcher)
+  const { data, error }: SWRResponse<OdDriveItem, string> = useSWR(`/api/item/?id=${result.id}`, fetcher)
 
   const { t } = useTranslation()
 

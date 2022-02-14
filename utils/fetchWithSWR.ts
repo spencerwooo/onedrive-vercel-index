@@ -40,10 +40,10 @@ export function useProtectedSWRInfinite(path: string = '') {
     if (previousPageData && !previousPageData.folder) return null
 
     // First page with no prevPageData
-    if (pageIndex === 0) return [`/api?path=${path}`, hashedToken]
+    if (pageIndex === 0) return [`/api/?path=${path}`, hashedToken]
 
     // Add nextPage token to API endpoint
-    return [`/api?path=${path}&next=${previousPageData.next}`, hashedToken]
+    return [`/api/?path=${path}&next=${previousPageData.next}`, hashedToken]
   }
 
   // Disable auto-revalidate, these options are equivalent to useSWRImmutable
