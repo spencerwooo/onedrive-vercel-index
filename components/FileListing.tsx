@@ -282,9 +282,10 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
             )
             continue
           }
+          const hashedTokenForPath = getStoredToken(p)
           yield {
             name: c?.name,
-            url: `/api/raw/?path=${p}${hashedToken ? `&odpt=${hashedToken}` : ''}`,
+            url: `/api/raw/?path=${p}${hashedTokenForPath ? `&odpt=${hashedTokenForPath}` : ''}`,
             path: p,
             isFolder,
           }
