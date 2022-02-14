@@ -20,6 +20,7 @@ export default function CustomEmbedLinkMenu({
 }) {
   const { t } = useTranslation()
   const clipboard = useClipboard()
+
   const hashedToken = getStoredToken(path)
 
   const closeMenu = () => setMenuOpen(false)

@@ -48,7 +48,7 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
 
   return (
     <>
-      <CustomEmbedLinkMenu path={getReadablePath(asPath)} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+      <CustomEmbedLinkMenu path={asPath} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <PreviewContainer>
         {error ? (
           <FourOhFour errorMsg={error.message} />
