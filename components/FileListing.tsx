@@ -39,6 +39,7 @@ import { PreviewContainer } from './previews/Containers'
 import type { OdFileObject, OdFolderChildren, OdFolderObject } from '../types'
 import FolderListLayout from './FolderListLayout'
 import FolderGridLayout from './FolderGridLayout'
+import { getStoredToken } from '../utils/protectedRouteHandler'
 
 // Disabling SSR for some previews
 const EPUBPreview = dynamic(() => import('./previews/EPUBPreview'), {
@@ -155,6 +156,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   }>({})
 
   const router = useRouter()
+  const hashedToken = getStoredToken(router.asPath)
   const [layout, _] = useLocalStorage('preferredLayout', layouts[0])
 
   const { t } = useTranslation()
@@ -237,7 +239,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       const folder = folderName ? decodeURIComponent(folderName) : undefined
       const files = getFiles()
         .filter(c => selected[c.id])
-        .map(c => ({ name: c.name, url: `/api/raw/?path=${path}` }))
+        .map(c => ({ name: c.name, url: `/api/raw/?path=${path}${hashedToken ? `&odpt=${hashedToken}` : ''}` }))
 
       if (files.length == 1) {
         const el = document.createElement('a')
@@ -280,7 +282,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
           }
           yield {
             name: c?.name,
-            url: `/api/raw/?path=${p}`,
+            url: `/api/raw/?path=${p}${hashedToken ? `&odpt=${hashedToken}` : ''}`,
             path: p,
             isFolder,
           }
