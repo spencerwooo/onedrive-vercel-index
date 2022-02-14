@@ -3,7 +3,7 @@ import { Trans } from 'next-i18next'
 
 const FourOhFour: React.FC<{ errorMsg: string }> = ({ errorMsg }) => {
   return (
-    <script>window.location.replace(\"/\");</script>
+    <script>window.location.replace('/');</script>
   )
 }
 
