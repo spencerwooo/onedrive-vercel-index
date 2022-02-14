@@ -31,8 +31,8 @@ module.exports = {
 
   // Cache-Control header, check Vercel documentation for more details. The default settings imply:
   // - max-age=0: no cache for your browser
-  // - s-maxage=3540: cache is fresh for 3540 seconds (59 minutes) on Vercel's CDN, after which it becomes stale
-  // - stale-while-revalidate=60: allow serving stale content up to another 60 seconds while revalidating
+  // - s-maxage=0: cache is fresh for 0 seconds on the edge, after which it becomes stale
+  // - stale-while-revalidate: allow serving stale content while revalidating on the edge
   // https://vercel.com/docs/concepts/edge-network/caching
-  cacheControlHeader: 'max-age=0, s-maxage=3540, stale-while-revalidate=60'
+  cacheControlHeader: 'max-age=0, s-maxage=0, stale-while-revalidate'
 }
