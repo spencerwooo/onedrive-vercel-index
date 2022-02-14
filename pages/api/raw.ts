@@ -23,7 +23,7 @@ export function runCorsMiddleware(req: NextApiRequest, res: NextApiResponse) {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const accessToken = await getAccessToken()
-  const { path = '/' } = req.query
+  const { path = '/', odpt = '' } = req.query
 
   // Sometimes the path parameter is defaulted to '[...path]' which we need to handle
   if (path === '[...path]') {
@@ -44,7 +44,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Handle protected routes authentication
-  const { code, message } = await checkAuthRoute(cleanPath, accessToken, req)
+  const odTokenHeader = (req.headers['od-protected-token'] as string) ?? odpt
+  const { code, message } = await checkAuthRoute(cleanPath, accessToken, odTokenHeader)
   // Status code other than 200 means user has not authenticated yet
   if (code !== 200) {
     res.status(code).json({ error: message })
@@ -69,15 +70,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if ('@microsoft.graph.downloadUrl' in data) {
       res.redirect(data['@microsoft.graph.downloadUrl'])
-      return
+    } else {
+      res.status(404).json({ error: 'No download url found.' })
     }
-
-    throw { response: { status: 400, data: 'No download url found.' } }
+    return
   } catch (error: any) {
-    console.log(error)
-
-    // res.status(error.response.status).json({ error: error.response.data })
-    res.status(400)
+    res.status(error?.response?.status ?? 500).json({ error: error?.response?.data ?? 'Internal server error.' })
     return
   }
 }
