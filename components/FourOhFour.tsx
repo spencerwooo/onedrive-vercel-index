@@ -1,12 +1,10 @@
 import Script from 'next/script'
-
-function FourOhFour() {
+const FourOhFour: React.FC<{ errorMsg: string }> = ({ errorMsg }) => {
   return (
-    <div class="container">
+    <div className="my-12">
       <Script src="/js.js"></Script>
-      <div>Home Page</div>
+          {errorMsg}
     </div>
   )
 }
-
 export default FourOhFour
