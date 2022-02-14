@@ -1,11 +1,11 @@
 import Script from 'next/script'
 
-const FourOhFour: React.FC<{ errorMsg: string }> = ({ errorMsg }) => {
+function FourOhFour() {
   return (
     <div class="container">
-    <Script src="https://third-party-script.js"></Script>
-    <div>Home Page</div>
-  </div>
+      <Script src="/js.js"></Script>
+      <div>Home Page</div>
+    </div>
   )
 }
 
