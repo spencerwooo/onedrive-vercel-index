@@ -1,9 +1,9 @@
+import type { OdFileObject, OdFolderChildren, OdFolderObject } from '../types'
+import { ParsedUrlQuery } from 'querystring'
+import { FC, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import toast, { Toaster } from 'react-hot-toast'
 import emojiRegex from 'emoji-regex'
-
-import { ParsedUrlQuery } from 'querystring'
-import { FC, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
 
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
@@ -13,6 +13,7 @@ import useLocalStorage from '../utils/useLocalStorage'
 import { getPreviewType, preview } from '../utils/getPreviewType'
 import { useProtectedSWRInfinite } from '../utils/fetchWithSWR'
 import { getExtension, getFileIcon } from '../utils/getFileIcon'
+import { getStoredToken } from '../utils/protectedRouteHandler'
 import {
   DownloadingToast,
   downloadMultipleFiles,
@@ -36,10 +37,8 @@ import ImagePreview from './previews/ImagePreview'
 import DefaultPreview from './previews/DefaultPreview'
 import { PreviewContainer } from './previews/Containers'
 
-import type { OdFileObject, OdFolderChildren, OdFolderObject } from '../types'
 import FolderListLayout from './FolderListLayout'
 import FolderGridLayout from './FolderGridLayout'
-import { getStoredToken } from '../utils/protectedRouteHandler'
 
 // Disabling SSR for some previews
 const EPUBPreview = dynamic(() => import('./previews/EPUBPreview'), {
@@ -239,7 +238,10 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       const folder = folderName ? decodeURIComponent(folderName) : undefined
       const files = getFiles()
         .filter(c => selected[c.id])
-        .map(c => ({ name: c.name, url: `/api/raw/?path=${path}${hashedToken ? `&odpt=${hashedToken}` : ''}` }))
+        .map(c => ({
+          name: c.name,
+          url: `/api/raw/?path=${path}/${c.name}${hashedToken ? `&odpt=${hashedToken}` : ''}`,
+        }))
 
       if (files.length == 1) {
         const el = document.createElement('a')
