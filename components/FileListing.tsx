@@ -8,6 +8,7 @@ import emojiRegex from 'emoji-regex'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
+import Script from 'next/script'
 
 import useLocalStorage from '../utils/useLocalStorage'
 import { getPreviewType, preview } from '../utils/getPreviewType'
@@ -354,6 +355,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
               {isLoadingMore ? (
                 <>
                   <LoadingIcon className="inline-block h-4 w-4 animate-spin" />
+                  <Script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></Script>
                   <span>{t('Loading ...')}</span>{' '}
                 </>
               ) : isReachingEnd ? (
