@@ -16,6 +16,10 @@ const OfficePreview: FC<{ file: OdFileObject }> = ({ file }) => {
   const docContainer = useRef<HTMLDivElement>(null)
   const [docContainerWidth, setDocContainerWidth] = useState(600)
 
+  const docUrl = encodeURIComponent(
+    `${getBaseUrl()}/api/raw/?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`
+  )
+
   useEffect(() => {
     setDocContainerWidth(docContainer.current ? docContainer.current.offsetWidth : 600)
   }, [])
@@ -23,11 +27,7 @@ const OfficePreview: FC<{ file: OdFileObject }> = ({ file }) => {
   return (
     <div>
       <div className="overflow-scroll" ref={docContainer} style={{ maxHeight: '90vh' }}>
-        <Preview
-          url={`${getBaseUrl()}/api/raw/?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`}
-          width={docContainerWidth.toString()}
-          height="600"
-        />
+        <Preview url={docUrl} width={docContainerWidth.toString()} height="600" />
       </div>
       <DownloadBtnContainer>
         <DownloadButtonGroup />
