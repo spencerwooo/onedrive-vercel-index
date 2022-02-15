@@ -12,7 +12,7 @@ import { useTranslation } from 'next-i18next'
 import useLocalStorage from '../utils/useLocalStorage'
 import { getPreviewType, preview } from '../utils/getPreviewType'
 import { useProtectedSWRInfinite } from '../utils/fetchWithSWR'
-import { getExtension, getFileIcon } from '../utils/getFileIcon'
+import { getExtension, getRawExtension, getFileIcon } from '../utils/getFileIcon'
 import { getStoredToken } from '../utils/protectedRouteHandler'
 import {
   DownloadingToast,
@@ -70,10 +70,10 @@ const formatChildName = (name: string) => {
   const { render, emoji } = renderEmoji(name)
   return render ? name.replace(emoji ? emoji[0] : '', '').trim() : name
 }
-export const ChildName: FC<{ name: string }> = ({ name }) => {
+export const ChildName: FC<{ name: string; folder?: boolean }> = ({ name, folder }) => {
   const original = formatChildName(name)
-  const extension = getExtension(original)
-  const prename = original.substring(0, original.length - extension.length)
+  const extension = folder ? '' : getRawExtension(original)
+  const prename = folder ? original : original.substring(0, original.length - extension.length)
   return (
     <span className="truncate before:float-right before:content-[attr(data-tail)]" data-tail={extension}>
       {prename}

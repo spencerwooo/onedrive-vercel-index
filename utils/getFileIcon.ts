@@ -105,8 +105,11 @@ export function hasKey<O>(obj: O, key: PropertyKey): key is keyof O {
   return key in obj
 }
 
+export function getRawExtension(fileName: string): string {
+  return fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2)
+}
 export function getExtension(fileName: string): string {
-  return fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2).toLowerCase()
+  return getRawExtension(fileName).toLowerCase()
 }
 
 export function getFileIcon(fileName: string, flags?: { video?: boolean }): [IconPrefix, IconName] {
