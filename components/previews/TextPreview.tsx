@@ -1,15 +1,17 @@
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import DownloadButtonGroup from '../DownloadBtnGtoup'
-import useAxiosGet from '../../utils/fetchOnMount'
+import useFileContent from '../../utils/fetchOnMount'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 
 const TextPreview = ({ file }) => {
+  const { asPath } = useRouter()
   const { t } = useTranslation()
 
-  const { response: content, error, validating } = useAxiosGet(file['@microsoft.graph.downloadUrl'])
+  const { response: content, error, validating } = useFileContent(`/api/raw/?path=${asPath}`, asPath)
   if (error) {
     return (
       <PreviewContainer>
@@ -40,7 +42,7 @@ const TextPreview = ({ file }) => {
         <pre className="overflow-x-scroll p-0 text-sm md:p-3">{content}</pre>
       </PreviewContainer>
       <DownloadBtnContainer>
-        <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadButtonGroup />
       </DownloadBtnContainer>
     </div>
   )

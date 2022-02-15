@@ -57,7 +57,6 @@
     "@types/cors": "^2.8.12",
     "@types/crypto-js": "^4.0.2",
     "@types/ioredis": "^4.28.5",
-    "@types/prismjs": "^1.16.5",
     "@types/react": "17.0.38",
     "@types/react-copy-to-clipboard": "^5.0.0",
     "@types/react-dom": "^17.0.8",

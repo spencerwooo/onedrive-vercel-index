@@ -800,7 +800,7 @@
   word-wrap: normal;
 }
 
-.markdown-body pre > code {
+.markdown-body pre > div > code {
   padding: 0;
   margin: 0;
   font-size: 100%;

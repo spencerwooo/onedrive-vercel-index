@@ -10,6 +10,7 @@ import DownloadButtonGroup from '../DownloadBtnGtoup'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 import { LoadingIcon } from '../Loading'
 import { formatModifiedDateTime } from '../../utils/fileDetails'
+import { getStoredToken } from '../../utils/protectedRouteHandler'
 
 enum PlayerState {
   Loading,
@@ -21,12 +22,13 @@ enum PlayerState {
 const AudioPreview: FC<{ file: OdFileObject }> = ({ file }) => {
   const { t } = useTranslation()
   const { asPath } = useRouter()
+  const hashedToken = getStoredToken(asPath)
 
   const rapRef = useRef<ReactAudioPlayer>(null)
   const [playerStatus, setPlayerStatus] = useState(PlayerState.Loading)
 
   // Render audio thumbnail, and also check for broken thumbnails
-  const thumbnail = `/api/thumbnail?path=${asPath}&size=medium`
+  const thumbnail = `/api/thumbnail/?path=${asPath}&size=medium${hashedToken ? `&odpt=${hashedToken}` : ''}`
   const [brokenThumbnail, setBrokenThumbnail] = useState(false)
 
   useEffect(() => {
@@ -92,7 +94,7 @@ const AudioPreview: FC<{ file: OdFileObject }> = ({ file }) => {
 
             <ReactAudioPlayer
               className="h-11 w-full"
-              src={file['@microsoft.graph.downloadUrl']}
+              src={`/api/raw/?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`}
               ref={rapRef}
               controls
               preload="auto"
@@ -102,7 +104,7 @@ const AudioPreview: FC<{ file: OdFileObject }> = ({ file }) => {
       </PreviewContainer>
 
       <DownloadBtnContainer>
-        <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadButtonGroup />
       </DownloadBtnContainer>
     </>
   )
