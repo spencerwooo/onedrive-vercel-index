@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { default as rawFileHandler } from '../raw'
+import { default as indexHandler } from '..'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  rawFileHandler(req, res)
+  indexHandler(req, res)
 }

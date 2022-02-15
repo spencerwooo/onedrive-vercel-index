@@ -11,7 +11,6 @@ import { humanFileSize, formatModifiedDateTime } from '../utils/fileDetails'
 import { getReadablePath } from '../utils/getReadablePath'
 
 import { Downloading, Checkbox, ChildIcon, ChildName } from './FileListing'
-import { getStoredToken } from '../utils/protectedRouteHandler'
 
 const FileListItem: FC<{ fileContent: OdFolderChildren }> = ({ fileContent: c }) => {
   return (
@@ -46,12 +45,8 @@ const FolderListLayout = ({
   toast,
 }) => {
   const clipboard = useClipboard()
-  const hashedToken = getStoredToken(path)
 
   const { t } = useTranslation()
-
-  // Get item path from item name
-  const getItemPath = (name: string) => `${path === '/' ? '' : path}/${encodeURIComponent(name)}`
 
   return (
     <div className="rounded bg-white dark:bg-gray-900 dark:text-gray-100">
@@ -77,7 +72,7 @@ const FolderListLayout = ({
               title={t('Select files')}
             />
             {totalGenerating ? (
-              <Downloading title={t('Downloading selected files, refresh page to cancel')} style="p-1.5" />
+              <Downloading title={t('Downloading selected files, refresh page to cancel')} />
             ) : (
               <button
                 title={t('Download selected files')}
@@ -118,7 +113,7 @@ const FolderListLayout = ({
                 <FontAwesomeIcon icon={['far', 'copy']} />
               </span>
               {folderGenerating[c.id] ? (
-                <Downloading title={t('Downloading folder, refresh page to cancel')} style="px-1.5 py-1" />
+                <Downloading title={t('Downloading folder, refresh page to cancel')} />
               ) : (
                 <span
                   title={t('Download folder')}
@@ -139,9 +134,9 @@ const FolderListLayout = ({
                 className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                 onClick={() => {
                   clipboard.copy(
-                    `${getBaseUrl()}/api/raw/?path=${getReadablePath(getItemPath(c.name))}${
-                      hashedToken ? `&odpt=${hashedToken}` : ''
-                    }`
+                    `${getBaseUrl()}/api?path=${getReadablePath(
+                      `${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`
+                    )}&raw=true`
                   )
                   toast.success(t('Copied raw file permalink.'))
                 }}
@@ -151,7 +146,7 @@ const FolderListLayout = ({
               <a
                 title={t('Download file')}
                 className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
-                href={`/api/raw/?path=${getItemPath(c.name)}${hashedToken ? `&odpt=${hashedToken}` : ''}`}
+                href={c['@microsoft.graph.downloadUrl']}
               >
                 <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
               </a>

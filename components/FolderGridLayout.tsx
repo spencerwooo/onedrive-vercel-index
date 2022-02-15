@@ -10,13 +10,10 @@ import { getBaseUrl } from '../utils/getBaseUrl'
 import { formatModifiedDateTime } from '../utils/fileDetails'
 import { getReadablePath } from '../utils/getReadablePath'
 import { Checkbox, ChildIcon, ChildName, Downloading } from './FileListing'
-import { getStoredToken } from '../utils/protectedRouteHandler'
 
 const GridItem = ({ c, path }: { c: OdFolderChildren; path: string }) => {
   // We use the generated medium thumbnail for rendering preview images (excluding folders)
-  const hashedToken = getStoredToken(path)
-  const thumbnailUrl =
-    'folder' in c ? null : `/api/thumbnail/?path=${path}&size=medium${hashedToken ? `&odpt=${hashedToken}` : ''}`
+  const thumbnailUrl = 'folder' in c ? null : `/api/thumbnail?path=${path}&size=medium`
 
   // Some thumbnails are broken, so we check for onerror event in the image component
   const [brokenThumbnail, setBrokenThumbnail] = useState(false)
@@ -69,7 +66,6 @@ const FolderGridLayout = ({
   toast,
 }) => {
   const clipboard = useClipboard()
-  const hashedToken = getStoredToken(path)
 
   const { t } = useTranslation()
 
@@ -88,7 +84,7 @@ const FolderGridLayout = ({
             title={t('Select all files')}
           />
           {totalGenerating ? (
-            <Downloading title={t('Downloading selected files, refresh page to cancel')} style="p-1.5" />
+            <Downloading title={t('Downloading selected files, refresh page to cancel')} />
           ) : (
             <button
               title={t('Download selected files')}
@@ -122,7 +118,7 @@ const FolderGridLayout = ({
                     <FontAwesomeIcon icon={['far', 'copy']} />
                   </span>
                   {folderGenerating[c.id] ? (
-                    <Downloading title={t('Downloading folder, refresh page to cancel')} style="px-1.5 py-1" />
+                    <Downloading title={t('Downloading folder, refresh page to cancel')} />
                   ) : (
                     <span
                       title={t('Download folder')}
@@ -139,11 +135,7 @@ const FolderGridLayout = ({
                     title={t('Copy raw file permalink')}
                     className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
                     onClick={() => {
-                      clipboard.copy(
-                        `${getBaseUrl()}/api/raw/?path=${getReadablePath(getItemPath(c.name))}${
-                          hashedToken ? `&odpt=${hashedToken}` : ''
-                        }`
-                      )
+                      clipboard.copy(`${getBaseUrl()}/api?path=${getReadablePath(getItemPath(c.name))}&raw=true`)
                       toast.success(t('Copied raw file permalink.'))
                     }}
                   >
@@ -152,9 +144,7 @@ const FolderGridLayout = ({
                   <a
                     title={t('Download file')}
                     className="cursor-pointer rounded px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
-                    href={`${getBaseUrl()}/api/raw/?path=${getReadablePath(getItemPath(c.name))}${
-                      hashedToken ? `&odpt=${hashedToken}` : ''
-                    }`}
+                    href={c['@microsoft.graph.downloadUrl']}
                   >
                     <FontAwesomeIcon icon={['far', 'arrow-alt-circle-down']} />
                   </a>

@@ -1,9 +1,9 @@
-import type { OdFileObject, OdFolderChildren, OdFolderObject } from '../types'
-import { ParsedUrlQuery } from 'querystring'
-import { FC, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import toast, { Toaster } from 'react-hot-toast'
 import emojiRegex from 'emoji-regex'
+
+import { ParsedUrlQuery } from 'querystring'
+import { FC, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
 
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
@@ -13,7 +13,6 @@ import useLocalStorage from '../utils/useLocalStorage'
 import { getPreviewType, preview } from '../utils/getPreviewType'
 import { useProtectedSWRInfinite } from '../utils/fetchWithSWR'
 import { getExtension, getFileIcon } from '../utils/getFileIcon'
-import { getStoredToken } from '../utils/protectedRouteHandler'
 import {
   DownloadingToast,
   downloadMultipleFiles,
@@ -37,6 +36,7 @@ import ImagePreview from './previews/ImagePreview'
 import DefaultPreview from './previews/DefaultPreview'
 import { PreviewContainer } from './previews/Containers'
 
+import type { OdFileObject, OdFolderChildren, OdFolderObject } from '../types'
 import FolderListLayout from './FolderListLayout'
 import FolderGridLayout from './FolderGridLayout'
 
@@ -134,9 +134,9 @@ export const Checkbox: FC<{
   )
 }
 
-export const Downloading: FC<{ title: string; style: string }> = ({ title, style }) => {
+export const Downloading: FC<{ title: string }> = ({ title }) => {
   return (
-    <span title={title} className={`${style} rounded`} role="status">
+    <span title={title} className="rounded p-2" role="status">
       <LoadingIcon
         // Use fontawesome far theme via class `svg-inline--fa` to get style `vertical-align` only
         // for consistent icon alignment, as class `align-*` cannot satisfy it
@@ -155,7 +155,6 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   }>({})
 
   const router = useRouter()
-  const hashedToken = getStoredToken(router.asPath)
   const [layout, _] = useLocalStorage('preferredLayout', layouts[0])
 
   const { t } = useTranslation()
@@ -238,10 +237,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       const folder = folderName ? decodeURIComponent(folderName) : undefined
       const files = getFiles()
         .filter(c => selected[c.id])
-        .map(c => ({
-          name: c.name,
-          url: `/api/raw/?path=${path}/${c.name}${hashedToken ? `&odpt=${hashedToken}` : ''}`,
-        }))
+        .map(c => ({ name: c.name, url: c['@microsoft.graph.downloadUrl'] }))
 
       if (files.length == 1) {
         const el = document.createElement('a')
@@ -282,10 +278,9 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
             )
             continue
           }
-          const hashedTokenForPath = getStoredToken(p)
           yield {
             name: c?.name,
-            url: `/api/raw/?path=${p}${hashedTokenForPath ? `&odpt=${hashedTokenForPath}` : ''}`,
+            url: c ? c['@microsoft.graph.downloadUrl'] : undefined,
             path: p,
             isFolder,
           }
