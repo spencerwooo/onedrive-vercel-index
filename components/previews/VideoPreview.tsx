@@ -59,7 +59,7 @@ const VideoPlayer: FC<{
     // If the video is not in flv format, we can use the native plyr and add sources directly with the video URL
     plyrSource['sources'] = [{ src: videoUrl }]
   }
-  return <Plyr id="plyr" source={plyrSource as Plyr.SourceInfo} options={plyrOptions} />
+  return <Plyr id="plyr" source={plyrSource as Plyr.SourceInfo} options={plyrOptions} crossOrigin="anonymous" />
 }
 
 const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
