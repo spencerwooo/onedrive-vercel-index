@@ -103,7 +103,7 @@ export default function OAuthStep2() {
 
             <p className="py-1">{t('The authorisation code extracted is:')}</p>
             <p className="my-2 overflow-hidden truncate rounded border border-gray-400/20 bg-gray-50 p-2 font-mono text-sm opacity-80 dark:bg-gray-800">
-              {authCode || <span className="animate-pulse">{t('Waiting for code...')}</span>}
+              {authCode ?? <span className="animate-pulse">{t('Waiting for code...')}</span>}
             </p>
 
             <p>

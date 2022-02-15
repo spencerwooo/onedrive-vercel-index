@@ -35,7 +35,7 @@ const DefaultPreview: FC<{ file: OdFileObject }> = ({ file }) => {
 
             <div>
               <div className="py-2 text-xs font-medium uppercase opacity-80">{t('MIME type')}</div>
-              <div>{file.file?.mimeType || t('Unavailable')}</div>
+              <div>{file.file?.mimeType ?? t('Unavailable')}</div>
             </div>
 
             <div>
@@ -47,7 +47,7 @@ const DefaultPreview: FC<{ file: OdFileObject }> = ({ file }) => {
                       Quick XOR
                     </td>
                     <td className="whitespace-nowrap py-1 px-3 font-mono text-gray-500 dark:text-gray-400">
-                      {file.file.hashes?.quickXorHash || t('Unavailable')}
+                      {file.file.hashes?.quickXorHash ?? t('Unavailable')}
                     </td>
                   </tr>
                   <tr className="border-y bg-white dark:border-gray-700 dark:bg-gray-900">
@@ -55,7 +55,7 @@ const DefaultPreview: FC<{ file: OdFileObject }> = ({ file }) => {
                       SHA1
                     </td>
                     <td className="whitespace-nowrap py-1 px-3 font-mono text-gray-500 dark:text-gray-400">
-                      {file.file.hashes?.sha1Hash || t('Unavailable')}
+                      {file.file.hashes?.sha1Hash ?? t('Unavailable')}
                     </td>
                   </tr>
                   <tr className="border-y bg-white dark:border-gray-700 dark:bg-gray-900">
@@ -63,7 +63,7 @@ const DefaultPreview: FC<{ file: OdFileObject }> = ({ file }) => {
                       SHA256
                     </td>
                     <td className="whitespace-nowrap py-1 px-3 font-mono text-gray-500 dark:text-gray-400">
-                      {file.file.hashes?.sha256Hash || t('Unavailable')}
+                      {file.file.hashes?.sha256Hash ?? t('Unavailable')}
                     </td>
                   </tr>
                 </tbody>
@@ -73,7 +73,7 @@ const DefaultPreview: FC<{ file: OdFileObject }> = ({ file }) => {
         </div>
       </PreviewContainer>
       <DownloadBtnContainer>
-        <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadButtonGroup />
       </DownloadBtnContainer>
     </div>
   )
