@@ -4,6 +4,7 @@ import { FC, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
+import axios from 'axios'
 import toast from 'react-hot-toast'
 import Plyr from 'plyr-react'
 import { useAsync } from 'react-async-hook'
@@ -33,6 +34,17 @@ const VideoPlayer: FC<{
   mpegts: any
 }> = ({ videoName, videoUrl, width, height, thumbnail, subtitle, isFlv, mpegts }) => {
   useEffect(() => {
+    // Really really hacky way to inject subtitles as file blobs into the video element
+    axios
+      .get(subtitle, { responseType: 'blob' })
+      .then(resp => {
+        const track = document.querySelector('track')
+        track?.setAttribute('src', URL.createObjectURL(resp.data))
+      })
+      .catch(() => {
+        console.log('Could not load subtitle.')
+      })
+
     if (isFlv) {
       const loadFlv = () => {
         // Really hacky way to get the exposed video element from Plyr
@@ -43,14 +55,14 @@ const VideoPlayer: FC<{
       }
       loadFlv()
     }
-  }, [videoUrl, isFlv, mpegts])
+  }, [videoUrl, isFlv, mpegts, subtitle])
 
   // Common plyr configs, including the video source and plyr options
   const plyrSource = {
     type: 'video',
     title: videoName,
     poster: thumbnail,
-    tracks: [{ kind: 'captions', label: videoName, src: subtitle, default: true }],
+    tracks: [{ kind: 'captions', label: videoName, src: '', default: true }],
   }
   const plyrOptions: Plyr.Options = {
     ratio: `${width ?? 16}:${height ?? 9}`,
@@ -59,7 +71,7 @@ const VideoPlayer: FC<{
     // If the video is not in flv format, we can use the native plyr and add sources directly with the video URL
     plyrSource['sources'] = [{ src: videoUrl }]
   }
-  return <Plyr id="plyr" source={plyrSource as Plyr.SourceInfo} options={plyrOptions} crossOrigin="anonymous" />
+  return <Plyr id="plyr" source={plyrSource as Plyr.SourceInfo} options={plyrOptions} />
 }
 
 const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
