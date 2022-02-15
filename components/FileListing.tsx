@@ -181,6 +181,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   if (!data) {
     return (
       <PreviewContainer>
+        <Script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></Script>
         <Loading loadingText={t('Loading ...')} />
       </PreviewContainer>
     )
