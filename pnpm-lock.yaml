@@ -34,6 +34,7 @@ specifiers:
   next: ^12.0.10
   next-i18next: ^10.2.0
   nextjs-progressbar: ^0.0.13
+  plyr-react: ^3.2.1
   postcss: ^8.4.5
   prettier: ^2.5.1
   prettier-plugin-tailwindcss: ^0.1.4
@@ -44,7 +45,6 @@ specifiers:
   react-cookie: ^4.1.1
   react-copy-to-clipboard: ^5.0.3
   react-dom: ^17.0.2
-  react-dplayer: ^0.4.2
   react-hot-toast: ^2.0.0
   react-hotkeys-hook: ^3.4.4
   react-markdown: ^8.0.0
@@ -82,6 +82,7 @@ dependencies:
   next: 12.0.10_react-dom@17.0.2+react@17.0.2
   next-i18next: 10.2.0_61390be992b634a688f7c2555547b55b
   nextjs-progressbar: 0.0.13_next@12.0.10+react@17.0.2
+  plyr-react: 3.2.1_react-dom@17.0.2+react@17.0.2
   preview-office-docs: 1.0.2_react@17.0.2
   react: 17.0.2
   react-async-hook: 4.0.0_react@17.0.2
@@ -89,7 +90,6 @@ dependencies:
   react-cookie: 4.1.1_react@17.0.2
   react-copy-to-clipboard: 5.0.4_react@17.0.2
   react-dom: 17.0.2_react@17.0.2
-  react-dplayer: 0.4.2_react@17.0.2
   react-hot-toast: 2.2.0_6bba596ee6fb84e656d75c53902ecf01
   react-hotkeys-hook: 3.4.4_react-dom@17.0.2+react@17.0.2
   react-markdown: 8.0.0_b08e3c15324cbe90a6ff8fcd416c932c
@@ -415,10 +415,6 @@ packages:
     resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
     dependencies:
       '@types/ms': 0.7.31
-    dev: false
-
-  /@types/dplayer/1.25.2:
-    resolution: {integrity: sha512-bkTVZkK3Vi7N7eX2FUBnqKhCjTaeRLkhvY8H6zolatbSTtjPPdxyUzhE3C29sIBYRRq1kQHSduFgCHKg5VF3Jw==}
     dev: false
 
   /@types/hast/2.3.4:
@@ -773,13 +769,6 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /axios/0.19.2:
-    resolution: {integrity: sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==}
-    deprecated: Critical security vulnerability fixed in v0.21.1. For more information, see https://github.com/axios/axios/pull/3410
-    dependencies:
-      follow-redirects: 1.5.10
-    dev: false
-
   /axios/0.25.0:
     resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
     dependencies:
@@ -799,10 +788,6 @@ packages:
   /balanced-match/1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
     dev: true
-
-  /balloon-css/1.2.0:
-    resolution: {integrity: sha512-urXwkHgwp6GsXVF+it01485Z2Cj4pnW02ICnM0TemOlkKmCNnDLmyy+ZZiRXBpwldUXO+aRNr7Hdia4CBvXJ5A==}
-    dev: false
 
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
@@ -1000,11 +985,6 @@ packages:
       readable-stream: 2.3.7
     dev: true
 
-  /clsx/1.1.1:
-    resolution: {integrity: sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==}
-    engines: {node: '>=6'}
-    dev: false
-
   /cluster-key-slot/1.1.0:
     resolution: {integrity: sha512-2Nii8p3RwAPiFwsnZvukotvow2rIHM+yQ6ZcBXGHdniadkYGZYiGmkHJIbZPIV9nfv7m/U1IPMVVcAhoWFeklw==}
     engines: {node: '>=0.10.0'}
@@ -1152,6 +1132,10 @@ packages:
   /csstype/3.0.10:
     resolution: {integrity: sha512-2u44ZG2OcNUO9HDp/Jl8C07x6pU/eTR3ncV91SiK3dhG9TWvRVsCoJw14Ckx5DgWkzGA3waZWO3d7pgqpUI/XA==}
 
+  /custom-event-polyfill/1.0.7:
+    resolution: {integrity: sha512-TDDkd5DkaZxZFM8p+1I3yAlvM3rSr1wbrOliG4yJiwinMZN8z/iGL7BTlDkrJcYTmgUSb4ywVCc3ZaUtOtC76w==}
+    dev: false
+
   /d/1.0.1:
     resolution: {integrity: sha512-m62ShEObQ39CfralilEQRjH6oAMtNCV1xJyEx5LpRYUVN+EviphDgUc/F3hnYbADmkiNs67Y+3ylmlG7Lnu+FA==}
     dependencies:
@@ -1180,12 +1164,6 @@ packages:
     dependencies:
       ms: 2.0.0
     dev: true
-
-  /debug/3.1.0:
-    resolution: {integrity: sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==}
-    dependencies:
-      ms: 2.0.0
-    dev: false
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -1305,14 +1283,6 @@ packages:
       domelementtype: 2.2.0
       domhandler: 4.3.0
     dev: true
-
-  /dplayer/1.26.0:
-    resolution: {integrity: sha512-uOE0w/WdlX7N9d0ppIEcAYrcnUjY52TMX+MBL4lj9Mj+JMljVuaEc5w88HkZp5Q11VqvN/jxnM8ktx2Dr7/MgA==}
-    dependencies:
-      axios: 0.19.2
-      balloon-css: 1.2.0
-      promise-polyfill: 8.1.3
-    dev: false
 
   /duplexify/3.7.1:
     resolution: {integrity: sha512-07z8uv2wMyS51kKhD1KsdXJg5WQ6t93RneqRxUHnskXVtlYYkLqM0gqStQZ3pj073g687jPCHrqNfCzawLYh5g==}
@@ -1802,13 +1772,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: false
-
-  /follow-redirects/1.5.10:
-    resolution: {integrity: sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==}
-    engines: {node: '>=4.0'}
-    dependencies:
-      debug: 3.1.0
     dev: false
 
   /format/0.2.2:
@@ -2620,6 +2583,10 @@ packages:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
     dev: true
 
+  /loadjs/4.2.0:
+    resolution: {integrity: sha512-AgQGZisAlTPbTEzrHPb6q+NYBMD+DP9uvGSIjSUM5uG+0jG15cb8axWpxuOIqrmQjn6scaaH8JwloiP27b2KXA==}
+    dev: false
+
   /localforage/1.10.0:
     resolution: {integrity: sha512-14/H1aX7hzBBmmh7sGPd+AOMkkIrHM3Z1PAyGgZigA1H1p5O5ANnMyWzvpAETtG68/dC4pC0ncy3+PPGzXZHPg==}
     dependencies:
@@ -3122,6 +3089,7 @@ packages:
 
   /ms/2.0.0:
     resolution: {integrity: sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=}
+    dev: true
 
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
@@ -3318,10 +3286,6 @@ packages:
       es-abstract: 1.19.1
     dev: true
 
-  /omit.js/2.0.2:
-    resolution: {integrity: sha512-hJmu9D+bNB40YpL9jYebQl4lsTW6yEHRTroJzNLqQJYHm7c+NQnJGfZmIWh8S3q3KoaxV1aLhV6B3+0N0/kyJg==}
-    dev: false
-
   /once/1.4.0:
     resolution: {integrity: sha1-WDsap3WWHUsROsF9nFC6753Xa9E=}
     dependencies:
@@ -3464,6 +3428,28 @@ packages:
     engines: {node: '>=8.6'}
     dev: true
 
+  /plyr-react/3.2.1_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-ZXMA+d837mZCkb68oTXso6rH8O+B2+A7t8ux1fdU+kFSUh1NZa1/iuItItFgScmVC6FoO3DNj+FkZP2aikxoKg==}
+    engines: {node: '>=10', npm: '>=6'}
+    peerDependencies:
+      react: ^16.13.0  || ^17.0.0
+      react-dom: ^16.13.0  || ^17.0.0
+    dependencies:
+      plyr: 3.6.12
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
+
+  /plyr/3.6.12:
+    resolution: {integrity: sha512-42WhYpMS/FEyX2unSEvhYtj1RvJgWvOsjZQFDongOQHA4eVzsyr7b06bzVpinMAOVC9e5H7RCbK+6CCAFIl2VQ==}
+    dependencies:
+      core-js: 3.21.0
+      custom-event-polyfill: 1.0.7
+      loadjs: 4.2.0
+      rangetouch: 2.0.1
+      url-polyfill: 1.1.12
+    dev: false
+
   /postcss-js/4.0.0_postcss@8.4.6:
     resolution: {integrity: sha512-77QESFBwgX4irogGVPgQ5s07vLvFqWr228qZY+w6lW599cRlK/HmnlivnnVUxkjHnCu4J16PDMHcH+e+2HbvTQ==}
     engines: {node: ^12 || ^14 || >= 16}
@@ -3572,10 +3558,6 @@ packages:
     engines: {node: 10.* || >= 12.*}
     dev: true
 
-  /promise-polyfill/8.1.3:
-    resolution: {integrity: sha512-MG5r82wBzh7pSKDRa9y+vllNHz3e3d4CNj1PQE4BQYxLme0gKYYBm9YENq+UkEikyZ0XbiGWxYlVw3Rl9O/U8g==}
-    dev: false
-
   /prop-types/15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
     dependencies:
@@ -3630,6 +3612,10 @@ packages:
       underscore.string: 3.3.6
     dev: true
 
+  /rangetouch/2.0.1:
+    resolution: {integrity: sha512-sln+pNSc8NGaHoLzwNBssFSf/rSYkqeBXzX1AtJlkJiUaVSJSbRAWJk+4omsXkN+EJalzkZhWQ3th1m0FpR5xA==}
+    dev: false
+
   /react-async-hook/4.0.0_react@17.0.2:
     resolution: {integrity: sha512-97lgjFkOcHCTYSrsKBpsXg3iVWM0LnzedB749iP76sb3/8Ouu4nHIkCLEOrQWHVYqrYxjF05NN6GHoXWFkB3Kw==}
     engines: {node: '>=8', npm: '>=5'}
@@ -3680,18 +3666,6 @@ packages:
       object-assign: 4.1.1
       react: 17.0.2
       scheduler: 0.20.2
-    dev: false
-
-  /react-dplayer/0.4.2_react@17.0.2:
-    resolution: {integrity: sha512-UnI6KaAsnGtP6MSz79lGCAEZko+j0DcKgwfNATtQJL/T/zRs1t3ZJDT/ymbCquuU1e3fADn0Cww1gpNJ3K2TiQ==}
-    peerDependencies:
-      react: ^16.x
-    dependencies:
-      '@types/dplayer': 1.25.2
-      clsx: 1.1.1
-      dplayer: 1.26.0
-      omit.js: 2.0.2
-      react: 17.0.2
     dev: false
 
   /react-hot-toast/2.2.0_6bba596ee6fb84e656d75c53902ecf01:
@@ -4511,6 +4485,10 @@ packages:
     dependencies:
       punycode: 2.1.1
     dev: true
+
+  /url-polyfill/1.1.12:
+    resolution: {integrity: sha512-mYFmBHCapZjtcNHW0MDq9967t+z4Dmg5CJ0KqysK3+ZbyoNOWQHksGCTWwDhxGXllkWlOc10Xfko6v4a3ucM6A==}
+    dev: false
 
   /use-clipboard-copy/0.2.0_react@17.0.2:
     resolution: {integrity: sha512-f0PMMwZ2/Hh9/54L12capx4s6ASdd6edNJxg2OcqWVNM8BPvtOSmNFIN1Dg/q//fPp8MpUZceHfr7cnWOS0RxA==}
