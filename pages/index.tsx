@@ -25,6 +25,7 @@ export default function Home() {
           <FileListing />
         </div>
       </main>
+
       <Footer />
     </div>
   )

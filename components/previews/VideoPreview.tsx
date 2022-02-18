@@ -1,23 +1,80 @@
 import type { OdFileObject } from '../../types'
-import { useState } from 'react'
+
+import { FC, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useClipboard } from 'use-clipboard-copy'
-import DPlayer from 'react-dplayer'
-import toast from 'react-hot-toast'
 import { useTranslation } from 'next-i18next'
+
+import axios from 'axios'
+import toast from 'react-hot-toast'
+import Plyr from 'plyr-react'
 import { useAsync } from 'react-async-hook'
+import { useClipboard } from 'use-clipboard-copy'
 
 import { getBaseUrl } from '../../utils/getBaseUrl'
 import { getExtension } from '../../utils/getFileIcon'
 import { getReadablePath } from '../../utils/getReadablePath'
 import { getStoredToken } from '../../utils/protectedRouteHandler'
+
 import { DownloadButton } from '../DownloadBtnGtoup'
 import { DownloadBtnContainer, PreviewContainer } from './Containers'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import CustomEmbedLinkMenu from '../CustomEmbedLinkMenu'
 
-const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
+import 'plyr-react/dist/plyr.css'
+
+const VideoPlayer: FC<{
+  videoName: string
+  videoUrl: string
+  width?: number
+  height?: number
+  thumbnail: string
+  subtitle: string
+  isFlv: boolean
+  mpegts: any
+}> = ({ videoName, videoUrl, width, height, thumbnail, subtitle, isFlv, mpegts }) => {
+  useEffect(() => {
+    // Really really hacky way to inject subtitles as file blobs into the video element
+    axios
+      .get(subtitle, { responseType: 'blob' })
+      .then(resp => {
+        const track = document.querySelector('track')
+        track?.setAttribute('src', URL.createObjectURL(resp.data))
+      })
+      .catch(() => {
+        console.log('Could not load subtitle.')
+      })
+
+    if (isFlv) {
+      const loadFlv = () => {
+        // Really hacky way to get the exposed video element from Plyr
+        const video = document.getElementById('plyr')
+        const flv = mpegts.createPlayer({ url: videoUrl, type: 'flv' })
+        flv.attachMediaElement(video)
+        flv.load()
+      }
+      loadFlv()
+    }
+  }, [videoUrl, isFlv, mpegts, subtitle])
+
+  // Common plyr configs, including the video source and plyr options
+  const plyrSource = {
+    type: 'video',
+    title: videoName,
+    poster: thumbnail,
+    tracks: [{ kind: 'captions', label: videoName, src: '', default: true }],
+  }
+  const plyrOptions: Plyr.Options = {
+    ratio: `${width ?? 16}:${height ?? 9}`,
+  }
+  if (!isFlv) {
+    // If the video is not in flv format, we can use the native plyr and add sources directly with the video URL
+    plyrSource['sources'] = [{ src: videoUrl }]
+  }
+  return <Plyr id="plyr" source={plyrSource as Plyr.SourceInfo} options={plyrOptions} />
+}
+
+const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
   const { asPath } = useRouter()
   const hashedToken = getStoredToken(asPath)
   const clipboard = useClipboard()
@@ -55,28 +112,15 @@ const VideoPreview: React.FC<{ file: OdFileObject }> = ({ file }) => {
         ) : loading && isFlv ? (
           <Loading loadingText={t('Loading FLV extension...')} />
         ) : (
-          <DPlayer
-            className="aspect-video"
-            options={{
-              volume: 1.0,
-              lang: 'en',
-              video: {
-                url: videoUrl,
-                pic: thumbnail,
-                type: isFlv ? 'customFlv' : 'auto',
-                customType: {
-                  customFlv: (video: HTMLVideoElement) => {
-                    const flvPlayer = mpegts!.createPlayer({
-                      type: 'flv',
-                      url: video.src,
-                    })
-                    flvPlayer.attachMediaElement(video)
-                    flvPlayer.load()
-                  },
-                },
-              },
-              subtitle: { url: subtitle },
-            }}
+          <VideoPlayer
+            videoName={file.name}
+            videoUrl={videoUrl}
+            width={file.video?.width}
+            height={file.video?.height}
+            thumbnail={thumbnail}
+            subtitle={subtitle}
+            isFlv={isFlv}
+            mpegts={mpegts}
           />
         )}
       </PreviewContainer>
