@@ -13,11 +13,6 @@ export function getReadablePath(path: string) {
         .join('')
     )
     .join('/')
-  // Handle trailing char for autolink
-  // Ref: https://github.github.com/gfm/#autolinks-extension-
-  if (/^[!,:*]$/.test(path[path.length - 1])) {
-    path = path.substring(0, path.length - 1) + encodeURIComponent(path[path.length - 1])
-  }
   return path
 }
 
@@ -28,7 +23,7 @@ function isSafeChar(c: string) {
     if (/^[a-zA-Z0-9\-._~]$/.test(c)) {
       // RFC3986 unreserved chars
       return true
-    } else if (/^[*:+@,!]$/.test(c)) {
+    } else if (/^[*:@,!]$/.test(c)) {
       // Some extra pretty safe chars for URL path or query
       // Ref: https://stackoverflow.com/a/42287988/11691878
       return true
