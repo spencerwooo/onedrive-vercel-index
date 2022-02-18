@@ -11,7 +11,7 @@ module.exports = {
 
   // [OPTIONAL] This is the website icon to the left of the title inside the navigation bar. It should be placed under the
   // /public directory of your GitHub project (not your OneDrive folder!), and referenced here by its relative path to /public.
-  icon: "favicon.ico",
+  icon: "/favicon.ico",
 
   // The name of your website. Present alongside your icon.
   title: "TUO图欧君学习资源库",
@@ -34,7 +34,7 @@ module.exports = {
 
   // [OPTIONAL] The footer component of your website. You can write HTML here, but you need to escape double
   // quotes - changing " to ". You can write anything here, and if you like badges, generate some with https://shields.io
-  footer: '<a style="color: rgb(254,17,130)" href="https://icp.gov.moe/?keyword=20220313" target="_blank">萌ICP备20220313号</a> <center>Construct ❤ by <a href="https://github.com/zkeq" target="_blank">Zkeq</a>.<br><center><iframe frameborder=0  height=25px marginwidth=0 scrolling=no src="/count.html"></iframe></center>Powered by: <a href="https://vercel.com/" target="_blank" rel="noopener noreferrer"><img style="display: inline-block" src="https://img.shields.io/badge/Vercel-black?style=flat&logo=Vercel&logoColor=white" alt="vercel" /> </a> <a href="https://github.com/spencerwooo/onedrive-vercel-index" target="_blank" rel="noopener noreferrer"><img style="display: inline-block" src="https://img.shields.io/badge/onedrive--vercel--index-2C68C3?style=flat&logo=microsoft-onedrive&logoColor=white" alt="github" /> </a> <a target="_blank" href="https://nextjs.org/"><img style="display: inline-block" src="https://img.shields.io/badge/Next.js-black?style=flat&logo=next.js&logoColor=white" alt="nextjs" /></a></center>',
+  footer: '<a style="color: rgb(254,17,130)" href="https://icp.gov.moe/?keyword=20220313" target="_blank">萌ICP备20220313号</a> <center>Construct ❤ by <a href="https://github.com/zkeq" target="_blank">Zkeq</a>.<br><center><iframe frameborder=0  height=20px marginwidth=0 scrolling=no src="/count.html"></iframe></center>Powered by: <a href="https://vercel.com/" target="_blank" rel="noopener noreferrer"><img style="display: inline-block" src="https://img.shields.io/badge/Vercel-black?style=flat&logo=Vercel&logoColor=white" alt="vercel" /> </a> <a href="https://github.com/spencerwooo/onedrive-vercel-index" target="_blank" rel="noopener noreferrer"><img style="display: inline-block" src="https://img.shields.io/badge/onedrive--vercel--index-2C68C3?style=flat&logo=microsoft-onedrive&logoColor=white" alt="github" /> </a> <a target="_blank" href="https://nextjs.org/"><img style="display: inline-block" src="https://img.shields.io/badge/Next.js-black?style=flat&logo=next.js&logoColor=white" alt="nextjs" /></a></center>',
 
   // [OPTIONAL] This is where you specify the folders that are password protected. It is an array of paths pointing to all
   // the directories in which you have .password set. Check the documentation for details.
