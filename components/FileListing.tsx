@@ -164,7 +164,13 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
   const { data, error, size, setSize } = useProtectedSWRInfinite(path)
 
-  const [videoAsAudio, setVideoAsAudio] = useState(false)
+  // This saves path to video needed treated as audio. When path changes, reset it.
+  const [videoAsAudioPath, setVideoAsAudioPath] = useState<string>()
+  useEffect(() => {
+    if (videoAsAudioPath !== path) {
+      setVideoAsAudioPath(undefined)
+    }
+  }, [path, videoAsAudioPath])
 
   if (error) {
     // If error includes 403 which means the user has not completed initial setup, redirect to OAuth page
@@ -381,7 +387,10 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
   if ('file' in responses[0] && responses.length === 1) {
     const file = responses[0].file as OdFileObject
-    const previewType = getPreviewType(getExtension(file.name), { video: Boolean(file.video), audio: videoAsAudio })
+    const previewType = getPreviewType(getExtension(file.name), {
+      video: Boolean(file.video),
+      audio: Boolean(videoAsAudioPath),
+    })
 
     if (previewType) {
       switch (previewType) {
@@ -398,7 +407,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
           return <MarkdownPreview file={file} path={path} />
 
         case preview.video:
-          return <VideoPreview file={file} onPlayAsAudio={() => setVideoAsAudio(true)} />
+          return <VideoPreview file={file} onPlayAsAudio={() => setVideoAsAudioPath(path)} />
 
         case preview.audio:
           return <AudioPreview file={file} />
