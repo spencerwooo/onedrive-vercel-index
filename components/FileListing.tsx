@@ -164,6 +164,8 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
   const { data, error, size, setSize } = useProtectedSWRInfinite(path)
 
+  const [videoAsAudio, setVideoAsAudio] = useState(false)
+
   if (error) {
     // If error includes 403 which means the user has not completed initial setup, redirect to OAuth page
     if (error.status === 403) {
@@ -379,7 +381,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
   if ('file' in responses[0] && responses.length === 1) {
     const file = responses[0].file as OdFileObject
-    const previewType = getPreviewType(getExtension(file.name), { video: Boolean(file.video) })
+    const previewType = getPreviewType(getExtension(file.name), { video: Boolean(file.video), audio: videoAsAudio })
 
     if (previewType) {
       switch (previewType) {
@@ -396,7 +398,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
           return <MarkdownPreview file={file} path={path} />
 
         case preview.video:
-          return <VideoPreview file={file} />
+          return <VideoPreview file={file} onPlayAsAudio={() => setVideoAsAudio(true)} />
 
         case preview.audio:
           return <AudioPreview file={file} />

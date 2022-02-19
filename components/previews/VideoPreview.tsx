@@ -74,7 +74,7 @@ const VideoPlayer: FC<{
   return <Plyr id="plyr" source={plyrSource as Plyr.SourceInfo} options={plyrOptions} />
 }
 
-const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
+const VideoPreview: FC<{ file: OdFileObject; onPlayAsAudio?: () => void }> = ({ file, onPlayAsAudio }) => {
   const { asPath } = useRouter()
   const hashedToken = getStoredToken(asPath)
   const clipboard = useClipboard()
@@ -158,6 +158,14 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
             btnText={t('Customise link')}
             btnIcon="pen"
           />
+          {onPlayAsAudio && (
+            <DownloadButton
+              onClickCallback={onPlayAsAudio}
+              btnColor="green"
+              btnText={t('Play as audio')}
+              btnIcon="music"
+            />
+          )}
 
           <DownloadButton
             onClickCallback={() => window.open(`iina://weblink?url=${getBaseUrl()}${videoUrl}`)}
