@@ -53,7 +53,7 @@
   "File is empty.": "文件为空。",
   "File size": "文件大小",
   "Filename": "文件名",
-  "Final step, click the button below to store these tokens persistently before they expire after {{minutes}} minutes {{seconds}} seconds. ": "最后一步，在这些 tokens 于 {{minutes}} 分钟 {{seconds}} 秒后失效前，点击下方按钮以永久存储这些 tokens",
+  "Final step, click the button below to store these tokens persistently before they expire after {{minutes}} minutes {{seconds}} seconds. ": "最后一步，在这些 tokens 于 {{minutes}} 分钟 {{seconds}} 秒后失效前，点击下方按钮以永久存储这些 tokens。",
   "Finished downloading folder.": "下载文件夹成功。",
   "Finished downloading selected files.": "下载选定文件成功。",
   "Get tokens": "获取 tokens",
