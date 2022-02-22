@@ -30,9 +30,14 @@ const TextPreview = ({ file }) => {
 
   if (!content) {
     return (
-      <PreviewContainer>
-        <FourOhFour errorMsg={t('File is empty.')} />
-      </PreviewContainer>
+      <>
+        <PreviewContainer>
+          <FourOhFour errorMsg={t('File is empty.')} />
+        </PreviewContainer>
+        <DownloadBtnContainer>
+          <DownloadButtonGroup />
+        </DownloadBtnContainer>
+      </>
     )
   }
 

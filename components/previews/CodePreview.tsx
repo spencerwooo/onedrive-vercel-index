@@ -29,14 +29,19 @@ const CodePreview: FC<{ file: any }> = ({ file }) => {
   }
   if (validating) {
     return (
-      <PreviewContainer>
-        <Loading loadingText={t('Loading file content...')} />
-      </PreviewContainer>
+      <>
+        <PreviewContainer>
+          <Loading loadingText={t('Loading file content...')} />
+        </PreviewContainer>
+        <DownloadBtnContainer>
+          <DownloadButtonGroup />
+        </DownloadBtnContainer>
+      </>
     )
   }
 
   return (
-    <div>
+    <>
       <PreviewContainer>
         <SyntaxHighlighter
           language={getLanguageByFileName(file.name)}
@@ -48,7 +53,7 @@ const CodePreview: FC<{ file: any }> = ({ file }) => {
       <DownloadBtnContainer>
         <DownloadButtonGroup />
       </DownloadBtnContainer>
-    </div>
+    </>
   )
 }
 

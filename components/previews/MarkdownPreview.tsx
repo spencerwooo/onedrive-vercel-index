@@ -96,9 +96,16 @@ const MarkdownPreview: FC<{
   }
   if (validating) {
     return (
-      <PreviewContainer>
-        <Loading loadingText={t('Loading file content...')} />
-      </PreviewContainer>
+      <>
+        <PreviewContainer>
+          <Loading loadingText={t('Loading file content...')} />
+        </PreviewContainer>
+        {standalone && (
+          <DownloadBtnContainer>
+            <DownloadButtonGroup />
+          </DownloadBtnContainer>
+        )}
+      </>
     )
   }
 
