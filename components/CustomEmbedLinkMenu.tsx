@@ -1,5 +1,4 @@
 import { Dispatch, Fragment, SetStateAction, useRef, useState } from 'react'
-import toast from 'react-hot-toast'
 import { useTranslation } from 'next-i18next'
 import { Dialog, Transition } from '@headlessui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,6 +7,24 @@ import { useClipboard } from 'use-clipboard-copy'
 import { getBaseUrl } from '../utils/getBaseUrl'
 import { getStoredToken } from '../utils/protectedRouteHandler'
 import { getReadablePath } from '../utils/getReadablePath'
+
+function LinkContainer({ title, value }: { title: string; value: string }) {
+  const clipboard = useClipboard({ copiedTimeout: 1000 })
+  return (
+    <>
+      <h4 className="py-2 text-xs font-medium uppercase tracking-wider">{title}</h4>
+      <div className="group relative mb-2 max-h-24 overflow-y-scroll break-all rounded border border-gray-400/20 bg-gray-50 p-2.5 font-mono dark:bg-gray-800">
+        <div className="opacity-80">{value}</div>
+        <button
+          onClick={() => clipboard.copy(value)}
+          className="absolute top-[0.2rem] right-[0.2rem] w-8 rounded border border-gray-400/40 bg-gray-100 py-1.5 opacity-0 transition-all duration-100 hover:bg-gray-200 group-hover:opacity-100 dark:bg-gray-850 dark:hover:bg-gray-700"
+        >
+          {clipboard.copied ? <FontAwesomeIcon icon="check" /> : <FontAwesomeIcon icon="copy" />}
+        </button>
+      </div>
+    </>
+  )
+}
 
 export default function CustomEmbedLinkMenu({
   path,
@@ -19,7 +36,6 @@ export default function CustomEmbedLinkMenu({
   setMenuOpen: Dispatch<SetStateAction<boolean>>
 }) {
   const { t } = useTranslation()
-  const clipboard = useClipboard()
 
   const hashedToken = getStoredToken(path)
 
@@ -79,39 +95,30 @@ export default function CustomEmbedLinkMenu({
               <div className="mt-4">
                 <h4 className="py-2 text-xs font-medium uppercase tracking-wider">{t('Filename')}</h4>
                 <input
-                  className="mb-2 w-full rounded border border-gray-600/10 p-1 font-mono focus:outline-none focus:ring focus:ring-blue-300 dark:bg-gray-600 dark:text-white dark:focus:ring-blue-700"
+                  className="mb-2 w-full rounded border border-gray-600/10 p-2.5 font-mono focus:outline-none focus:ring focus:ring-blue-300 dark:bg-gray-600 dark:text-white dark:focus:ring-blue-700"
                   ref={focusInputRef}
                   value={name}
                   onChange={e => setName(e.target.value)}
                 />
-                <h4 className="py-2 text-xs font-medium uppercase tracking-wider">{t('Default')}</h4>
-                <div className="mb-2 overflow-hidden break-all rounded border border-gray-400/20 bg-gray-50 p-1 font-mono dark:bg-gray-800">
-                  {`${getBaseUrl()}/api/raw/?path=${readablePath}${hashedToken ? `&odpt=${hashedToken}` : ''}`}
-                </div>
-                <h4 className="py-2 text-xs font-medium uppercase tracking-wider">{t('Customised')}</h4>
-                <div className="mb-2 overflow-hidden break-all rounded border border-gray-400/20 bg-gray-50 p-1 font-mono dark:bg-gray-800">
-                  <span>{`${getBaseUrl()}/api/name/`}</span>
-                  <span className="underline decoration-blue-400 decoration-wavy">{name}</span>
-                  <span>{`/?path=${readablePath}${hashedToken ? `&odpt=${hashedToken}` : ''}`}</span>
-                </div>
-              </div>
 
-              <div className="mb-2 mt-6 text-right">
-                <button
-                  className="rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-2 text-center text-sm font-medium text-white hover:bg-gradient-to-bl focus:ring-4 focus:ring-cyan-300 dark:focus:ring-cyan-800"
-                  onClick={() => {
-                    clipboard.copy(
-                      `${getBaseUrl()}/api/name/${name}/?path=${readablePath}${
-                        hashedToken ? `&odpt=${hashedToken}` : ''
-                      }`
-                    )
-                    toast.success(t('Copied customised link to clipboard.'))
-                    closeMenu()
-                  }}
-                >
-                  <FontAwesomeIcon icon="copy" />
-                  <span className="ml-2">{t('Copy custom link to clipboard')}</span>
-                </button>
+                <LinkContainer
+                  title={t('Default')}
+                  value={`${getBaseUrl()}/api/raw/?path=${readablePath}${hashedToken ? `&odpt=${hashedToken}` : ''}`}
+                />
+                <LinkContainer
+                  title={t('URL encoded')}
+                  value={`${getBaseUrl()}/api/raw/?path=${path}${hashedToken ? `&odpt=${hashedToken}` : ''}`}
+                />
+                <LinkContainer
+                  title={t('Customised')}
+                  value={`${getBaseUrl()}/api/name/${name}/?path=${readablePath}${
+                    hashedToken ? `&odpt=${hashedToken}` : ''
+                  }`}
+                />
+                <LinkContainer
+                  title={t('Customised and encoded')}
+                  value={`${getBaseUrl()}/api/name/${name}/?path=${path}${hashedToken ? `&odpt=${hashedToken}` : ''}`}
+                />
               </div>
             </div>
           </Transition.Child>
