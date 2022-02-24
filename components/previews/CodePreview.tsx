@@ -29,20 +29,31 @@ const CodePreview: FC<{ file: any }> = ({ file }) => {
       <PreviewContainer>
         <Loading loadingText="Loading file content..." />
       </PreviewContainer>
+      <>
+        <PreviewContainer>
+          <Loading loadingText={t('Loading file content...')} />
+        </PreviewContainer>
+        <DownloadBtnContainer>
+          <DownloadButtonGroup />
+        </DownloadBtnContainer>
+      </>
     )
   }
 
   return (
-    <div>
+    <>
       <PreviewContainer>
-        <pre className={`language-${getExtension(file.name)}`}>
-          <code className="font-mono">{content}</code>
-        </pre>
+       <SyntaxHighlighter
+          language={getLanguageByFileName(file.name)}
+          style={theme === 'dark' ? tomorrowNightEighties : tomorrow}
+        >
+          {content}
+        </SyntaxHighlighter>
       </PreviewContainer>
       <DownloadBtnContainer>
-        <DownloadButtonGroup downloadUrl={file['@microsoft.graph.downloadUrl']} />
+        <DownloadButtonGroup />
       </DownloadBtnContainer>
-    </div>
+    </>
   )
 }
 
