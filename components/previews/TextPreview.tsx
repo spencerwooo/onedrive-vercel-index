@@ -22,9 +22,14 @@ const TextPreview = ({ file }) => {
 
   if (validating) {
     return (
-      <PreviewContainer>
-        <Loading loadingText={t('Loading file content...')} />
-      </PreviewContainer>
+      <>
+        <PreviewContainer>
+          <Loading loadingText={t('Loading file content...')} />
+        </PreviewContainer>
+        <DownloadBtnContainer>
+          <DownloadButtonGroup />
+        </DownloadBtnContainer>
+      </>
     )
   }
 
