@@ -130,7 +130,7 @@ Documentation is hosted at [onedrive-vercel-index.spencerwoo.com](https://ovi.sw
 
 Yes! Completely free with no backend server what-so-ever. (Well, we use Redis, but that's free to some extent also.)
 
-## Sponsors and donations!
+## Sponsors and donations
 
 Open-source is hard! If you happen to like this project and want me to keep going, please consider sponsoring me or providing a single donation! Thanks for all the love and support!
 
@@ -140,10 +140,11 @@ Open-source is hard! If you happen to like this project and want me to keep goin
 
 *Your name will appear here if you sponsor or donate 😀*
 
----
+## License
 
-**onedrive-vercel-index** ©Spencer Woo. Released under the MIT License.
+[MIT](LICENSE)
 
-Authored and maintained by Spencer Woo.
-
-> [@Portfolio](https://spencerwoo.com/) · [@Blog](https://blog.spencerwoo.com/) · [@GitHub](https://github.com/spencerwooo)
+<div align="center">
+  <img src="./public/footer.png" />
+  <em>made with ❤️ by <a href="https://spencerwoo.com">spencer woo</a></em>
+</div>
