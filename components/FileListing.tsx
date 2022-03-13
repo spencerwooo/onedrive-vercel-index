@@ -150,7 +150,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
   const [totalSelected, setTotalSelected] = useState<0 | 1 | 2>(0)
   const [totalGenerating, setTotalGenerating] = useState<boolean>(false)
-  const [folderGenerating, setFolderGenerating] = useState<{
+  const [folderGenerating] = useState<{
     [key: string]: boolean
   }>({})
 
@@ -269,48 +269,48 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
     }
 
     // Folder recursive download
-    const handleFolderDownload = (path: string, id: string, name?: string) => () => {
-      const files = (async function* () {
-        for await (const { meta: c, path: p, isFolder, error } of traverseFolder(path)) {
-          if (error) {
-            toast.error(
-              t('Failed to download folder {{path}}: {{status}} {{message}} Skipped it to continue.', {
-                path: p,
-                status: error.status,
-                message: error.message,
-              })
-            )
-            continue
-          }
-          const hashedTokenForPath = getStoredToken(p)
-          yield {
-            name: c?.name,
-            url: `/api/raw/?path=${p}${hashedTokenForPath ? `&odpt=${hashedTokenForPath}` : ''}`,
-            path: p,
-            isFolder,
-          }
-        }
-      })()
+    // const handleFolderDownload = (path: string, id: string, name?: string) => () => {
+    //   const files = (async function* () {
+    //     for await (const { meta: c, path: p, isFolder, error } of traverseFolder(path)) {
+    //       if (error) {
+    //         toast.error(
+    //           t('Failed to download folder {{path}}: {{status}} {{message}} Skipped it to continue.', {
+    //             path: p,
+    //             status: error.status,
+    //             message: error.message,
+    //           })
+    //         )
+    //         continue
+    //       }
+    //       const hashedTokenForPath = getStoredToken(p)
+    //       yield {
+    //         name: c?.name,
+    //         url: `/api/raw/?path=${p}${hashedTokenForPath ? `&odpt=${hashedTokenForPath}` : ''}`,
+    //         path: p,
+    //         isFolder,
+    //       }
+    //     }
+    //   })()
 
-      setFolderGenerating({ ...folderGenerating, [id]: true })
-      const toastId = toast.loading(<DownloadingToast router={router} />)
+    //   setFolderGenerating({ ...folderGenerating, [id]: true })
+    //   const toastId = toast.loading(<DownloadingToast router={router} />)
 
-      downloadTreelikeMultipleFiles({
-        toastId,
-        router,
-        files,
-        basePath: path,
-        folder: name,
-      })
-        .then(() => {
-          setFolderGenerating({ ...folderGenerating, [id]: false })
-          toast.success(t('Finished downloading folder.'), { id: toastId })
-        })
-        .catch(() => {
-          setFolderGenerating({ ...folderGenerating, [id]: false })
-          toast.error(t('Failed to download folder.'), { id: toastId })
-        })
-    }
+    //   downloadTreelikeMultipleFiles({
+    //     toastId,
+    //     router,
+    //     files,
+    //     basePath: path,
+    //     folder: name,
+    //   })
+    //     .then(() => {
+    //       setFolderGenerating({ ...folderGenerating, [id]: false })
+    //       toast.success(t('Finished downloading folder.'), { id: toastId })
+    //     })
+    //     .catch(() => {
+    //       setFolderGenerating({ ...folderGenerating, [id]: false })
+    //       toast.error(t('Failed to download folder.'), { id: toastId })
+    //     })
+    // }
 
     // Folder layout component props
     const folderProps = {
@@ -323,8 +323,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       toggleTotalSelected,
       totalGenerating,
       handleSelectedDownload,
-      folderGenerating,
-      handleFolderDownload,
+      // folderGenerating,
     }
 
     return (
