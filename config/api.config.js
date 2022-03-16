@@ -29,6 +29,9 @@ module.exports = {
   // unauthorised use of the proxied download feature - but that is disabled for now. So you can safely ignore this settings.
   directLinkRegex: 'public[.].*[.]files[.]1drv[.]com',
 
+  // The hideFileRegex is used to hide some files, and supports regular expressions. e.g. README.md
+  hideFileRegex: 'README[.]md',
+  
   // Cache-Control header, check Vercel documentation for more details. The default settings imply:
   // - max-age=0: no cache for your browser
   // - s-maxage=0: cache is fresh for 60 seconds on the edge, after which it becomes stale
