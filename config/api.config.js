@@ -25,10 +25,6 @@ module.exports = {
   // The scope we require are listed here, in most cases you would not need to change this as well.
   scope: 'user.read files.read.all offline_access',
 
-  // The directLinkRegex is used to match the direct link of the file from the response of the API. We originally use this to prevent
-  // unauthorised use of the proxied download feature - but that is disabled for now. So you can safely ignore this settings.
-  directLinkRegex: 'public[.].*[.]files[.]1drv[.]com',
-
   // Cache-Control header, check Vercel documentation for more details. The default settings imply:
   // - max-age=0: no cache for your browser
   // - s-maxage=0: cache is fresh for 60 seconds on the edge, after which it becomes stale
