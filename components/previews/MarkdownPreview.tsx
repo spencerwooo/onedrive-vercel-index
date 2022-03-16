@@ -20,11 +20,16 @@ const MarkdownPreview: FC<{
   file: any
   path: string
   standalone?: boolean
-}> = ({ file, path, standalone = true }) => {
+  proxy?: boolean
+}> = ({ file, path, standalone = true, proxy = false }) => {
   // The parent folder of the markdown file, which is also the relative image folder
   const parentPath = standalone ? path.substring(0, path.lastIndexOf('/')) : path
 
-  const { response: content, error, validating } = useFileContent(`/api/raw/?path=${parentPath}/${file.name}`, path)
+  const {
+    response: content,
+    error,
+    validating,
+  } = useFileContent(`/api/raw/?path=${parentPath}/${file.name}${proxy ? `&proxy=true` : ''}`, path)
   const { t } = useTranslation()
 
   // Check if the image is relative path instead of a absolute url

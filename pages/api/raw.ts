@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
 import Cors from 'cors'
 
-import { driveApi } from '../../config/api.config'
+import { driveApi, cacheControlHeader } from '../../config/api.config'
 import { encodePath, getAccessToken, checkAuthRoute } from '.'
 
 // CORS middleware for raw links: https://nextjs.org/docs/api-routes/api-middlewares
@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return
   }
 
-  const { path = '/', odpt = '' } = req.query
+  const { path = '/', odpt = '', proxy = false } = req.query
 
   // Sometimes the path parameter is defaulted to '[...path]' which we need to handle
   if (path === '[...path]') {
@@ -65,12 +65,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
         // OneDrive international version fails when only selecting the downloadUrl (what a stupid bug)
-        select: 'id,@microsoft.graph.downloadUrl',
+        select: 'id,size,@microsoft.graph.downloadUrl',
       },
     })
 
     if ('@microsoft.graph.downloadUrl' in data) {
-      res.redirect(data['@microsoft.graph.downloadUrl'])
+      // Only proxy raw file content response for files up to 4MB
+      if (proxy && 'size' in data && data['size'] < 4194304) {
+        const { headers, data: stream } = await axios.get(data['@microsoft.graph.downloadUrl'] as string, {
+          responseType: 'stream',
+        })
+        headers['Cache-Control'] = cacheControlHeader
+        // Send data stream as response
+        res.writeHead(200, headers)
+        stream.pipe(res)
+      } else {
+        res.redirect(data['@microsoft.graph.downloadUrl'])
+      }
     } else {
       res.status(404).json({ error: 'No download url found.' })
     }
