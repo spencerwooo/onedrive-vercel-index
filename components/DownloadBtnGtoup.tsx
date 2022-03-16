@@ -82,13 +82,6 @@ const DownloadButtonGroup = () => {
           btnIcon="file-download"
           btnTitle={t('Download the file directly through OneDrive')}
         />
-        {/* <DownloadButton
-          onClickCallback={() => window.open(`/api/proxy?url=${encodeURIComponent(downloadUrl)}`)}
-          btnColor="teal"
-          btnText={t('Proxy download')}
-          btnIcon="download"
-          btnTitle={t('Download the file with the stream proxied through Vercel Serverless')}
-        /> */}
         <DownloadButton
           onClickCallback={() => {
             clipboard.copy(`${getBaseUrl()}/api/raw/?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`)

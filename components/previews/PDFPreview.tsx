@@ -8,7 +8,6 @@ const PDFEmbedPreview: React.FC<{ file: any }> = ({ file }) => {
   const { asPath } = useRouter()
   const hashedToken = getStoredToken(asPath)
 
-  // const url = `/api/proxy?url=${encodeURIComponent(...)}&inline=true`
   const pdfPath = encodeURIComponent(
     `${getBaseUrl()}/api/raw/?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`
   )
