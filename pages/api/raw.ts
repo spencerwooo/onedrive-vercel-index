@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
 import Cors from 'cors'
 
-import { driveApi } from '../../config/api.config'
+import { driveApi,cacheControlHeader } from '../../config/api.config'
 import { encodePath, getAccessToken, checkAuthRoute } from '.'
 
 // CORS middleware for raw links: https://nextjs.org/docs/api-routes/api-middlewares
@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return
   }
 
-  const { path = '/', odpt = '' } = req.query
+  const { path = '/', odpt = '', proxy = false, inline = false } = req.query
 
   // Sometimes the path parameter is defaulted to '[...path]' which we need to handle
   if (path === '[...path]') {
@@ -70,7 +70,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
     if ('@microsoft.graph.downloadUrl' in data) {
-      res.redirect(data['@microsoft.graph.downloadUrl'])
+      if(proxy){
+        const { headers, data: stream } = await axios.get(data['@microsoft.graph.downloadUrl'] as string, {
+          responseType: 'stream',
+        })
+        if (headers['content-type'] === 'application/pdf' && inline) {
+          // Get filename from content-disposition header
+          const filename = headers['content-disposition'].split(/filename[*]?=/)[1]
+          // Remove original content-disposition header
+          delete headers['content-disposition']
+          // Add new inline content-disposition header along with filename
+          headers['content-disposition'] = `inline; filename*=UTF-8''${filename}`
+        }
+        headers['Cache-Control'] = cacheControlHeader
+        // Send data stream as response
+        res.writeHead(200, headers)
+        stream.pipe(res)
+      }else{
+        res.redirect(data['@microsoft.graph.downloadUrl'])
+      }
     } else {
       res.status(404).json({ error: 'No download url found.' })
     }
