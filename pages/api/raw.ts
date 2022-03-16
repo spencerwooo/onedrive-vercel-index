@@ -70,7 +70,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
     if ('@microsoft.graph.downloadUrl' in data) {
-      //only file size less 4m use proxy
+      // Only proxy raw file content response for files up to 4MB
       if (proxy && 'size' in data && data['size'] < 4194304) {
         const { headers, data: stream } = await axios.get(data['@microsoft.graph.downloadUrl'] as string, {
           responseType: 'stream',
