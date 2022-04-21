@@ -159,12 +159,12 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
             btnImage="/players/vlc.png"
           />
           <DownloadButton
-            onClickCallback={() => window.open(`potplayer://${getBaseUrl()}/${videoUrl}`)}
+            onClickCallback={() => window.open(`potplayer://${getBaseUrl()}${videoUrl}`)}
             btnText="PotPlayer"
             btnImage="/players/potplayer.png"
           />
           <DownloadButton
-            onClickCallback={() => window.open(`nplayer-http://${getBaseUrl()}/${videoUrl}`)}
+            onClickCallback={() => window.open(`nplayer-http://${getBaseUrl()}${videoUrl}`)}
             btnText="nPlayer"
             btnImage="/players/nplayer.png"
           />
