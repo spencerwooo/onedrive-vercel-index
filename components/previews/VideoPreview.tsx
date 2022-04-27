@@ -22,6 +22,8 @@ import Loading from '../Loading'
 import CustomEmbedLinkMenu from '../CustomEmbedLinkMenu'
 
 import 'plyr-react/dist/plyr.css'
+import CustomMediaTrackMenu from '../CustomMediaTrackMenu'
+import { urlObjectKeys } from 'next/dist/shared/lib/utils'
 
 const VideoPlayer: FC<{
   videoName: string
@@ -29,12 +31,14 @@ const VideoPlayer: FC<{
   width?: number
   height?: number
   thumbnail: string
-  targetSubtitles: { name: string; originSrc: string }[]
+  tracks: Plyr.Track[]
   isFlv: boolean
   mpegts: any
-}> = ({ videoName, videoUrl, width, height, thumbnail, targetSubtitles, isFlv, mpegts }) => {
+}> = ({ videoName, videoUrl, width, height, thumbnail, tracks, isFlv, mpegts }) => {
   const { t } = useTranslation()
-  const [subtitleSrcMap, setSubTitleSrcMap] = useState<Map<string, string>>(new Map())
+  // Store pairs of original link and transcoded blob link
+  const [trackSrcMap, setTrackSrcMap] = useState<Map<string, string>>(new Map())
+
   useEffect(() => {
     if (isFlv) {
       const loadFlv = () => {
@@ -48,64 +52,62 @@ const VideoPlayer: FC<{
     }
   }, [videoUrl, isFlv, mpegts])
 
-  const asyncSubtitleTracks = useAsync(async () => {
+  const asyncTracks = useAsync(async () => {
     const loadingToast = toast.loading(t('Loading subtitles...'))
-    const isPropValuesEqual = (subject, target, propNames) =>
-      propNames.every(propName => subject[propName] === target[propName])
     // Remove duplicated items
-    const noDuplTargetSubs = targetSubtitles.filter(
-      (value, index, self) => index === self.findIndex(t => isPropValuesEqual(t, value, ['originSrc', 'name']))
+    const noDuplTargetTracks = tracks.filter(
+      (value1, index, self) =>
+        index === self.findIndex(value2 => Object.keys(value2).every(key => value2[key] == value1[key]))
     )
     // Get src of transcoded subtitles
-    const jobs: any[] = []
-    noDuplTargetSubs.forEach(sub => {
-      if (!subtitleSrcMap.has(sub.originSrc)) {
-        jobs.push(
-          new Promise((resolve, reject) => {
-            axios
-              .get(sub.originSrc, { responseType: 'blob' })
-              .then(resp => {
-                resp.data.text().then(vttsub => {
-                  if (subsrt.detect(vttsub) != 'vtt') {
-                    vttsub = subsrt.convert(vttsub, { format: 'vtt' })
-                  }
-                  subtitleSrcMap.set(sub.originSrc, URL.createObjectURL(new Blob([vttsub])))
-                  resolve('success')
-                })
+    const jobs: Promise<any>[] = noDuplTargetTracks
+      .filter(sub => !trackSrcMap.has(sub.src) && sub.src != '')
+      .map(sub => {
+        return new Promise((resolve, reject) => {
+          axios
+            .get(sub.src, { responseType: 'blob', timeout: 5000 })
+            .then(resp => {
+              resp.data.text().then(vttsub => {
+                if (subsrt.detect(vttsub) != 'vtt') {
+                  vttsub = subsrt.convert(vttsub, { format: 'vtt' })
+                }
+                trackSrcMap.set(sub.src, URL.createObjectURL(new Blob([vttsub])))
+                resolve('success')
               })
               .catch(() => {
-                subtitleSrcMap.set(sub.originSrc, '')
+                trackSrcMap.set(sub.src, '')
                 resolve('error')
               })
-          })
-        )
-      }
-    })
+            })
+            .catch(() => {
+              trackSrcMap.set(sub.src, '')
+              resolve('error')
+            })
+        })
+      })
     await Promise.all(jobs)
     // Build new subtitle tracks
-    const newSubTracks: any[] = []
-    noDuplTargetSubs.forEach(el => {
-      const vttSrc = subtitleSrcMap.get(el.originSrc)
+    const realTracks: Plyr.Track[] = []
+    noDuplTargetTracks.forEach(el => {
+      const vttSrc = trackSrcMap.get(el.src)
       if (vttSrc != undefined && vttSrc != '') {
-        newSubTracks.push({
-          kind: 'captions',
-          label: el.name,
+        realTracks.push({
+          ...el,
           src: vttSrc,
-          default: false,
         })
       }
     })
-    setSubTitleSrcMap(subtitleSrcMap)
+    setTrackSrcMap(trackSrcMap)
     toast.dismiss(loadingToast)
-    return newSubTracks
-  }, [targetSubtitles])
+    return realTracks
+  }, [tracks])
 
   // Common plyr configs, including the video source and plyr options
   const plyrSource: Plyr.SourceInfo = {
     type: 'video',
     title: videoName,
     poster: thumbnail,
-    tracks: [...(asyncSubtitleTracks.result ?? [])],
+    tracks: asyncTracks.result ?? [],
     sources: isFlv ? [] : [{ src: videoUrl }],
   }
   const plyrOptions: Plyr.Options = {
@@ -125,18 +127,20 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
   const hashedToken = getStoredToken(asPath)
   const clipboard = useClipboard()
 
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [targetSubtitles, setTargetSubtitles] = useState(() => {
-    const initialSubtitles: Array<{ name: string; originSrc: string }> = []
-    Array.from(['.vtt','.ass','.srt']).forEach(suffix => {
-      initialSubtitles.push({
-        name: `${file.name.substring(0, file.name.lastIndexOf('.'))}${suffix}`,
-        originSrc: `/api/raw/?path=${asPath.substring(0, asPath.lastIndexOf('.'))}${suffix}${
+  const [linkMenuOpen, setLinkMenuOpen] = useState(false)
+  const [trackMenuOpen, setTrackMenuOpen] = useState(false)
+  const [targetTracks, setTargetTracks] = useState<Plyr.Track[]>(() => {
+    return Array.from(['.vtt', '.ass', '.srt']).map(suffix => {
+      return {
+        kind: 'captions',
+        label: `${file.name.substring(0, file.name.lastIndexOf('.'))}${suffix}`,
+        src: `/api/raw/?path=${asPath.substring(0, asPath.lastIndexOf('.'))}${suffix}${
           hashedToken ? `&odpt=${hashedToken}` : ''
         }`,
-      })
+        srcLang: undefined,
+        default: false,
+      }
     })
-    return initialSubtitles
   })
 
   const { t } = useTranslation()
@@ -156,7 +160,14 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
 
   return (
     <>
-      <CustomEmbedLinkMenu path={asPath} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+      <CustomEmbedLinkMenu path={asPath} menuOpen={linkMenuOpen} setMenuOpen={setLinkMenuOpen} />
+      <CustomMediaTrackMenu
+        path={asPath}
+        tracks={targetTracks}
+        setTracks={setTargetTracks}
+        menuOpen={trackMenuOpen}
+        setMenuOpen={setTrackMenuOpen}
+      />
       <PreviewContainer>
         {asyncFlvExtension.error ? (
           <FourOhFour errorMsg={asyncFlvExtension.error.message} />
@@ -169,7 +180,7 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
             width={file.video?.width}
             height={file.video?.height}
             thumbnail={thumbnail}
-            targetSubtitles={targetSubtitles}
+            tracks={targetTracks}
             isFlv={isFlv}
             mpegts={asyncFlvExtension.result}
           />
@@ -194,9 +205,15 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
             btnIcon="copy"
           />
           <DownloadButton
-            onClickCallback={() => setMenuOpen(true)}
+            onClickCallback={() => setLinkMenuOpen(true)}
             btnColor="teal"
             btnText={t('Customise link')}
+            btnIcon="pen"
+          />
+          <DownloadButton
+            onClickCallback={() => setTrackMenuOpen(true)}
+            btnColor="blue"
+            btnText={t('Customise track')}
             btnIcon="pen"
           />
 
