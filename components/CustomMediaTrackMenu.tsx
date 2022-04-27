@@ -126,7 +126,7 @@ export default function CustomMediaTrackMenu({
           >
             <div className="inline-block max-h-[80vh] w-full max-w-3xl transform overflow-hidden overflow-y-scroll rounded border border-gray-400/30 bg-white p-4 text-left align-middle text-sm shadow-xl transition-all dark:bg-gray-900 dark:text-white">
               <Dialog.Title as="h3" className="py-2 text-xl font-bold">
-                {t('Customise media track')}
+                {t('Customise player track')}
               </Dialog.Title>
               <Dialog.Description as="p" className="py-2 opacity-80">
                 {t('Customise tracks of the media player.')}{' '}
