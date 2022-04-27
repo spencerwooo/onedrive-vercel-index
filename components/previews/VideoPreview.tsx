@@ -213,7 +213,7 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
           <DownloadButton
             onClickCallback={() => setTrackMenuOpen(true)}
             btnColor="blue"
-            btnText={t('Customise track')}
+            btnText={t('Customise player track')}
             btnIcon="pen"
           />
 
