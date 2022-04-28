@@ -166,7 +166,6 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
     <>
       <CustomEmbedLinkMenu path={asPath} menuOpen={linkMenuOpen} setMenuOpen={setLinkMenuOpen} />
       <CustomVideoSubMenu
-        path={asPath}
         tracks={targetTracks}
         setTracks={setTargetTracks}
         menuOpen={trackMenuOpen}

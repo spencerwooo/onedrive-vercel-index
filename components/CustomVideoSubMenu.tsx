@@ -41,7 +41,6 @@ export default function CustomVideoSubMenu({
   menuOpen,
   setMenuOpen,
 }: {
-  path: string
   tracks: Plyr.Track[]
   setTracks: Dispatch<SetStateAction<Plyr.Track[]>>
   menuOpen: boolean
