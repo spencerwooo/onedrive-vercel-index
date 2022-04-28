@@ -113,7 +113,7 @@ const VideoPlayer: FC<{
   }
   const plyrOptions: Plyr.Options = {
     ratio: `${width ?? 16}:${height ?? 9}`,
-    captions: {update: true}
+    captions: { update: true },
   }
   return (
     // Add translate="no" to avoid "Uncaught DOMException: Failed to execute 'removeChild' on 'Node'" error.
