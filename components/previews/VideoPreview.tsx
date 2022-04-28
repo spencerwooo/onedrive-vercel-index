@@ -23,7 +23,6 @@ import CustomEmbedLinkMenu from '../CustomEmbedLinkMenu'
 
 import 'plyr-react/dist/plyr.css'
 import CustomMediaTrackMenu from '../CustomMediaTrackMenu'
-import { urlObjectKeys } from 'next/dist/shared/lib/utils'
 
 const VideoPlayer: FC<{
   videoName: string
@@ -67,20 +66,22 @@ const VideoPlayer: FC<{
           axios
             .get(sub.src, { responseType: 'blob', timeout: 5000 })
             .then(resp => {
-              resp.data.text().then(vttsub => {
-                if (subsrt.detect(vttsub) != 'vtt') {
-                  vttsub = subsrt.convert(vttsub, { format: 'vtt' })
-                }
-                trackSrcMap.set(sub.src, URL.createObjectURL(new Blob([vttsub])))
-                resolve('success')
-              })
-              .catch(() => {
-                trackSrcMap.set(sub.src, '')
-                resolve('error')
-              })
+              resp.data
+                .text()
+                .then(vttsub => {
+                  if (subsrt.detect(vttsub) != 'vtt') {
+                    vttsub = subsrt.convert(vttsub, { format: 'vtt' })
+                  }
+                  trackSrcMap.set(sub.src, URL.createObjectURL(new Blob([vttsub])))
+                  resolve('success')
+                })
+                .catch(() => {
+                  trackSrcMap.set(sub.src, '')
+                  resolve('error')
+                })
             })
-            .catch(() => {
-              trackSrcMap.set(sub.src, '')
+            .catch(e => {
+              if (e.code != 'ECONNABORTED') trackSrcMap.set(sub.src, '')
               resolve('error')
             })
         })
@@ -112,6 +113,7 @@ const VideoPlayer: FC<{
   }
   const plyrOptions: Plyr.Options = {
     ratio: `${width ?? 16}:${height ?? 9}`,
+    captions: {update: true}
   }
   return (
     // Add translate="no" to avoid "Uncaught DOMException: Failed to execute 'removeChild' on 'Node'" error.
