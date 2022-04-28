@@ -37,6 +37,20 @@ const VideoPlayer: FC<{
   const { t } = useTranslation()
   // Store pairs of original link and transcoded blob link
   const [trackSrcMap, setTrackSrcMap] = useState<Map<string, string>>(new Map())
+  const [convertedTracks, setConvertedTracks] = useState<Plyr.Track[]>([])
+
+  // Common plyr configs, including the video source and plyr options
+  const [plyrSource, setPlyrSource] = useState<Plyr.SourceInfo>({
+    type: 'video',
+    title: videoName,
+    poster: thumbnail,
+    tracks: [],
+    sources: isFlv ? [] : [{ src: videoUrl }],
+  })
+  const [plyrOptions, setPlyrOptions] = useState<Plyr.Options>({
+    ratio: `${width ?? 16}:${height ?? 9}`,
+    captions: { update: true },
+  })
 
   useEffect(() => {
     if (isFlv) {
@@ -49,9 +63,20 @@ const VideoPlayer: FC<{
       }
       loadFlv()
     }
-  }, [videoUrl, isFlv, mpegts])
+    setPlyrSource({
+      type: 'video',
+      title: videoName,
+      poster: thumbnail,
+      tracks: convertedTracks,
+      sources: isFlv ? [] : [{ src: videoUrl }],
+    })
+    setPlyrOptions({
+      ratio: `${width ?? 16}:${height ?? 9}`,
+      captions: { update: true },
+    })
+  }, [videoUrl, isFlv, mpegts, videoName, thumbnail, convertedTracks, width, height])
 
-  const asyncTracks = useAsync(async () => {
+  useAsync(async () => {
     const loadingToast = toast.loading(t('Loading subtitles...'))
     // Remove duplicated items
     const noDuplTargetTracks = tracks.filter(
@@ -64,7 +89,7 @@ const VideoPlayer: FC<{
       .map(sub => {
         return new Promise((resolve, reject) => {
           axios
-            .get(sub.src, { responseType: 'blob', timeout: 5000 })
+            .get(sub.src, { responseType: 'blob', timeout: 6000 })
             .then(resp => {
               resp.data
                 .text()
@@ -98,23 +123,11 @@ const VideoPlayer: FC<{
         })
       }
     })
-    setTrackSrcMap(trackSrcMap)
     toast.dismiss(loadingToast)
-    return realTracks
+    setTrackSrcMap(trackSrcMap)
+    if (JSON.stringify(realTracks) != JSON.stringify(convertedTracks)) setConvertedTracks(realTracks)
   }, [tracks])
 
-  // Common plyr configs, including the video source and plyr options
-  const plyrSource: Plyr.SourceInfo = {
-    type: 'video',
-    title: videoName,
-    poster: thumbnail,
-    tracks: asyncTracks.result ?? [],
-    sources: isFlv ? [] : [{ src: videoUrl }],
-  }
-  const plyrOptions: Plyr.Options = {
-    ratio: `${width ?? 16}:${height ?? 9}`,
-    captions: { update: true },
-  }
   return (
     // Add translate="no" to avoid "Uncaught DOMException: Failed to execute 'removeChild' on 'Node'" error.
     // https://github.com/facebook/react/issues/11538
