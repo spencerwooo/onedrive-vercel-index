@@ -20,9 +20,9 @@ import { DownloadBtnContainer, PreviewContainer } from './Containers'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import CustomEmbedLinkMenu from '../CustomEmbedLinkMenu'
+import CustomVideoSubMenu from '../CustomVideoSubMenu'
 
 import 'plyr-react/dist/plyr.css'
-import CustomMediaTrackMenu from '../CustomMediaTrackMenu'
 
 const VideoPlayer: FC<{
   videoName: string
@@ -134,13 +134,11 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
   const [targetTracks, setTargetTracks] = useState<Plyr.Track[]>(() => {
     return Array.from(['.vtt', '.ass', '.srt']).map(suffix => {
       return {
-        kind: 'captions',
+        kind: 'subtitles',
         label: `${file.name.substring(0, file.name.lastIndexOf('.'))}${suffix}`,
         src: `/api/raw/?path=${asPath.substring(0, asPath.lastIndexOf('.'))}${suffix}${
           hashedToken ? `&odpt=${hashedToken}` : ''
         }`,
-        srcLang: undefined,
-        default: false,
       }
     })
   })
@@ -163,7 +161,7 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
   return (
     <>
       <CustomEmbedLinkMenu path={asPath} menuOpen={linkMenuOpen} setMenuOpen={setLinkMenuOpen} />
-      <CustomMediaTrackMenu
+      <CustomVideoSubMenu
         path={asPath}
         tracks={targetTracks}
         setTracks={setTargetTracks}
@@ -215,7 +213,7 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
           <DownloadButton
             onClickCallback={() => setTrackMenuOpen(true)}
             btnColor="blue"
-            btnText={t('Customise player track')}
+            btnText={t('Customise subtitle')}
             btnIcon="pen"
           />
 
