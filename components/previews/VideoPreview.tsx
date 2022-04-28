@@ -40,17 +40,8 @@ const VideoPlayer: FC<{
   const [convertedTracks, setConvertedTracks] = useState<Plyr.Track[]>([])
 
   // Common plyr configs, including the video source and plyr options
-  const [plyrSource, setPlyrSource] = useState<Plyr.SourceInfo>({
-    type: 'video',
-    title: videoName,
-    poster: thumbnail,
-    tracks: [],
-    sources: isFlv ? [] : [{ src: videoUrl }],
-  })
-  const [plyrOptions, setPlyrOptions] = useState<Plyr.Options>({
-    ratio: `${width ?? 16}:${height ?? 9}`,
-    captions: { update: true },
-  })
+  const [plyrSource, setPlyrSource] = useState<Plyr.SourceInfo>({ type: 'video', sources: [] })
+  const [plyrOptions, setPlyrOptions] = useState<Plyr.Options>({})
 
   useEffect(() => {
     if (isFlv) {
@@ -113,11 +104,11 @@ const VideoPlayer: FC<{
       })
     await Promise.all(jobs)
     // Build new subtitle tracks
-    const realTracks: Plyr.Track[] = []
+    const newCvtTracks: Plyr.Track[] = []
     noDuplTargetTracks.forEach(el => {
       const vttSrc = trackSrcMap.get(el.src)
       if (vttSrc != undefined && vttSrc != '') {
-        realTracks.push({
+        newCvtTracks.push({
           ...el,
           src: vttSrc,
         })
@@ -125,7 +116,7 @@ const VideoPlayer: FC<{
     })
     toast.dismiss(loadingToast)
     setTrackSrcMap(trackSrcMap)
-    if (JSON.stringify(realTracks) != JSON.stringify(convertedTracks)) setConvertedTracks(realTracks)
+    if (JSON.stringify(newCvtTracks) != JSON.stringify(convertedTracks)) setConvertedTracks(newCvtTracks)
   }, [tracks])
 
   return (
