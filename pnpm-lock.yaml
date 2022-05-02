@@ -4585,7 +4585,7 @@ packages:
     dev: false
 
   github.com/openfun/subsrt/da0ffa9195752aa165770529033b7aededab078e:
-    resolution: {commit: da0ffa9195752aa165770529033b7aededab078e, repo: git+ssh://git@github.com/openfun/subsrt.git, type: git}
+    resolution: {tarball: https://codeload.github.com/openfun/subsrt/tar.gz/da0ffa9195752aa165770529033b7aededab078e}
     name: '@openfun/subsrt'
     version: 1.0.5
     hasBin: true
