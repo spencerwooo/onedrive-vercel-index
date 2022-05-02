@@ -7,6 +7,7 @@ specifiers:
   '@fortawesome/free-solid-svg-icons': ^5.15.3
   '@fortawesome/react-fontawesome': ^0.1.14
   '@headlessui/react': ^1.4.0
+  '@openfun/subsrt': github:openfun/subsrt
   '@tailwindcss/line-clamp': ^0.3.1
   '@types/cors': ^2.8.12
   '@types/crypto-js': ^4.0.2
@@ -55,7 +56,6 @@ specifiers:
   rehype-raw: ^6.0.0
   remark-gfm: ^3.0.1
   remark-math: ^5.1.1
-  subsrt: ^1.1.1
   swr: ^1.2.0
   tailwindcss: ^3.0.18
   typescript: 4.5.5
@@ -69,6 +69,7 @@ dependencies:
   '@fortawesome/free-solid-svg-icons': 5.15.4
   '@fortawesome/react-fontawesome': 0.1.17_6uk63tqcq2kfmhhlivxd3orcjq
   '@headlessui/react': 1.4.3_sfoxds7t5ydpegc3knd667wn6m
+  '@openfun/subsrt': github.com/openfun/subsrt/da0ffa9195752aa165770529033b7aededab078e
   '@tailwindcss/line-clamp': 0.3.1_tailwindcss@3.0.18
   awesome-debounce-promise: 2.1.0
   axios: 0.25.0
@@ -101,7 +102,6 @@ dependencies:
   rehype-raw: 6.1.1
   remark-gfm: 3.0.1
   remark-math: 5.1.1
-  subsrt: registry.npmmirror.com/subsrt/1.1.1
   swr: 1.2.0_react@17.0.2
   use-clipboard-copy: 0.2.0_react@17.0.2
   use-constant: 1.1.0_react@17.0.2
@@ -4584,6 +4584,13 @@ packages:
     resolution: {integrity: sha512-JZxotl7SxAJH0j7dN4pxsTV6ZLXoLdGME+PsjkL/DaBrVryK9kTGq06GfKrwcSOqypP+fdXGoCHE36b99fWVoA==}
     dev: false
 
+  github.com/openfun/subsrt/da0ffa9195752aa165770529033b7aededab078e:
+    resolution: {commit: da0ffa9195752aa165770529033b7aededab078e, repo: git+ssh://git@github.com/openfun/subsrt.git, type: git}
+    name: '@openfun/subsrt'
+    version: 1.0.5
+    hasBin: true
+    dev: false
+
   registry.npmmirror.com/@next/swc-android-arm64/12.0.10:
     resolution: {integrity: sha512-xYwXGkNhzZZsM5MD7KRwF5ZNiC8OLPtVMUiagpPnwENg8Hb0GSQo/NbYWXM8YrawEwp9LaZ7OXiuRKPh2JyBdA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@next/swc-android-arm64/-/swc-android-arm64-12.0.10.tgz}
     name: '@next/swc-android-arm64'
@@ -4720,10 +4727,3 @@ packages:
     name: graceful-fs
     version: 4.2.9
     dev: true
-
-  registry.npmmirror.com/subsrt/1.1.1:
-    resolution: {integrity: sha512-F15pSRRrPYnLjDKohcwkUUGhgHH+0IqpCoznMHMibZI9a2qN3ya/p3Xp/7zFOPvwez9b/qFjwtOnyS7f7d/MNw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/subsrt/-/subsrt-1.1.1.tgz}
-    name: subsrt
-    version: 1.1.1
-    hasBin: true
-    dev: false

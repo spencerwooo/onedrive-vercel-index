@@ -17,6 +17,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@headlessui/react": "^1.4.0",
+    "@openfun/subsrt": "github:openfun/subsrt",
     "@tailwindcss/line-clamp": "^0.3.1",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "^0.25.0",
@@ -49,7 +50,6 @@
     "rehype-raw": "^6.0.0",
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
-    "subsrt": "^1.1.1",
     "swr": "^1.2.0",
     "use-clipboard-copy": "^0.2.0",
     "use-constant": "^1.1.0"
