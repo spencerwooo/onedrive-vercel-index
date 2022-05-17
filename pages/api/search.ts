@@ -1,9 +1,11 @@
 import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { encodePath, getAccessToken } from '.'
+import { encodePath, getAccessToken, getAuthTokenPath } from '.'
+import { mapAbsolutePath } from '../../utils/mapAbsolutePath'
 import apiConfig from '../../config/api.config'
 import siteConfig from '../../config/site.config'
+import type { OdSearchResult } from '../../types'
 
 /**
  * Sanitize the search query
@@ -51,7 +53,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           top: siteConfig.maxItems,
         },
       })
-      res.status(200).json(data.value)
+
+      // Check if paths of search items are protected
+      let items = data.value as OdSearchResult
+      if (items && 'path' in items[0].parentReference) {
+        // OneDrive International have the path returned in the parentReference field
+        // OneDrive for Business/Education does not, so we skip it and leave the check to item API
+        items = items.filter(item => {
+          const path = `${decodeURIComponent(mapAbsolutePath(item.parentReference.path))}/${item.name}`
+          return getAuthTokenPath(path) === ''
+        })
+      }
+
+      res.status(200).json(items)
     } catch (error: any) {
       res.status(error?.response?.status ?? 500).json({ error: error?.response?.data ?? 'Internal server error.' })
     }
