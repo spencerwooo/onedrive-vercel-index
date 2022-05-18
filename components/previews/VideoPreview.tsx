@@ -156,7 +156,11 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
   const videoUrl = `/api/raw/?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`
 
   const isFlv = getExtension(file.name) === 'flv'
-  const asyncFlvExtension = useAsync(async () => {
+  const {
+    loading,
+    error,
+    result: mpegts,
+  } = useAsync(async () => {
     if (isFlv) {
       return (await import('mpegts.js')).default
     }
@@ -172,9 +176,9 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
         setMenuOpen={setTrackMenuOpen}
       />
       <PreviewContainer>
-        {asyncFlvExtension.error ? (
-          <FourOhFour errorMsg={asyncFlvExtension.error.message} />
-        ) : asyncFlvExtension.loading && isFlv ? (
+        {error ? (
+          <FourOhFour errorMsg={error.message} />
+        ) : loading && isFlv ? (
           <Loading loadingText={t('Loading FLV extension...')} />
         ) : (
           <VideoPlayer
@@ -185,7 +189,7 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
             thumbnail={thumbnail}
             tracks={targetTracks}
             isFlv={isFlv}
-            mpegts={asyncFlvExtension.result}
+            mpegts={mpegts}
           />
         )}
       </PreviewContainer>
@@ -236,7 +240,7 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
             btnImage="/players/potplayer.png"
           />
           <DownloadButton
-            onClickCallback={() => window.open(`nplayer-http://${window?.location.hostname ?? ""}${videoUrl}`)}
+            onClickCallback={() => window.open(`nplayer-http://${window?.location.hostname ?? ''}${videoUrl}`)}
             btnText="nPlayer"
             btnImage="/players/nplayer.png"
           />
