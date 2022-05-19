@@ -98,7 +98,7 @@ export default function CustomVideoSubMenu({
 
               <div className="my-4">
                 {modedTracks.map((track, index) => (
-                  <TrackContainer key={JSON.stringify(track)} track={track} title={`#${index}`}></TrackContainer>
+                  <TrackContainer key={JSON.stringify({ track, index })} track={track} title={`#${index}`} />
                 ))}
               </div>
 
