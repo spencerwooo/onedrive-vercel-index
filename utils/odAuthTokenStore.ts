@@ -5,8 +5,8 @@ import Redis from 'ioredis'
 const kv = new Redis(process.env.REDIS_URL)
 
 export async function getOdAuthTokens(): Promise<{ accessToken: unknown; refreshToken: unknown }> {
-  const accessToken = await kv.get('access_token')
-  const refreshToken = await kv.get('refresh_token')
+  const accessToken = await kv.get('access_token_ilyfairy')
+  const refreshToken = await kv.get('refresh_token_ilyfairy')
 
   return {
     accessToken,
@@ -23,6 +23,6 @@ export async function storeOdAuthTokens({
   accessTokenExpiry: number
   refreshToken: string
 }): Promise<void> {
-  await kv.set('access_token', accessToken, 'ex', accessTokenExpiry)
-  await kv.set('refresh_token', refreshToken)
+  await kv.set('access_token_ilyfairy', accessToken, 'ex', accessTokenExpiry)
+  await kv.set('refresh_token_ilyfairy', refreshToken)
 }
