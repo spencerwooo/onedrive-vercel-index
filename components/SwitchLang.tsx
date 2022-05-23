@@ -22,7 +22,7 @@ const localeText = (locale: string): string => {
     case 'zh-CN':
       return '🇨🇳 简体中文'
     default:
-      return '🇬🇧 English'
+      return '🇨🇳 简体中文'
   }
 }
 
