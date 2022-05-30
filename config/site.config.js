@@ -53,8 +53,8 @@ module.exports = {
       link: 'https://github.com/fordes123',
     },
     {
-      name: 'Blog',
-      link: 'https://blog.fordes.top',
+      name: 'Telegram',
+      link: 'https://t.me/Fordes123',
     },
   ],
 
