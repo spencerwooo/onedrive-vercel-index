@@ -109,17 +109,15 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
 
   const [linkMenuOpen, setLinkMenuOpen] = useState(false)
   const [trackMenuOpen, setTrackMenuOpen] = useState(false)
-  const [targetTracks, setTargetTracks] = useState<Plyr.Track[]>(() => {
-    return Array.from(['.vtt', '.ass', '.srt']).map(suffix => {
-      return {
-        kind: 'subtitles',
-        label: `${file.name.substring(0, file.name.lastIndexOf('.'))}${suffix}`,
-        src: `/api/raw/?path=${asPath.substring(0, asPath.lastIndexOf('.'))}${suffix}${
-          hashedToken ? `&odpt=${hashedToken}` : ''
-        }`,
-      }
-    })
-  })
+  const [tracks, setTracks] = useState<Plyr.Track[]>(() =>
+    Array.from(['.vtt', '.ass', '.srt']).map(suffix => ({
+      kind: 'subtitles',
+      label: `${file.name.substring(0, file.name.lastIndexOf('.'))}${suffix}`,
+      src: `/api/raw/?path=${asPath.substring(0, asPath.lastIndexOf('.'))}${suffix}${
+        hashedToken ? `&odpt=${hashedToken}` : ''
+      }`,
+    }))
+  )
 
   const { t } = useTranslation()
 
@@ -144,8 +142,8 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
     <>
       <CustomEmbedLinkMenu path={asPath} menuOpen={linkMenuOpen} setMenuOpen={setLinkMenuOpen} />
       <CustomVideoSubMenu
-        tracks={targetTracks}
-        setTracks={setTargetTracks}
+        tracks={tracks}
+        setTracks={setTracks}
         menuOpen={trackMenuOpen}
         setMenuOpen={setTrackMenuOpen}
       />
@@ -161,7 +159,7 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
             width={file.video?.width}
             height={file.video?.height}
             thumbnail={thumbnail}
-            tracks={targetTracks}
+            tracks={tracks}
             isFlv={isFlv}
             mpegts={mpegts}
           />
