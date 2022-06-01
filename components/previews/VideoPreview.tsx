@@ -35,8 +35,8 @@ const VideoPlayer: FC<{
   mpegts: any
 }> = ({ videoName, videoUrl, width, height, thumbnail, tracks, isFlv, mpegts }) => {
   const { t } = useTranslation()
-  // Store pairs of original link and transcoded blob link
-  const [trackSrcMap, setTrackSrcMap] = useState<Map<string, string>>(new Map())
+
+  // Store transcoded blob links
   const [convertedTracks, setConvertedTracks] = useState<Plyr.Track[]>([])
 
   // Common plyr configs, including the video source and plyr options
@@ -68,55 +68,29 @@ const VideoPlayer: FC<{
   }, [videoUrl, isFlv, mpegts, videoName, thumbnail, convertedTracks, width, height])
 
   useAsync(async () => {
-    const loadingToast = toast.loading(t('Loading subtitles...'))
+    const toastId = toast.loading(t('Loading subtitles...'))
     // Remove duplicated items
-    const noDupTargetTracks = tracks.filter(
+    const noDupTracks = tracks.filter(
       (value1, index, self) =>
         index === self.findIndex(value2 => Object.keys(value2).every(key => value2[key] == value1[key]))
     )
-    // Get src of transcoded subtitles
-    const jobs: Promise<any>[] = noDupTargetTracks
-      .filter(sub => !trackSrcMap.has(sub.src) && sub.src != '')
-      .map(sub => {
-        return new Promise((resolve, reject) => {
-          axios
-            .get(sub.src, { responseType: 'blob', timeout: 6000 })
-            .then(resp => {
-              resp.data
-                .text()
-                .then(vttsub => {
-                  if (subsrt.detect(vttsub) != 'vtt') {
-                    vttsub = subsrt.convert(vttsub, { format: 'vtt' })
-                  }
-                  trackSrcMap.set(sub.src, URL.createObjectURL(new Blob([vttsub])))
-                  resolve('success')
-                })
-                .catch(() => {
-                  trackSrcMap.set(sub.src, '')
-                  resolve('error')
-                })
-            })
-            .catch(e => {
-              if (e.code != 'ECONNABORTED') trackSrcMap.set(sub.src, '')
-              resolve('error')
-            })
-        })
+    // Get src of transcoded subtitles and build new subtitle tracks
+    const convertedTrackResults = await Promise.allSettled(
+      noDupTracks.map(async track => {
+        const resp = await axios.get(track.src, { responseType: 'blob' })
+        let sub: string = await resp.data.text()
+        if (subsrt.detect(sub) != 'vtt') {
+          sub = subsrt.convert(sub, { format: 'vtt' })
+        }
+        return { ...track, src: URL.createObjectURL(new Blob([sub])) } as Plyr.Track
       })
-    await Promise.all(jobs)
-    // Build new subtitle tracks
-    const newCvtTracks: Plyr.Track[] = []
-    noDupTargetTracks.forEach(el => {
-      const vttSrc = trackSrcMap.get(el.src)
-      if (vttSrc != undefined && vttSrc != '') {
-        newCvtTracks.push({
-          ...el,
-          src: vttSrc,
-        })
-      }
-    })
-    toast.dismiss(loadingToast)
-    setTrackSrcMap(trackSrcMap)
-    if (JSON.stringify(newCvtTracks) != JSON.stringify(convertedTracks)) setConvertedTracks(newCvtTracks)
+    )
+    setConvertedTracks(
+      convertedTrackResults
+        .filter(track => track.status === 'fulfilled')
+        .map(track => (track as PromiseFulfilledResult<Plyr.Track>).value)
+    )
+    toast.dismiss(toastId)
   }, [tracks])
 
   return (
