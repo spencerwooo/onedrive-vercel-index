@@ -70,12 +70,12 @@ const VideoPlayer: FC<{
   useAsync(async () => {
     const loadingToast = toast.loading(t('Loading subtitles...'))
     // Remove duplicated items
-    const noDuplTargetTracks = tracks.filter(
+    const noDupTargetTracks = tracks.filter(
       (value1, index, self) =>
         index === self.findIndex(value2 => Object.keys(value2).every(key => value2[key] == value1[key]))
     )
     // Get src of transcoded subtitles
-    const jobs: Promise<any>[] = noDuplTargetTracks
+    const jobs: Promise<any>[] = noDupTargetTracks
       .filter(sub => !trackSrcMap.has(sub.src) && sub.src != '')
       .map(sub => {
         return new Promise((resolve, reject) => {
@@ -105,7 +105,7 @@ const VideoPlayer: FC<{
     await Promise.all(jobs)
     // Build new subtitle tracks
     const newCvtTracks: Plyr.Track[] = []
-    noDuplTargetTracks.forEach(el => {
+    noDupTargetTracks.forEach(el => {
       const vttSrc = trackSrcMap.get(el.src)
       if (vttSrc != undefined && vttSrc != '') {
         newCvtTracks.push({
