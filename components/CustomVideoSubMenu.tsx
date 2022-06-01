@@ -1,6 +1,7 @@
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import { Dialog, Transition } from '@headlessui/react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DownloadButton } from './DownloadBtnGtoup'
 
 function TrackContainer({
@@ -20,8 +21,20 @@ function TrackContainer({
       tracks[index] = value
       return [...tracks]
     })
+  const delTrack = () => {
+    setTracks(tracks => {
+      tracks.splice(index, 1)
+      return [...tracks]
+    })
+  }
   return (
     <div className="mt-4 w-full rounded border border-gray-600/10 bg-gray-50 p-2">
+      <div
+        className="float-right cursor-pointer rounded-full px-1.5 py-1 hover:bg-gray-300 dark:hover:bg-gray-600"
+        onClick={delTrack}
+      >
+        <FontAwesomeIcon icon={['far', 'times-circle']} />
+      </div>
       <h3 className="text-md w-full font-semibold  uppercase tracking-wider text-black">{title}</h3>
       <div className="mt-2 w-full ">
         <h4 className="w-full py-2 text-xs font-medium uppercase tracking-wider">{t('Subtitle label')}</h4>
@@ -119,7 +132,7 @@ export default function CustomVideoSubMenu({
                     key={JSON.stringify({ track, index })}
                     track={track}
                     index={index}
-                    setTracks={setTracks}
+                    setTracks={setPendingTracks}
                     title={`#${index}`}
                   />
                 ))}
