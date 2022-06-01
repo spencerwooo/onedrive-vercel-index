@@ -3,35 +3,53 @@ import { useTranslation } from 'next-i18next'
 import { Dialog, Transition } from '@headlessui/react'
 import { DownloadButton } from './DownloadBtnGtoup'
 
-function TrackContainer({ track, title }: { track: Plyr.Track; title: string }) {
+function TrackContainer({
+  track,
+  index,
+  setTracks,
+  title,
+}: {
+  track: Plyr.Track
+  index: number
+  setTracks: Dispatch<SetStateAction<Plyr.Track[]>>
+  title: string
+}) {
   const { t } = useTranslation()
+  const setTrack = (value: Plyr.Track) =>
+    setTracks(tracks => {
+      tracks[index] = value
+      return [...tracks]
+    })
   return (
-    <>
-      <div className="mt-4 w-full rounded border border-gray-600/10 bg-gray-50 p-2 ">
-        {/* <div className="h-4 w-4 rounded-full shadow-lg"></div> */}
-        <h3 className="text-md w-full font-semibold  uppercase tracking-wider text-black">{title}</h3>
+    <div className="mt-4 w-full rounded border border-gray-600/10 bg-gray-50 p-2">
+      <h3 className="text-md w-full font-semibold  uppercase tracking-wider text-black">{title}</h3>
+      <div className="mt-2 w-full ">
+        <h4 className="w-full py-2 text-xs font-medium uppercase tracking-wider">{t('Subtitle label')}</h4>
+        <input
+          className="w-full rounded border border-gray-600/10 p-2.5 font-mono focus:outline-none focus:ring focus:ring-blue-300 dark:bg-gray-600 dark:text-white dark:focus:ring-blue-700"
+          defaultValue={track.label}
+          onChange={value =>
+            setTrack({
+              ...track,
+              label: value.target.value,
+            })
+          }
+        />
         <div className="mt-2 w-full ">
-          <h4 className="w-full py-2 text-xs font-medium uppercase tracking-wider">{t('Subtitle label')}</h4>
+          <h4 className="w-full py-2 text-xs font-medium uppercase tracking-wider">{t('Subtitle source')}</h4>
           <input
             className="w-full rounded border border-gray-600/10 p-2.5 font-mono focus:outline-none focus:ring focus:ring-blue-300 dark:bg-gray-600 dark:text-white dark:focus:ring-blue-700"
-            defaultValue={track.label}
-            onChange={value => {
-              track.label = value.target.value
-            }}
+            defaultValue={track.src}
+            onChange={value =>
+              setTrack({
+                ...track,
+                src: value.target.value,
+              })
+            }
           />
-          <div className="mt-2 w-full ">
-            <h4 className="w-full py-2 text-xs font-medium uppercase tracking-wider">{t('Subtitle source')}</h4>
-            <input
-              className="w-full rounded border border-gray-600/10 p-2.5 font-mono focus:outline-none focus:ring focus:ring-blue-300 dark:bg-gray-600 dark:text-white dark:focus:ring-blue-700"
-              defaultValue={track.src}
-              onChange={value => {
-                track.src = value.target.value
-              }}
-            />
-          </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
@@ -50,18 +68,17 @@ export default function CustomVideoSubMenu({
 
   const closeMenu = () => setMenuOpen(false)
 
-  const [modedTracks, setModedTracks] = useState<Plyr.Track[]>(JSON.parse(JSON.stringify(tracks)))
+  const initTracks = () => JSON.parse(JSON.stringify(tracks))
+  const [pendingTracks, setPendingTracks] = useState<Plyr.Track[]>(initTracks())
   useEffect(() => {
-    if (menuOpen) setModedTracks(JSON.parse(JSON.stringify(tracks)))
+    if (menuOpen) {
+      setPendingTracks(initTracks())
+    }
   }, [tracks, menuOpen])
 
   return (
     <Transition appear show={menuOpen} as={Fragment}>
-      <Dialog
-        as="div"
-        className="fixed inset-0 z-10 overflow-y-auto"
-        onClose={closeMenu} /* initialFocus={focusInputRef} */
-      >
+      <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={closeMenu}>
         <div className="min-h-screen px-4 text-center">
           <Transition.Child
             as={Fragment}
@@ -93,20 +110,26 @@ export default function CustomVideoSubMenu({
                 {t('Customise subtitle')}
               </Dialog.Title>
               <Dialog.Description as="p" className="py-2 opacity-80">
-                {t('Customise subtitle tracks of the media player.')}{' '}
+                {t('Customise subtitle tracks of the media player.')}
               </Dialog.Description>
 
               <div className="my-4">
-                {modedTracks.map((track, index) => (
-                  <TrackContainer key={JSON.stringify({ track, index })} track={track} title={`#${index}`} />
+                {pendingTracks.map((track, index) => (
+                  <TrackContainer
+                    key={JSON.stringify({ track, index })}
+                    track={track}
+                    index={index}
+                    setTracks={setTracks}
+                    title={`#${index}`}
+                  />
                 ))}
               </div>
 
               <div className="float-right flex flex-wrap gap-4">
                 <DownloadButton
                   onClickCallback={() => {
-                    setModedTracks([
-                      ...modedTracks,
+                    setPendingTracks([
+                      ...pendingTracks,
                       {
                         label: '',
                         src: '',
@@ -120,7 +143,7 @@ export default function CustomVideoSubMenu({
                 />
                 <DownloadButton
                   onClickCallback={() => {
-                    setTracks(modedTracks)
+                    setTracks(pendingTracks)
                     closeMenu()
                   }}
                   btnColor="blue"
