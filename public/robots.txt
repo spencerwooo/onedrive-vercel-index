@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://testing-one-pink.vercel.app/api/my-sitemap
