@@ -21,6 +21,7 @@ import {
   faEnvelope,
   faFlag,
   faCheckCircle,
+  faTimesCircle,
 } from '@fortawesome/free-regular-svg-icons'
 import {
   faSearch,
@@ -110,6 +111,7 @@ library.add(
   faThList,
   faLanguage,
   faPen,
+  faTimesCircle,
   ...iconList
 )
 

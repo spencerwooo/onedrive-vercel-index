@@ -7,6 +7,7 @@ import { useTranslation } from 'next-i18next'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import Plyr from 'plyr-react'
+import subsrt from '@openfun/subsrt'
 import { useAsync } from 'react-async-hook'
 import { useClipboard } from 'use-clipboard-copy'
 
@@ -19,6 +20,7 @@ import { DownloadBtnContainer, PreviewContainer } from './Containers'
 import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import CustomEmbedLinkMenu from '../CustomEmbedLinkMenu'
+import CustomVideoSubMenu from '../CustomVideoSubMenu'
 
 import 'plyr-react/dist/plyr.css'
 
@@ -28,22 +30,20 @@ const VideoPlayer: FC<{
   width?: number
   height?: number
   thumbnail: string
-  subtitle: string
+  tracks: Plyr.Track[]
   isFlv: boolean
   mpegts: any
-}> = ({ videoName, videoUrl, width, height, thumbnail, subtitle, isFlv, mpegts }) => {
-  useEffect(() => {
-    // Really really hacky way to inject subtitles as file blobs into the video element
-    axios
-      .get(subtitle, { responseType: 'blob' })
-      .then(resp => {
-        const track = document.querySelector('track')
-        track?.setAttribute('src', URL.createObjectURL(resp.data))
-      })
-      .catch(() => {
-        console.log('Could not load subtitle.')
-      })
+}> = ({ videoName, videoUrl, width, height, thumbnail, tracks, isFlv, mpegts }) => {
+  const { t } = useTranslation()
 
+  // Store transcoded blob links
+  const [convertedTracks, setConvertedTracks] = useState<Plyr.Track[]>([])
+
+  // Common plyr configs, including the video source and plyr options
+  const [plyrSource, setPlyrSource] = useState<Plyr.SourceInfo>({ type: 'video', sources: [] })
+  const [plyrOptions, setPlyrOptions] = useState<Plyr.Options>({})
+
+  useEffect(() => {
     if (isFlv) {
       const loadFlv = () => {
         // Really hacky way to get the exposed video element from Plyr
@@ -54,24 +54,52 @@ const VideoPlayer: FC<{
       }
       loadFlv()
     }
-  }, [videoUrl, isFlv, mpegts, subtitle])
+    setPlyrSource({
+      type: 'video',
+      title: videoName,
+      poster: thumbnail,
+      tracks: convertedTracks,
+      sources: isFlv ? [] : [{ src: videoUrl }],
+    })
+    setPlyrOptions({
+      ratio: `${width ?? 16}:${height ?? 9}`,
+      captions: { update: true },
+    })
+  }, [videoUrl, isFlv, mpegts, videoName, thumbnail, convertedTracks, width, height])
 
-  // Common plyr configs, including the video source and plyr options
-  const plyrSource = {
-    type: 'video',
-    title: videoName,
-    poster: thumbnail,
-    tracks: [{ kind: 'captions', label: videoName, src: '', default: true }],
-  }
-  const plyrOptions: Plyr.Options = {
-    ratio: `${width ?? 16}:${height ?? 9}`,
-    fullscreen: { iosNative: true },
-  }
-  if (!isFlv) {
-    // If the video is not in flv format, we can use the native plyr and add sources directly with the video URL
-    plyrSource['sources'] = [{ src: videoUrl }]
-  }
-  return <Plyr id="plyr" source={plyrSource as Plyr.SourceInfo} options={plyrOptions} />
+  useAsync(async () => {
+    const toastId = toast.loading(t('Loading subtitles...'))
+    // Remove duplicated items
+    const noDupTracks = tracks.filter(
+      (value1, index, self) =>
+        index === self.findIndex(value2 => Object.keys(value2).every(key => value2[key] == value1[key]))
+    )
+    // Get src of transcoded subtitles and build new subtitle tracks
+    const convertedTrackResults = await Promise.allSettled(
+      noDupTracks.map(async track => {
+        const resp = await axios.get(track.src, { responseType: 'blob' })
+        let sub: string = await resp.data.text()
+        if (subsrt.detect(sub) != 'vtt') {
+          sub = subsrt.convert(sub, { format: 'vtt' })
+        }
+        return { ...track, src: URL.createObjectURL(new Blob([sub])) } as Plyr.Track
+      })
+    )
+    setConvertedTracks(
+      convertedTrackResults
+        .filter(track => track.status === 'fulfilled')
+        .map(track => (track as PromiseFulfilledResult<Plyr.Track>).value)
+    )
+    toast.dismiss(toastId)
+  }, [tracks])
+
+  return (
+    // Add translate="no" to avoid "Uncaught DOMException: Failed to execute 'removeChild' on 'Node'" error.
+    // https://github.com/facebook/react/issues/11538
+    <div translate="no">
+      <Plyr id="plyr" source={plyrSource} options={plyrOptions} />
+    </div>
+  )
 }
 
 const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
@@ -79,15 +107,22 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
   const hashedToken = getStoredToken(asPath)
   const clipboard = useClipboard()
 
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [linkMenuOpen, setLinkMenuOpen] = useState(false)
+  const [trackMenuOpen, setTrackMenuOpen] = useState(false)
+  const [tracks, setTracks] = useState<Plyr.Track[]>(() =>
+    Array.from(['.vtt', '.ass', '.srt']).map(suffix => ({
+      kind: 'subtitles',
+      label: `${file.name.substring(0, file.name.lastIndexOf('.'))}${suffix}`,
+      src: `/api/raw/?path=${asPath.substring(0, asPath.lastIndexOf('.'))}${suffix}${
+        hashedToken ? `&odpt=${hashedToken}` : ''
+      }`,
+    }))
+  )
+
   const { t } = useTranslation()
 
   // OneDrive generates thumbnails for its video files, we pick the thumbnail with the highest resolution
   const thumbnail = `/api/thumbnail/?path=${asPath}&size=large${hashedToken ? `&odpt=${hashedToken}` : ''}`
-
-  // We assume subtitle files are beside the video with the same name, only webvtt '.vtt' files are supported
-  const vtt = `${asPath.substring(0, asPath.lastIndexOf('.'))}.vtt`
-  const subtitle = `/api/raw/?path=${vtt}${hashedToken ? `&odpt=${hashedToken}` : ''}`
 
   // We also format the raw video file for the in-browser player as well as all other players
   const videoUrl = `/api/raw/?path=${asPath}${hashedToken ? `&odpt=${hashedToken}` : ''}`
@@ -105,7 +140,13 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
 
   return (
     <>
-      <CustomEmbedLinkMenu path={asPath} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+      <CustomEmbedLinkMenu path={asPath} menuOpen={linkMenuOpen} setMenuOpen={setLinkMenuOpen} />
+      <CustomVideoSubMenu
+        tracks={tracks}
+        setTracks={setTracks}
+        menuOpen={trackMenuOpen}
+        setMenuOpen={setTrackMenuOpen}
+      />
       <PreviewContainer>
         {error ? (
           <FourOhFour errorMsg={error.message} />
@@ -118,7 +159,7 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
             width={file.video?.width}
             height={file.video?.height}
             thumbnail={thumbnail}
-            subtitle={subtitle}
+            tracks={tracks}
             isFlv={isFlv}
             mpegts={mpegts}
           />
@@ -143,9 +184,15 @@ const VideoPreview: FC<{ file: OdFileObject }> = ({ file }) => {
             btnIcon="copy"
           />
           <DownloadButton
-            onClickCallback={() => setMenuOpen(true)}
+            onClickCallback={() => setLinkMenuOpen(true)}
             btnColor="teal"
             btnText={t('Customise link')}
+            btnIcon="pen"
+          />
+          <DownloadButton
+            onClickCallback={() => setTrackMenuOpen(true)}
+            btnColor="blue"
+            btnText={t('Customise subtitle')}
             btnIcon="pen"
           />
 
