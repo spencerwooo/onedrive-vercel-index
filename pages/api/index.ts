@@ -257,7 +257,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         params: {
           ...{
             select: 'name,size,id,lastModifiedDateTime,folder,file,video,image',
-            top: siteConfig.maxItems,
+            $top: siteConfig.maxItems,
           },
           ...(next ? { $skipToken: next } : {}),
           ...(sort ? { $orderby: sort } : {}),
