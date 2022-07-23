@@ -169,7 +169,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // If method is GET, then the API is a normal request to the OneDrive API for files or folders
-  const { path = '/', raw = false, next = '' } = req.query
+  const { path = '/', raw = false, next = '', sort = '' } = req.query
 
   // Set edge function caching for faster load times, check docs:
   // https://vercel.com/docs/concepts/functions/edge-caching
@@ -186,6 +186,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return
   }
   const cleanPath = pathPosix.resolve('/', pathPosix.normalize(path))
+
+  // Validate sort param
+  if (typeof sort !== 'string') {
+    res.status(400).json({ error: 'Sort query invalid.' })
+    return
+  }
 
   const accessToken = await getAccessToken()
 
@@ -248,16 +254,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if ('folder' in identityData) {
       const { data: folderData } = await axios.get(`${requestUrl}${isRoot ? '' : ':'}/children`, {
         headers: { Authorization: `Bearer ${accessToken}` },
-        params: next
-          ? {
-              select: 'name,size,id,lastModifiedDateTime,folder,file,video,image',
-              top: siteConfig.maxItems,
-              $skipToken: next,
-            }
-          : {
-              select: 'name,size,id,lastModifiedDateTime,folder,file,video,image',
-              top: siteConfig.maxItems,
-            },
+        params: {
+          ...{
+            select: 'name,size,id,lastModifiedDateTime,folder,file,video,image',
+            top: siteConfig.maxItems,
+          },
+          ...(next ? { $skipToken: next } : {}),
+          ...(sort ? { $orderby: sort } : {}),
+        },
       })
 
       // Extract next page token from full @odata.nextLink
