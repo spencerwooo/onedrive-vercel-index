@@ -1,0 +1,6 @@
+**/.git
+**/node_modules
+**/.vscode
+**/.idea
+**/.next
+**/.env.local
