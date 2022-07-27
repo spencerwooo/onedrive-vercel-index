@@ -113,12 +113,22 @@ function SearchResultItemTemplate({
 }
 
 function SearchResultItemLoadRemote({ result }: { result: OdSearchResult[number] }) {
-  const { data, error }: SWRResponse<OdDriveItem, string> = useSWR(`/api/item/?id=${result.id}`, fetcher)
+  const { data, error }: SWRResponse<OdDriveItem, { status: number; message: any }> = useSWR(
+    `/api/item/?id=${result.id}`,
+    fetcher
+  )
 
   const { t } = useTranslation()
 
   if (error) {
-    return <SearchResultItemTemplate driveItem={result} driveItemPath={''} itemDescription={error} disabled={true} />
+    return (
+      <SearchResultItemTemplate
+        driveItem={result}
+        driveItemPath={''}
+        itemDescription={typeof error.message?.error === 'string' ? error.message.error : JSON.stringify(error.message)}
+        disabled={true}
+      />
+    )
   }
   if (!data) {
     return (
