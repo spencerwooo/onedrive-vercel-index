@@ -85,9 +85,10 @@ export function getAuthTokenPath(path: string) {
   // Ensure trailing slashes to compare paths component by component. Same for protectedRoutes.
   // Since OneDrive ignores case, lower case before comparing. Same for protectedRoutes.
   path = path.toLowerCase() + '/'
-  const protectedRoutes = siteConfig.protectedRoutes
+  const protectedRoutes = siteConfig.protectedRoutes as string[]
   let authTokenPath = ''
   for (let r of protectedRoutes) {
+    if (typeof r !== 'string') continue
     r = r.toLowerCase().replace(/\/$/, '') + '/'
     if (path.startsWith(r)) {
       authTokenPath = `${r}.password`
