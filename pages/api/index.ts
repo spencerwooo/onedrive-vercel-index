@@ -90,7 +90,7 @@ export function getAuthTokenPath(path: string) {
   for (let r of protectedRoutes) {
     r = r.toLowerCase().replace(/\/$/, '') + '/'
     if (path.startsWith(r)) {
-      authTokenPath = `${r}/.password`
+      authTokenPath = `${r}.password`
       break
     }
   }
