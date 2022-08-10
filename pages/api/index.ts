@@ -82,11 +82,16 @@ export async function getAccessToken(): Promise<string> {
  * @returns Path to required auth token. If not required, return empty string.
  */
 export function getAuthTokenPath(path: string) {
-  const protectedRoutes = siteConfig.protectedRoutes
+  // Ensure trailing slashes to compare paths component by component. Same for protectedRoutes.
+  // Since OneDrive ignores case, lower case before comparing. Same for protectedRoutes.
+  path = path.toLowerCase() + '/'
+  const protectedRoutes = siteConfig.protectedRoutes as string[]
   let authTokenPath = ''
-  for (const r of protectedRoutes) {
+  for (let r of protectedRoutes) {
+    if (typeof r !== 'string') continue
+    r = r.toLowerCase().replace(/\/$/, '') + '/'
     if (path.startsWith(r)) {
-      authTokenPath = `${r}/.password`
+      authTokenPath = `${r}.password`
       break
     }
   }
@@ -185,7 +190,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(400).json({ error: 'Path query invalid.' })
     return
   }
-  const cleanPath = pathPosix.resolve('/', pathPosix.normalize(path))
+  // Besides normalizing and making absolute, trailing slashes are trimmed
+  const cleanPath = pathPosix.resolve('/', pathPosix.normalize(path)).replace(/\/$/, '')
 
   // Validate sort param
   if (typeof sort !== 'string') {
