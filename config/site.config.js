@@ -16,8 +16,11 @@ module.exports = {
   // Prefix for KV Storage
   kvPrefix: process.env.KV_PREFIX || '',
 
-  // The name of your website. Present alongside your icon.
+  // The title of the website. Present in the navigation bar and the title of the page.
   title: "Spencer's OneDrive",
+  // The name of your website. Present alongside your icon.
+  header: "Spencer's OneDrive",
+
 
   // The folder that you are to share publicly with onedrive-vercel-index. Use '/' if you want to share your root folder.
   baseDirectory: '/',

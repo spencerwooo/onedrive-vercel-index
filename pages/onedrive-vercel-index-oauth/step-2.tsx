@@ -26,7 +26,7 @@ export default function OAuthStep2() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
       <Head>
-        <title>{t('OAuth Step 2 - {{title}}', { title: siteConfig.title })}</title>
+        <title>{t('OAuth Step 2 - {{title}}', { title: siteConfig:header })}</title>
       </Head>
 
       <main className="flex w-full flex-1 flex-col bg-gray-50 dark:bg-gray-800">
