@@ -121,6 +121,10 @@ const MarkdownPreview: FC<{
           {/* Using rehypeRaw to render HTML inside Markdown is potentially dangerous, use under safe environments. (#18) */}
           <ReactMarkdown
             remarkPlugins={[gfm, remarkMath]}
+            // The type error is introduced by caniuse-lite upgrade.
+            // Since type errors occur often in remark toolchain and the use is so common,
+            // ignoring it shoudld be safe enough.
+            // @ts-ignore
             rehypePlugins={[rehypeKatex, rehypeRaw]}
             components={customRenderer}
           >
