@@ -29,6 +29,8 @@
   "Customise link": "自定义直链",
   "Customised": "自定义链接",
   "Customised and encoded": "URL 编码的自定义链接",
+  "Copy selected files permalink": "复制选定文件永久链接",
+  "Copied selected files permalink.": "已复制选定文件永久链接。",
   "Default": "默认",
   "Do not pretend to be the site owner": "你不是网站所有者",
   "Don't worry, after storing them, onedrive-vercel-index will take care of token refreshes and updates after your site goes live.": "别担心，存储它们之后，onedrive-vercel-index 会在帮助你定时更新 token",

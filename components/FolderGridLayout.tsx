@@ -64,6 +64,7 @@ const FolderGridLayout = ({
   totalGenerating,
   handleSelectedDownload,
   folderGenerating,
+  handleSelectedPermalink,
   handleFolderDownload,
   toast,
 }) => {
@@ -86,6 +87,17 @@ const FolderGridLayout = ({
             indeterminate={true}
             title={t('Select all files')}
           />
+          <button
+            title={t('Copy selected files permalink')}
+            className="cursor-pointer rounded p-1.5 hover:bg-gray-300 disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:bg-white dark:hover:bg-gray-600 disabled:dark:text-gray-600 disabled:hover:dark:bg-gray-900"
+            disabled={totalSelected === 0}
+            onClick={() => {
+              clipboard.copy(handleSelectedPermalink(getBaseUrl()))
+              toast.success(t('Copied selected files permalink.'))
+            }}
+          >
+            <FontAwesomeIcon icon={['far', 'copy']} size="lg" />
+          </button>
           {totalGenerating ? (
             <Downloading title={t('Downloading selected files, refresh page to cancel')} style="p-1.5" />
           ) : (
