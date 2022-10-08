@@ -20,7 +20,7 @@ import FourOhFour from '../FourOhFour'
 import Loading from '../Loading'
 import CustomEmbedLinkMenu from '../CustomEmbedLinkMenu'
 
-import 'plyr-react/dist/plyr.css'
+import 'plyr-react/plyr.css'
 
 const VideoPlayer: FC<{
   videoName: string
