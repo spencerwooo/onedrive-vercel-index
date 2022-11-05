@@ -276,8 +276,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
           c =>
             `${baseUrl}/api/raw/?path=${path}/${encodeURIComponent(c.name)}${hashedToken ? `&odpt=${hashedToken}` : ''}`
         )
-        .reduce((urls, cur) => urls + cur + '\n', '')
-        .slice(0, -1)
+        .join('\n')
     }
 
     // Folder recursive download
