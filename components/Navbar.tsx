@@ -120,7 +120,7 @@ const Navbar = () => {
 
           {tokenPresent && (
             <button
-              className="flex items-center space-x-2 p-2 hover:opacity-80 dark:text-white"
+              className="flex items-center space-x-2 hover:opacity-80 dark:text-white"
               onClick={() => setIsOpen(true)}
             >
               <span className="hidden text-sm font-medium md:inline-block">{t('Logout')}</span>
