@@ -12,7 +12,7 @@ import { useTranslation } from 'next-i18next'
 
 import siteConfig from '../config/site.config'
 import SearchModal from './SearchModal'
-import SwitchLang from './SwitchLang'
+//import SwitchLang from './SwitchLang'
 import useDeviceOS from '../utils/useDeviceOS'
 
 const Navbar = () => {
@@ -89,7 +89,7 @@ const Navbar = () => {
             </div>
           </button>
 
-          {/*<SwitchLang />
+          {/*<SwitchLang />*/}
 
           {siteConfig.links.length !== 0 &&
             siteConfig.links.map((l: { name: string; link: string }) => (
@@ -110,7 +110,7 @@ const Navbar = () => {
                 </span>
               </a>
             ))}
-*/}
+
           {siteConfig.email && (
             <a href={siteConfig.email} className="flex items-center space-x-2 hover:opacity-80 dark:text-white">
               <FontAwesomeIcon icon={['far', 'envelope']} />
@@ -130,7 +130,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/*<Transition appear show={isOpen} as={Fragment}>
+      <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" open={isOpen} onClose={() => setIsOpen(false)}>
           <div className="min-h-screen px-4 text-center">
             <Transition.Child
@@ -145,7 +145,7 @@ const Navbar = () => {
               <Dialog.Overlay className="fixed inset-0 bg-gray-50 dark:bg-gray-800" />
             </Transition.Child>
 
-            {/* This element is to trick the browser into centering the modal contents.
+            {/* This element is to trick the browser into centering the modal contents.*/}
             <span className="inline-block h-screen align-middle" aria-hidden="true">
               &#8203;
             </span>
@@ -197,7 +197,7 @@ const Navbar = () => {
             </Transition.Child>
           </div>
         </Dialog>
-      </Transition> */}
+      </Transition>
     </div>
   )
 }
