@@ -42,7 +42,7 @@ const Navbar = () => {
     setTokenPresent(storedToken())
   }, [])
 
-  {/*const { t } = useTranslation()*/}
+  //const { t } = useTranslation()
 
   const clearTokens = () => {
     setIsOpen(false)
@@ -89,7 +89,7 @@ const Navbar = () => {
             </div>
           </button>
 
-          {/*<SwitchLang />*/}
+          </*SwitchLang */>
 
           {siteConfig.links.length !== 0 &&
             siteConfig.links.map((l: { name: string; link: string }) => (
