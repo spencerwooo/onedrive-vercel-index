@@ -1,0 +1,1 @@
+rediss://default:cff7effe39504fa991a490959143bbf8@us1-included-antelope-38299.upstash.io:38299
