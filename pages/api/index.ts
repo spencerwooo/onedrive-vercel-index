@@ -249,56 +249,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Querying current path identity (file or folder) and follow up query childrens in folder
- try {
-  // check if the request is for a shared folder
-  if (path.startsWith("/drive/sharedWithMe")) {
-    const { data: sharedFoldersData } = await axios.get(`https://graph.microsoft.com/v1.0${path}`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      params: {
-        select: 'name,size,id,lastModifiedDateTime,folder,file,video,image',
-        $top: siteConfig.maxItems,
-        ...(next ? { $skipToken: next } : {}),
-        ...(sort ? { $orderby: sort } : {})
-      }
-    });
-    const nextPage = sharedFoldersData['@odata.nextLink'] ? sharedFoldersData['@odata.nextLink'].match(/&\$skiptoken=(.+)/i)[1] : null
-    if (nextPage) {
-      res.status(200).json({ folder: sharedFoldersData, next: nextPage })
-    } else {
-      res.status(200).json({ folder: sharedFoldersData })
-    }
-  } 
-  // check if the request is for a SharePoint site
-  else if (path.startsWith("/sites")) {
-    const { data: sharepointData } = await axios.get(`https://graph.microsoft.com/v1.0${path}`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      params: {
-        select: 'name,size,id,lastModifiedDateTime,folder,file,video,image',
-        $top: siteConfig.maxItems,
-        ...(next ? { $skipToken: next } : {}),
-        ...(sort ? { $orderby: sort } : {})
-      }
-    });
-    const nextPage = sharepointData['@odata.nextLink'] ? sharepointData['@odata.nextLink'].match(/&\$skiptoken=(.+)/i)[1] : null
-    if (nextPage) {
-      res.status(200).json({ sharepoint: sharepointData, next: nextPage })
-    } else {
-      res.status(200).json({ sharepoint: sharepointData })
-    }
-  }
-   else {
+  try {
     const { data: identityData } = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
         select: 'name,size,id,lastModifiedDateTime,folder,file,video,image',
       },
-    });
+    })
 
     if ('folder' in identityData) {
       const { data: folderData } = await axios.get(`${requestUrl}${isRoot ? '' : ':'}/children`, {
@@ -311,26 +268,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ...(next ? { $skipToken: next } : {}),
           ...(sort ? { $orderby: sort } : {}),
         },
-      });
+      })
 
       // Extract next page token from full @odata.nextLink
       const nextPage = folderData['@odata.nextLink']
         ? folderData['@odata.nextLink'].match(/&\$skiptoken=(.+)/i)[1]
-        : null;
+        : null
 
       // Return paging token if specified
       if (nextPage) {
-        res.status(200).json({ folder: folderData, next: nextPage });
+        res.status(200).json({ folder: folderData, next: nextPage })
       } else {
-        res.status(200).json({ folder: folderData });
+        res.status(200).json({ folder: folderData })
       }
-      return;
+      return
     }
-    res.status(200).json({ file: identityData });
-    return;
-  }
-   } catch (error: any) {
+    res.status(200).json({ file: identityData })
+    return
+  } catch (error: any) {
     res.status(error?.response?.code ?? 500).json({ error: error?.response?.data ?? 'Internal server error.' })
     return
   }
- }
+}
