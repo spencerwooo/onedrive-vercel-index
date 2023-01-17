@@ -329,7 +329,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return;
         }
     } catch (error) {
-        res.status(error?.response?.code ?? 500).json({error: error?.response?.data ?? 'Internal server error.'})
-        return
+        // Handle error response from OneDrive API
+if (error.response) {
+            const {status, statusText, data} = error.response
+            res.status(status).json({error: statusText, data})
+            return
+        }
     }
 }
