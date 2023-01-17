@@ -329,4 +329,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json({ file: identityData });
     return;
   }
+   } catch (error: any) {
+    res.status(error?.response?.code ?? 500).json({ error: error?.response?.data ?? 'Internal server error.' })
+    return
+  }
  }
