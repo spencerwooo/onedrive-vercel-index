@@ -1,6 +1,6 @@
 import { FC, CSSProperties, ReactNode } from 'react'
 import ReactMarkdown from 'react-markdown'
-import gfm from 'remark-gfm'
+import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import rehypeRaw from 'rehype-raw'
@@ -20,16 +20,11 @@ const MarkdownPreview: FC<{
   file: any
   path: string
   standalone?: boolean
-  proxy?: boolean
-}> = ({ file, path, standalone = true, proxy = false }) => {
+}> = ({ file, path, standalone = true }) => {
   // The parent folder of the markdown file, which is also the relative image folder
   const parentPath = standalone ? path.substring(0, path.lastIndexOf('/')) : path
 
-  const {
-    response: content,
-    error,
-    validating,
-  } = useFileContent(`/api/raw/?path=${parentPath}/${file.name}${proxy ? `&proxy=true` : ''}`, path)
+  const { response: content, error, validating } = useFileContent(`/api/raw/?path=${parentPath}/${file.name}`, path)
   const { t } = useTranslation()
 
   // Check if the image is relative path instead of a absolute url
@@ -120,7 +115,8 @@ const MarkdownPreview: FC<{
         <div className="markdown-body">
           {/* Using rehypeRaw to render HTML inside Markdown is potentially dangerous, use under safe environments. (#18) */}
           <ReactMarkdown
-            remarkPlugins={[gfm, remarkMath]}
+            // @ts-ignore
+            remarkPlugins={[remarkGfm, remarkMath]}
             // The type error is introduced by caniuse-lite upgrade.
             // Since type errors occur often in remark toolchain and the use is so common,
             // ignoring it shoudld be safe enough.

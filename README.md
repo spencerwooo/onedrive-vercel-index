@@ -1,7 +1,7 @@
 <div align="center">
   <img src="./public/header.png" alt="onedrive-vercel-index" />
   <h3><a href="https://drive.swo.moe">onedrive-vercel-index</a></h3>
-  <p><a href="https://ovi.swo.moe/docs/getting-started">Get started</a> · <a href="https://ovi.swo.moe/blog/whats-new">What's new?</a> · <a href="https://ovi.swo.moe/sponsor">Sponsoring</a></p>
+  <p><a href="https://ovi.swo.moe/docs/getting-started">Get started</a> · <a href="https://ovi.swo.moe/blog/whats-new">What's new?</a> · <a href="https://ovi.swo.moe/sponsor/ways">Sponsoring</a></p>
   <p><em>OneDrive public directory listing, powered by Vercel and Next.js</em></p>
 
   <img src="https://img.shields.io/badge/OneDrive-2C68C3?style=flat&logo=microsoft-onedrive&logoColor=white" alt="OneDrive" />
@@ -32,7 +32,7 @@ Please go to our [discussion forum](https://github.com/spencerwooo/onedrive-verc
 
 *If you happen to like this project, please give it a star!* :3
 
-*If you really, really like this project, please send money! -> [Sponsors 🤑 and donations 💰](https://ovi.swo.moe/sponsor)*
+*If you really, really like this project, please send money! -> [Sponsors 🤑 and donations 💰](https://ovi.swo.moe/sponsor/ways)*
 
 ## Demo
 
@@ -134,11 +134,7 @@ Yes! Completely free with no backend server what-so-ever. (Well, we use Redis, b
 
 Open-source is hard! If you happen to like this project and want me to keep going, please consider sponsoring me or providing a single donation! Thanks for all the love and support!
 
-[🧸 Please donate - 微信/支付宝](https://ovi.swo.moe/sponsor) · [Patreon](https://www.patreon.com/spencerwoo) · [爱发电](https://afdian.net/@spencerwoo)
-
-### Sponsors
-
-*Your name will appear here if you sponsor or donate 😀*
+[🧸 Please donate - 微信/支付宝](https://ovi.swo.moe/sponsor/ways) · [Patreon](https://www.patreon.com/spencerwoo) · [爱发电](https://afdian.net/@spencerwoo)
 
 ## License
 
