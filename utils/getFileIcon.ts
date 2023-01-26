@@ -97,11 +97,13 @@ const extensions = {
  * To stop TypeScript complaining about indexing the object with a non-existent key
  * https://dev.to/mapleleaf/indexing-objects-in-typescript-1cgi
  *
+ * Fixed by ChatGPT with the upgrade of TypeScript 4.9
+ *
  * @param obj Object with keys to index
  * @param key The index key
  * @returns Whether or not the key exists inside the object
  */
-export function hasKey<O>(obj: O, key: PropertyKey): key is keyof O {
+export function hasKey(obj: Record<string, any>, key: string): boolean {
   return key in obj
 }
 
