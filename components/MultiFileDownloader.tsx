@@ -188,10 +188,10 @@ export async function* traverseFolder(path: string): AsyncGenerator<TraverseItem
     return {
       i,
       path,
-      data: await fetcher(
+      data: await fetcher([
         next ? `/api/?path=${path}&next=${next}` : `/api?path=${path}`,
-        hashedToken ?? undefined
-      ).catch(error => ({ i, path, error })),
+        hashedToken ?? undefined,
+      ]).catch(error => ({ i, path, error })),
     }
   }
 

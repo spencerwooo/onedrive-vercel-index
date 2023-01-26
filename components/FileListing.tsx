@@ -370,7 +370,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
 
         {readmeFile && (
           <div className="mt-4">
-            <MarkdownPreview file={readmeFile} path={path} standalone={false} proxy={true} />
+            <MarkdownPreview file={readmeFile} path={path} standalone={false} />
           </div>
         )}
       </>
