@@ -114,7 +114,7 @@ function SearchResultItemTemplate({
 
 function SearchResultItemLoadRemote({ result }: { result: OdSearchResult[number] }) {
   const { data, error }: SWRResponse<OdDriveItem, { status: number; message: any }> = useSWR(
-    `/api/item/?id=${result.id}`,
+    [`/api/item/?id=${result.id}`],
     fetcher
   )
 
