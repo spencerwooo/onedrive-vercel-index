@@ -6,7 +6,7 @@ import type { OdAPIResponse } from '../types'
 import { getStoredToken } from './protectedRouteHandler'
 
 // Common axios fetch function for use with useSWR
-export async function fetcher(url: string, token?: string): Promise<any> {
+export async function fetcher([url, token]: [url: string, token?: string]): Promise<any> {
   try {
     return (
       await (token
