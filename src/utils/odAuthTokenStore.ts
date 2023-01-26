@@ -1,5 +1,5 @@
 import Redis from 'ioredis'
-import siteConfig from '../config/site.config'
+import siteConfig from '../../config/site.config'
 
 // Persistent key-value store is provided by Redis, hosted on Upstash
 // https://vercel.com/integrations/upstash
