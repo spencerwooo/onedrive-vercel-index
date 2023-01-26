@@ -17,8 +17,8 @@ export default function Home() {
 
       <main className="flex w-full flex-1 flex-col bg-gray-50 dark:bg-gray-800">
         <Navbar />
-        <div className="mx-auto w-full max-w-5xl p-4">
-          <nav className="mb-4 flex items-center justify-between pl-1">
+        <div className="mx-auto w-full max-w-5xl sm:p-4 py-4">
+          <nav className="mb-4 flex items-center justify-between sm:pl-1 sm:px-0 px-4">
             <Breadcrumb />
             <SwitchLayout />
           </nav>
