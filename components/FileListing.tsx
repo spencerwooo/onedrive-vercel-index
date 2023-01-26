@@ -268,6 +268,17 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       }
     }
 
+    // Get selected file permalink
+    const handleSelectedPermalink = (baseUrl: string) => {
+      return getFiles()
+        .filter(c => selected[c.id])
+        .map(
+          c =>
+            `${baseUrl}/api/raw/?path=${path}/${encodeURIComponent(c.name)}${hashedToken ? `&odpt=${hashedToken}` : ''}`
+        )
+        .join('\n')
+    }
+
     // Folder recursive download
     const handleFolderDownload = (path: string, id: string, name?: string) => () => {
       const files = (async function* () {
@@ -324,6 +335,7 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       totalGenerating,
       handleSelectedDownload,
       folderGenerating,
+      handleSelectedPermalink,
       handleFolderDownload,
     }
 
