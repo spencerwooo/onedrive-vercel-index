@@ -85,6 +85,7 @@
   "Oops, that's a <1>four-oh-four</1>.": "Oops，这里是 <1>404</1> 页面。",
   "Open URL": "打开 URL",
   "Open URL{{url}}": "打开 URL{{url}}",
+  "Play as audio": "播放为音频",
   "Press <2>F12</2> and open devtools for more details, or seek help at <6>onedrive-vercel-index discussions</6>.": "请按下 <2>F12</2> 来打开开发者工具窗口以获取详细信息，或是到 <6>onedrive-vercel-index 社区讨论</6> 处寻求帮助。",
   "Proceed to OAuth": "继续进行 OAuth",
   "Requesting tokens": "正在获取 token",
