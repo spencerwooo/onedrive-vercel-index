@@ -47,7 +47,7 @@ specifiers:
   react-copy-to-clipboard: ^5.0.3
   react-dom: ^18.2.0
   react-hot-toast: ^2.4.0
-  react-hotkeys-hook: ^3.4.7
+  react-hotkeys-hook: ^4.3.2
   react-i18next: ^12.1.4
   react-markdown: ^8.0.5
   react-reader: ^0.21.3
@@ -94,7 +94,7 @@ dependencies:
   react-copy-to-clipboard: 5.1.0_react@18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-hot-toast: 2.4.0_owo25xnefcwdq3zjgtohz6dbju
-  react-hotkeys-hook: 3.4.7_biqbaboplfbrettd7655fr4n2y
+  react-hotkeys-hook: 4.3.2_biqbaboplfbrettd7655fr4n2y
   react-i18next: 12.1.4_iakk3dtjhjpukdoa4oua5khgci
   react-markdown: 8.0.5_3stiutgnnbnfnf3uowm5cip22i
   react-reader: 0.21.3_react@18.2.0
@@ -2588,10 +2588,6 @@ packages:
       react-is: 16.13.1
     dev: false
 
-  /hotkeys-js/3.9.4:
-    resolution: {integrity: sha512-2zuLt85Ta+gIyvs4N88pCYskNrxf1TFv3LR9t5mdAZIX8BcgQQ48F2opUptvHa6m8zsy5v/a0i9mWzTrlNWU0Q==}
-    dev: false
-
   /html-parse-stringify/3.0.1:
     resolution: {integrity: sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==}
     dependencies:
@@ -4305,13 +4301,12 @@ packages:
       - csstype
     dev: false
 
-  /react-hotkeys-hook/3.4.7_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-+bbPmhPAl6ns9VkXkNNyxlmCAIyDAcWbB76O4I0ntr3uWCRuIQf/aRLartUahe9chVMPj+OEzzfk3CQSjclUEQ==}
+  /react-hotkeys-hook/4.3.2_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-ZA/li3kBDHuRTtJIf7Td41UU87bPtnt9xV4r+PlEzpnFoYRDVspk3B+mlaX75zowyQygMVmoaWnM4B88lkyExQ==}
     peerDependencies:
       react: '>=16.8.1'
       react-dom: '>=16.8.1'
     dependencies:
-      hotkeys-js: 3.9.4
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false
