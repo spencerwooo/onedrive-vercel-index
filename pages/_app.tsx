@@ -1,12 +1,13 @@
-import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 
 import '../styles/globals.css'
 import '../styles/markdown-github.css'
 
+// Require had to be used to prevent SSR failure in Next.js
+// Related discussion: https://github.com/FortAwesome/Font-Awesome/issues/19348
+const { library, config } = require('@fortawesome/fontawesome-svg-core')
 config.autoAddCss = false
 
-import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faFileImage,
   faFilePdf,
