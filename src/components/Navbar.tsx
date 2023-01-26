@@ -10,7 +10,7 @@ import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import { useTranslation } from 'next-i18next'
 
-import siteConfig from '../config/site.config'
+import siteConfig from '../../config/site.config'
 import SearchModal from './SearchModal'
 import SwitchLang from './SwitchLang'
 import useDeviceOS from '../utils/useDeviceOS'

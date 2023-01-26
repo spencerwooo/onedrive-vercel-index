@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier 'components/**/*.tsx' 'config/*.js' 'pages/**/*.{ts,tsx}' '{types,utils}/**/*.ts' --write",
+    "format": "prettier 'src/**/*.{js,ts,jsx,tsx}' --write",
     "extract": "i18next"
   },
   "dependencies": {
@@ -74,5 +74,21 @@
     "prettier-plugin-tailwindcss": "^0.2.2",
     "tailwindcss": "^3.2.4",
     "typescript": "4.9.4"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "arrowParens": "avoid",
+    "singleQuote": true,
+    "semi": false,
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "next",
+      "next/core-web-vitals",
+      "prettier"
+    ]
   }
 }
