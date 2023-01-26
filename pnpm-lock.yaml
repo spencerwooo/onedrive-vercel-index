@@ -50,7 +50,7 @@ specifiers:
   react-hotkeys-hook: ^4.3.2
   react-i18next: ^12.1.4
   react-markdown: ^8.0.5
-  react-reader: ^0.21.3
+  react-reader: ^1.0.2
   react-syntax-highlighter: ^15.5.0
   react-use-system-theme: ^1.1.1
   rehype-katex: ^6.0.2
@@ -97,7 +97,7 @@ dependencies:
   react-hotkeys-hook: 4.3.2_biqbaboplfbrettd7655fr4n2y
   react-i18next: 12.1.4_iakk3dtjhjpukdoa4oua5khgci
   react-markdown: 8.0.5_3stiutgnnbnfnf3uowm5cip22i
-  react-reader: 0.21.3_react@18.2.0
+  react-reader: 1.0.2_react@18.2.0
   react-syntax-highlighter: 15.5.0_react@18.2.0
   react-use-system-theme: 1.1.1_react@18.2.0
   rehype-katex: 6.0.2
@@ -806,8 +806,8 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@xmldom/xmldom/0.7.5:
-    resolution: {integrity: sha512-V3BIhmY36fXZ1OtVcI9W+FxQqxVLsPKcNjWigIaa81dLC9IolJl5Mt4Cvhmr0flUnjSpTdrbMTSbXqYqV5dT6A==}
+  /@xmldom/xmldom/0.7.9:
+    resolution: {integrity: sha512-yceMpm/xd4W2a85iqZyO09gTnHvXF6pyiWjD2jcOJs7hRoZtNNOO1eJlhHj1ixA+xip2hOyGn+LgcvLCMo5zXA==}
     engines: {node: '>=10.0.0'}
     dev: false
 
@@ -1288,11 +1288,6 @@ packages:
       toggle-selection: 1.0.6
     dev: false
 
-  /core-js/3.25.5:
-    resolution: {integrity: sha512-nbm6eZSjm+ZuBQxCUPQKQCoUEfFOXjUZ8dTTyikyKaWrTYmAVbykQfwsKE5dBK88u3QCkCrzsx/PPlKfhsvgpw==}
-    requiresBuild: true
-    dev: false
-
   /core-js/3.27.2:
     resolution: {integrity: sha512-9ashVQskuh5AZEZ1JdQWp1GqSoC1e1G87MzRqg2gIfVAQ7Qn9K+uFj8EcniUFA4P2NLZfV+TOlX1SzoKfo+s7w==}
     requiresBuild: true
@@ -1608,8 +1603,8 @@ packages:
     resolution: {integrity: sha512-c06pNSdBxcXv3dZSbXAVLE1/pmleRhOT6mXNZo6INKmvuKpYB65MwU/lO7830czCtjIiK9i+KR+3S+p0wtljrw==}
     dependencies:
       '@types/localforage': 0.0.34
-      '@xmldom/xmldom': 0.7.5
-      core-js: 3.25.5
+      '@xmldom/xmldom': 0.7.9
+      core-js: 3.27.2
       event-emitter: 0.3.5
       jszip: 3.10.1
       localforage: 1.10.0
@@ -4365,8 +4360,8 @@ packages:
       - supports-color
     dev: false
 
-  /react-reader/0.21.3_react@18.2.0:
-    resolution: {integrity: sha512-/8TmwSgDgIihY4PJr7f5aFOkICK7GdZoX2CXO0AakwvBBshcZtfAusyWMYZ63TYp/XJH9P7rbFGsQq5naHdKYg==}
+  /react-reader/1.0.2_react@18.2.0:
+    resolution: {integrity: sha512-iN0yyIDF5GsdDpo1S2HApc7hTrra77nMHeTi8QDt4xGpFMWwMO1ZQmQH44poSE0GfYy3lkMoJYXZBg3vMKmIag==}
     peerDependencies:
       react: '>=17.0.2'
     dependencies:
