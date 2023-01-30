@@ -105,7 +105,7 @@
   "The authorisation code extracted is:": "El código de autorización extraído es:",
   "The OAuth link for getting the authorisation code has been created. Click on the link above to get the <2>authorisation code</2>. Your browser willopen a new tab to Microsoft's account login page. After logging in and authenticating with your Microsoft account, you will be redirected to a blank page on localhost. Paste <6>the entire redirected URL</6> down below.": "El enlace OAuth para obtener el código de autorización se ha creado. Haz clic en el enlace anterior para obtener el <2>código de autorización</2>. Tu navegador abrirá una nueva pestaña en la página de inicio de sesión de la cuenta de Microsoft. Después de iniciar sesión y autenticarse con tu cuenta de Microsoft, serás redirigido a una página en blanco en localhost. Pega <6>toda la URL redirigida</6> a continuación.",
   "These tokens are used to authenticate yourself into password protected folders, ": "Estos tokens se utilizan para autenticarse en carpetas protegidas con contraseña,",
-  "These tokens may take a few seconds to populate after you click the button below. ": "stos tokens pueden demorar unos segundos en ser llenados después de hacer clic en el botón de abajo.",
+  "These tokens may take a few seconds to populate after you click the button below. ": "Estos tokens pueden demorar unos segundos en ser llenados después de hacer clic en el botón de abajo.",
   "This route (the folder itself and the files inside) is password protected. ": "Esta ruta (la carpeta y los archivos dentro de ella) está protegida por contraseña.",
   "Unavailable": "No disponible",
   "URL encoded": "Codificado en URL",
