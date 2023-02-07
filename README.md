@@ -1,7 +1,7 @@
 <div align="center">
   <img src="./public/header.png" alt="onedrive-vercel-index" />
   <h3><a href="https://drive.swo.moe">onedrive-vercel-index</a></h3>
-  <p><a href="https://ovi.swo.moe/docs/getting-started">Get started</a> · <a href="https://ovi.swo.moe/blog/whats-new">What's new?</a> · <a href="https://ovi.swo.moe/sponsor">Sponsoring</a></p>
+  <p><a href="https://ovi.swo.moe/docs/getting-started">Get started</a> · <a href="https://ovi.swo.moe/blog/whats-new">What's new?</a> · <a href="https://ovi.swo.moe/sponsor/ways">Sponsoring</a></p>
   <p><em>OneDrive public directory listing, powered by Vercel and Next.js</em></p>
 
   <img src="https://img.shields.io/badge/OneDrive-2C68C3?style=flat&logo=microsoft-onedrive&logoColor=white" alt="OneDrive" />
@@ -32,7 +32,7 @@ Please go to our [discussion forum](https://github.com/spencerwooo/onedrive-verc
 
 *If you happen to like this project, please give it a star!* :3
 
-*If you really, really like this project, please send money! -> [Sponsors 🤑 and donations 💰](https://ovi.swo.moe/sponsor)*
+*If you really, really like this project, please send money! -> [Sponsors 🤑 and donations 💰](https://ovi.swo.moe/sponsor/ways)*
 
 ## Demo
 
@@ -109,22 +109,24 @@ Live demo at [Spencer's OneDrive](https://drive.swo.moe).
 - Direct raw-file serving and hosting ...
 - Full dark mode support, style and website customisations ...
 
+> **Note**: This project is focused on showcasing and providing a way for others to download files from your OneDrive. Emphasis on **free** and **serverless**. If you have your own server / need WebDAV / use cloud providers other than OneDrive, checkout [alist](https://github.com/alist-org/alist).
+
 ## Documentation
 
-Documentation is hosted at [onedrive-vercel-index.spencerwoo.com](https://ovi.swo.moe/).
+Documentation is hosted at [ovi.swo.moe](https://ovi.swo.moe/).
 
-- How can I get started and deploy? - [Docs - Getting started](https://ovi.swo.moe/docs/getting-started).
-- How can I configure ... ? - [Docs - Custom configs](https://ovi.swo.moe/docs/custom-configs).
+- [How can I get started and deploy?](https://ovi.swo.moe/docs/getting-started)
+- [How can I configure ... ?](https://ovi.swo.moe/docs/custom-configs)
 - Where is feature ... ?
   - [Docs - Password protected folders](https://ovi.swo.moe/docs/features/protected-folders)
   - [Docs - Multi-file and folder download](https://ovi.swo.moe/docs/features/multi-file-folder-download)
   - [Docs - Hosting files (images) directly](https://ovi.swo.moe/docs/features/hosting-images-directly)
   - [Docs - Search for files and folders](https://ovi.swo.moe/docs/features/search-for-files-and-folders)
   - [Docs - Load video subtitles](https://ovi.swo.moe/docs/features/load-video-subtitles)
-- I deployed this before, how can I upgrade to the latest version? - [Docs - Updating to the latest version](https://ovi.swo.moe/docs/migration/updating-to-latest-version)
-- I was here before 2022, how can I migrate to the new version? - [Docs - Migrating from versions before 2022](https://ovi.swo.moe/docs/migration/if-you-deployed-before-2022).
-- I got a problem during deployment ... - [Docs - FAQ](https://ovi.swo.moe/docs/faqs/error-on-deployment)
-- I didn't find a solution / My problem is unique - [Find help in discussion forum](https://github.com/spencerwooo/onedrive-vercel-index/discussions).
+- [I deployed this before, how can I upgrade to the latest version?](https://ovi.swo.moe/docs/migration/updating-to-latest-version)
+- [I was here before 2022, how can I migrate to the new version?](https://ovi.swo.moe/docs/migration/if-you-deployed-before-2022)
+- [I got a problem during deployment ...](https://ovi.swo.moe/docs/faqs/error-on-deployment)
+- I didn't find a solution / My problem is unique? [Find help in discussion forum](https://github.com/spencerwooo/onedrive-vercel-index/discussions).
 
 ## Server-*less* (free)?
 
@@ -134,11 +136,7 @@ Yes! Completely free with no backend server what-so-ever. (Well, we use Redis, b
 
 Open-source is hard! If you happen to like this project and want me to keep going, please consider sponsoring me or providing a single donation! Thanks for all the love and support!
 
-[🧸 Please donate - 微信/支付宝](https://ovi.swo.moe/sponsor) · [Patreon](https://www.patreon.com/spencerwoo) · [爱发电](https://afdian.net/@spencerwoo)
-
-### Sponsors
-
-*Your name will appear here if you sponsor or donate 😀*
+[🧸 Please donate - 微信/支付宝](https://ovi.swo.moe/sponsor/ways) · [Patreon](https://www.patreon.com/spencerwoo) · [爱发电](https://afdian.net/@spencerwoo)
 
 ## License
 

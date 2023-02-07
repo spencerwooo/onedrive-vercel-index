@@ -31,6 +31,8 @@
   "Customise link": "Customise link",
   "Customised": "Customised",
   "Customised and encoded": "Customised and encoded",
+  "Copy selected files permalink": "Copy selected files permalink",
+  "Copied selected files permalink.": "Copied selected files permalink.",
   "Default": "Default",
   "Do not pretend to be the site owner": "Do not pretend to be the site owner",
   "Don't worry, after storing them, onedrive-vercel-index will take care of token refreshes and updates after your site goes live.": "Don't worry, after storing them, onedrive-vercel-index will take care of token refreshes and updates after your site goes live.",
