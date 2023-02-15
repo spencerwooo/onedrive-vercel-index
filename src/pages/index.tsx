@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-import siteConfig from '../../config/site.config'
+import siteConfig from '@cfg/site.config'
 import Navbar from '../components/Navbar'
 import FileListing from '../components/FileListing'
 import Footer from '../components/Footer'

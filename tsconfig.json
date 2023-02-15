@@ -18,7 +18,12 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "noImplicitAny": false,
-    "incremental": true
+    "incremental": true,
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["./*"],
+      "@cfg/*": ["../config/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
