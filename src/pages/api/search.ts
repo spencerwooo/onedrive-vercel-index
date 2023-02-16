@@ -1,5 +1,5 @@
 import { encodePath, getAccessToken, handleResponseError, setCaching } from '@/utils/api'
-import { kv } from '@/utils/kv/upst'
+import { kv } from '@/utils/kv/edge'
 import apiConfig from '@cfg/api.config'
 import siteConfig from '@cfg/site.config'
 import { NextRequest, NextResponse } from 'next/server'

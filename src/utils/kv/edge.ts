@@ -1,37 +1,38 @@
 import { get } from '@vercel/edge-config'
 import { Redis } from '../odAuthTokenStore'
 
-// Persistent key-value store is provided by Redis, hosted on Upstash
-// https://vercel.com/integrations/upstash
 export const kv: Redis = {
   get: async (key: string) => {
-    return (await get(key)) ?? null
+    const [value, expiry] = await Promise.all([get<string>(key), get<number>(`${key}_expiry`)])
+    if (!value || (expiry && Date.now() > expiry)) {
+      return null
+    }
+    return value
   },
   set: async (key: string, value: string, expiry?: number) => {
-    if (expiry !== undefined) {
-      throw new Error('Not implemented')
-    }
-    await set(key, value)
+    await set(key, value, expiry)
   },
 }
 
-async function set(key: string, value: string) {
+async function set(key: string, value: string, expiry?: number) {
+  const items: {
+    operation: string
+    key: string
+    value: string | number
+  }[] = [{ operation: 'upsert', key, value }]
+  if (typeof expiry === 'number') {
+    items.push({ operation: 'upsert', key: `${key}_expiry`, value: Date.now() + expiry * 1e3 })
+  }
+  const edgeConfigID = new URL(process.env.EDGE_CONFIG ?? '').pathname.split('/').pop()
+
   try {
-    const updateEdgeConfig = await fetch(`https://api.vercel.com/v1/edge-config/${process.env.EDGE_CONFIG_ID}/items`, {
+    const updateEdgeConfig = await fetch(`https://api.vercel.com/v1/edge-config/${edgeConfigID}/items`, {
       method: 'PATCH',
       headers: {
-        Authorization: `Bearer ${process.env.EDGE_CONFIG_TOKEN}`,
+        Authorization: `Bearer ${process.env.VERCEL_TOKEN}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        items: [
-          {
-            operation: 'upsert',
-            key,
-            value,
-          },
-        ],
-      }),
+      body: JSON.stringify({ items }),
     })
     const result = await updateEdgeConfig.json()
     console.log(result)

@@ -14,7 +14,7 @@ import {
 } from '@/utils/api'
 import { revealObfuscatedToken } from '@/utils/oAuthHandler'
 import { storeOdAuthTokens } from '@/utils/odAuthTokenStore'
-import { kv } from '@/utils/kv/upst'
+import { kv } from '@/utils/kv/edge'
 
 export const config = {
   runtime: 'edge',

@@ -1,7 +1,7 @@
 import apiConfig from '@cfg/api.config'
 import { getAccessToken, handleResponseError, setCaching } from '@/utils/api'
 import { NextRequest, NextResponse } from 'next/server'
-import { kv } from '@/utils/kv/upst'
+import { kv } from '@/utils/kv/edge'
 
 export const config = {
   runtime: 'edge',
