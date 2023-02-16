@@ -1,5 +1,5 @@
-import axios from 'axios'
-import CryptoJS from 'crypto-js'
+import AES from 'crypto-js/aes'
+import Utf8 from 'crypto-js/enc-utf8'
 
 import apiConfig from '@cfg/api.config'
 
@@ -8,13 +8,13 @@ import apiConfig from '@cfg/api.config'
 const AES_SECRET_KEY = 'onedrive-vercel-index'
 export function obfuscateToken(token: string): string {
   // Encrypt token with AES
-  const encrypted = CryptoJS.AES.encrypt(token, AES_SECRET_KEY)
+  const encrypted = AES.encrypt(token, AES_SECRET_KEY)
   return encrypted.toString()
 }
 export function revealObfuscatedToken(obfuscated: string): string {
   // Decrypt SHA256 obfuscated token
-  const decrypted = CryptoJS.AES.decrypt(obfuscated, AES_SECRET_KEY)
-  return decrypted.toString(CryptoJS.enc.Utf8)
+  const decrypted = AES.decrypt(obfuscated, AES_SECRET_KEY)
+  return decrypted.toString(Utf8)
 }
 
 // Generate the Microsoft OAuth 2.0 authorization URL, used for requesting the authorisation code
@@ -59,53 +59,52 @@ export async function requestTokenWithAuthCode(
   const clientSecret = revealObfuscatedToken(apiConfig.obfuscatedClientSecret)
 
   // Construct URL parameters for OAuth2
-  const params = new URLSearchParams()
-  params.append('client_id', clientId)
-  params.append('redirect_uri', redirectUri)
-  params.append('client_secret', clientSecret)
-  params.append('code', code)
-  params.append('grant_type', 'authorization_code')
+  const url = new URL(authApi)
+  url.searchParams.append('client_id', clientId)
+  url.searchParams.append('redirect_uri', redirectUri)
+  url.searchParams.append('client_secret', clientSecret)
+  url.searchParams.append('code', code)
+  url.searchParams.append('grant_type', 'authorization_code')
 
   // Request access token
-  return axios
-    .post(authApi, params, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    })
-    .then(resp => {
-      const { expires_in, access_token, refresh_token } = resp.data
-      return { expiryTime: expires_in, accessToken: access_token, refreshToken: refresh_token }
-    })
-    .catch(err => {
-      const { error, error_description, error_uri } = err.response.data
-      return { error, errorDescription: error_description, errorUri: error_uri }
-    })
+
+  const response = await fetch(url.href, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  })
+
+  const data = await response.json()
+  if (!response.ok) {
+    const { error, error_description, error_uri } = data
+    return { error, errorDescription: error_description, errorUri: error_uri }
+  }
+  const { expires_in, access_token, refresh_token } = data
+  return { expiryTime: expires_in, accessToken: access_token, refreshToken: refresh_token }
 }
 
 // Verify the identity of the user with the access token and compare it with the userPrincipalName
 // in the Microsoft Graph API. If the userPrincipalName matches, proceed with token storing.
 export async function getAuthPersonInfo(accessToken: string) {
   const profileApi = apiConfig.driveApi.replace('/drive', '')
-  return axios.get(profileApi, {
+  return await fetch(profileApi, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-  })
+  }).then(res => (res.ok ? res.json() : Promise.reject(res)))
 }
 
 export async function sendTokenToServer(accessToken: string, refreshToken: string, expiryTime: string) {
-  return await axios.post(
-    '/api',
-    {
+  await fetch('/api', {
+    method: 'POST',
+    body: JSON.stringify({
       obfuscatedAccessToken: obfuscateToken(accessToken),
       accessTokenExpiry: parseInt(expiryTime),
       obfuscatedRefreshToken: obfuscateToken(refreshToken),
+    }),
+    headers: {
+      'Content-Type': 'application/json',
     },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
+  })
 }

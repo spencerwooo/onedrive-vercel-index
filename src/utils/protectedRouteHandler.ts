@@ -35,7 +35,7 @@ export function compareHashedToken({
  */
 
 export function matchProtectedRoute(route: string): string {
-  const protectedRoutes: string[] = siteConfig.protectedRoutes
+  const protectedRoutes = siteConfig.protectedRoutes
   let authTokenPath = ''
 
   for (const r of protectedRoutes) {

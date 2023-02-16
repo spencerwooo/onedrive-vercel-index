@@ -1,36 +1,32 @@
-import axios from 'axios'
-import type { NextApiRequest, NextApiResponse } from 'next'
-
-import { getAccessToken } from '.'
 import apiConfig from '@cfg/api.config'
+import { getAccessToken, handleResponseError, setCaching } from '@/utils/api'
+import { NextRequest, NextResponse } from 'next/server'
+import { kv } from '@/utils/kv/upst'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export const config = {
+  runtime: 'edge',
+}
+
+export default async function handler(req: NextRequest) {
   // Get access token from storage
-  const accessToken = await getAccessToken()
+  const accessToken = await getAccessToken(kv)
 
   // Get item details (specifically, its path) by its unique ID in OneDrive
-  const { id = '' } = req.query
+  const id = req.nextUrl.searchParams.get('id') ?? ''
 
-  // Set edge function caching for faster load times, check docs:
-  // https://vercel.com/docs/concepts/functions/edge-caching
-  res.setHeader('Cache-Control', apiConfig.cacheControlHeader)
+  const headers = setCaching(new Headers())
 
-  if (typeof id === 'string') {
-    const itemApi = `${apiConfig.driveApi}/items/${id}`
+  if (typeof id !== 'string') return NextResponse.json({ error: 'Invalid driveItem ID.' }, { status: 400, headers })
+  const itemApi = new URL(`${apiConfig.driveApi}/items/${id}`)
+  itemApi.searchParams.set('select', 'id,name,parentReference')
 
-    try {
-      const { data } = await axios.get(itemApi, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        params: {
-          select: 'id,name,parentReference',
-        },
-      })
-      res.status(200).json(data)
-    } catch (error: any) {
-      res.status(error?.response?.status ?? 500).json({ error: error?.response?.data ?? 'Internal server error.' })
-    }
-  } else {
-    res.status(400).json({ error: 'Invalid driveItem ID.' })
+  try {
+    const data = await fetch(itemApi, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }).then(res => (res.ok ? res.json() : Promise.reject(res)))
+    return NextResponse.json(data, { status: 200, headers })
+  } catch (error) {
+    const { data, status } = await handleResponseError(error)
+    return NextResponse.json(data, { status, headers })
   }
-  return
 }

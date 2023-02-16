@@ -1,9 +1,12 @@
-import axios from 'axios'
-import type { NextApiRequest, NextApiResponse } from 'next'
-
-import { encodePath, getAccessToken } from '.'
+import { encodePath, getAccessToken, handleResponseError, setCaching } from '@/utils/api'
+import { kv } from '@/utils/kv/upst'
 import apiConfig from '@cfg/api.config'
 import siteConfig from '@cfg/site.config'
+import { NextRequest, NextResponse } from 'next/server'
+
+export const config = {
+  runtime: 'edge',
+}
 
 /**
  * Sanitize the search query
@@ -25,38 +28,34 @@ function sanitiseQuery(query: string): string {
   return encodeURIComponent(sanitisedQuery)
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextRequest) {
   // Get access token from storage
-  const accessToken = await getAccessToken()
+  const accessToken = await getAccessToken(kv)
 
   // Query parameter from request
-  const { q: searchQuery = '' } = req.query
+  const searchQuery = req.nextUrl.searchParams.get('q') ?? ''
 
-  // Set edge function caching for faster load times, check docs:
-  // https://vercel.com/docs/concepts/functions/edge-caching
-  res.setHeader('Cache-Control', apiConfig.cacheControlHeader)
+  const headers = new Headers()
 
-  if (typeof searchQuery === 'string') {
-    // Construct Microsoft Graph Search API URL, and perform search only under the base directory
-    const searchRootPath = encodePath('/')
-    const encodedPath = searchRootPath === '' ? searchRootPath : searchRootPath + ':'
+  setCaching(headers)
 
-    const searchApi = `${apiConfig.driveApi}/root${encodedPath}/search(q='${sanitiseQuery(searchQuery)}')`
+  if (typeof searchQuery !== 'string') return NextResponse.json([], { status: 200, headers })
 
-    try {
-      const { data } = await axios.get(searchApi, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        params: {
-          select: 'id,name,file,folder,parentReference',
-          top: siteConfig.maxItems,
-        },
-      })
-      res.status(200).json(data.value)
-    } catch (error: any) {
-      res.status(error?.response?.status ?? 500).json({ error: error?.response?.data ?? 'Internal server error.' })
-    }
-  } else {
-    res.status(200).json([])
+  // Construct Microsoft Graph Search API URL, and perform search only under the base directory
+  const searchRootPath = encodePath('/')
+  const encodedPath = searchRootPath === '' ? searchRootPath : searchRootPath + ':'
+
+  const searchApi = new URL(`${apiConfig.driveApi}/root${encodedPath}/search(q='${sanitiseQuery(searchQuery)}')`)
+
+  searchApi.searchParams.set('select', 'id,name,file,folder,parentReference')
+  searchApi.searchParams.set('top', siteConfig.maxItems.toString())
+  try {
+    const data = await fetch(searchApi, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }).then(res => (res.ok ? res.json() : Promise.reject(res)))
+    return NextResponse.json(data.value, { status: 200, headers })
+  } catch (error) {
+    const { data, status } = await handleResponseError(error)
+    return NextResponse.json(data, { status, headers })
   }
-  return
 }

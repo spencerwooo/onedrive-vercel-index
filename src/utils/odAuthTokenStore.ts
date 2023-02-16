@@ -1,29 +1,35 @@
-import Redis from 'ioredis'
 import siteConfig from '@cfg/site.config'
 
-// Persistent key-value store is provided by Redis, hosted on Upstash
-// https://vercel.com/integrations/upstash
-const kv = new Redis(process.env.REDIS_URL || '')
-
-export async function getOdAuthTokens(): Promise<{ accessToken: unknown; refreshToken: unknown }> {
-  const accessToken = await kv.get(`${siteConfig.kvPrefix}access_token`)
-  const refreshToken = await kv.get(`${siteConfig.kvPrefix}refresh_token`)
-
+export async function getOdAuthTokens(kv: Redis): Promise<{ accessToken: unknown; refreshToken: unknown }> {
+  const [accessToken, refreshToken] = await Promise.all([
+    kv.get(`${siteConfig.kvPrefix}access_token`),
+    kv.get(`${siteConfig.kvPrefix}refresh_token`),
+  ])
   return {
     accessToken,
     refreshToken,
   }
 }
 
-export async function storeOdAuthTokens({
-  accessToken,
-  accessTokenExpiry,
-  refreshToken,
-}: {
-  accessToken: string
-  accessTokenExpiry: number
-  refreshToken: string
-}): Promise<void> {
-  await kv.set(`${siteConfig.kvPrefix}access_token`, accessToken, 'EX', accessTokenExpiry)
-  await kv.set(`${siteConfig.kvPrefix}refresh_token`, refreshToken)
+export async function storeOdAuthTokens(
+  kv: Redis,
+  {
+    accessToken,
+    accessTokenExpiry,
+    refreshToken,
+  }: {
+    accessToken: string
+    accessTokenExpiry: number
+    refreshToken: string
+  }
+): Promise<void> {
+  await Promise.all([
+    kv.set(`${siteConfig.kvPrefix}access_token`, accessToken, accessTokenExpiry),
+    kv.set(`${siteConfig.kvPrefix}refresh_token`, refreshToken),
+  ])
+}
+
+export interface Redis {
+  get(key: string): Promise<string | null>
+  set(key: string, value: string, expiry?: number): Promise<any>
 }
