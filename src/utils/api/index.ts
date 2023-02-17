@@ -80,7 +80,7 @@ export default async function handler(kv: Redis, req: NextRequest) {
   // Go for file raw download link, add CORS headers, and redirect to @microsoft.graph.downloadUrl
   // (kept here for backwards compatibility, and cache headers will be reverted to no-cache)
   if (raw) {
-    return await handleRaw(req, { headers, requestPath, accessToken })
+    return await handleRaw({ headers, requestPath, accessToken })
   }
 
   // Handle response from OneDrive API

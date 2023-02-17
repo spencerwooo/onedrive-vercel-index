@@ -5,9 +5,8 @@ import { Redis, getOdAuthTokens, storeOdAuthTokens } from '../odAuthTokenStore'
 import { compareHashedToken } from '../protectedRouteHandler'
 import pathPosix from 'path-browserify'
 import { NextRequest, NextResponse } from 'next/server'
-import cors from '../cors'
-import { NextApiRequest, NextApiResponse } from 'next'
-import { Response as NodeResponse } from 'node-fetch'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import type { Response as NodeResponse } from 'node-fetch'
 
 const basePath = pathPosix.resolve('/', siteConfig.baseDirectory)
 const clientSecret = revealObfuscatedToken(apiConfig.obfuscatedClientSecret)
@@ -184,10 +183,6 @@ export function setNoCache(header: Headers) {
   return header
 }
 
-export function initCorsForRaw(req: NextRequest) {
-  return (res: Response) => cors(req, res, { methods: ['GET', 'HEAD'] })
-}
-
 export async function handleResponseError(error: unknown) {
   let output: { data: { error: string }; status: number }
   if (error instanceof Response) {
@@ -225,8 +220,10 @@ function setHeaders(res: NextApiResponse, init: ResponseInit | undefined) {
   }
 }
 
+type ResponseCompatInit = Pick<ResponseInit, 'headers' | 'status'> & { cors?: boolean }
+
 export class ResponseCompat {
-  static redirect(url: string | URL, init?: number | Pick<ResponseInit, 'headers' | 'status'>) {
+  static redirect(url: string | URL, init?: number | ResponseCompatInit) {
     const status = typeof init === 'number' ? init : init?.status ?? 302
     return {
       toWeb() {
@@ -236,9 +233,10 @@ export class ResponseCompat {
         if (typeof init !== 'number') setHeaders(res, init)
         res.redirect(status, url.toString())
       },
+      cors: (typeof init !== 'number' && init?.cors) ?? false,
     }
   }
-  static json(body: any, init?: Pick<ResponseInit, 'headers' | 'status'>) {
+  static json(body: any, init?: ResponseCompatInit) {
     return {
       toWeb() {
         return NextResponse.json(body, init)
@@ -247,9 +245,10 @@ export class ResponseCompat {
         setHeaders(res, init)
         res.status(init?.status ?? 200).json(body)
       },
+      cors: init?.cors ?? false,
     }
   }
-  static text(body: string, init?: Pick<ResponseInit, 'headers' | 'status'>) {
+  static text(body: string, init?: ResponseCompatInit) {
     return {
       toWeb() {
         return new NextResponse(body, init)
@@ -258,9 +257,10 @@ export class ResponseCompat {
         setHeaders(res, init)
         res.status(init?.status ?? 200).send(body)
       },
+      cors: init?.cors ?? false,
     }
   }
-  static stream(body: Response['body'] | NodeResponse['body'], init?: Pick<ResponseInit, 'headers' | 'status'>) {
+  static stream(body: Response['body'] | NodeResponse['body'], init?: ResponseCompatInit) {
     return {
       toWeb() {
         if (isNodeStream(body)) throw new Error("Can't handle Node.js streams to the web")
@@ -272,6 +272,7 @@ export class ResponseCompat {
         if (body) body?.pipe(res)
         res.status(init?.status ?? 200)
       },
+      cors: init?.cors ?? false,
     }
   }
 }

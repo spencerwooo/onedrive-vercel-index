@@ -4,7 +4,7 @@ import { encodePath, getAccessToken, checkAuthRoute, noCacheForProtectedPath, Re
 import { NextRequest } from 'next/server'
 import { Redis } from '@/utils/odAuthTokenStore'
 import { cacheControlHeader, driveApi } from '@cfg/api.config'
-import { initCorsForRaw, handleResponseError } from './common'
+import { handleResponseError } from './common'
 
 export default async function handler(kv: Redis, req: NextRequest) {
   const accessToken = await getAccessToken(kv)
@@ -37,18 +37,12 @@ export default async function handler(kv: Redis, req: NextRequest) {
     return ResponseCompat.json({ error: message }, { status: code })
   }
 
-  const header = noCacheForProtectedPath(new Headers(), message)
-
-  return await handleRaw(req, { headers: header, requestPath: encodePath(cleanPath), accessToken }, proxy)
+  const headers = noCacheForProtectedPath(new Headers(), message)
+  return await handleRaw({ headers: headers, requestPath: encodePath(cleanPath), accessToken }, proxy)
 }
 
-export async function handleRaw(
-  req: NextRequest,
-  ctx: { headers?: Headers; requestPath: string; accessToken: string },
-  proxy = false
-) {
-  const headers = ctx.headers ?? new Headers()
-
+export async function handleRaw(ctx: { headers?: Headers; requestPath: string; accessToken: string }, proxy = false) {
+  const init = { headers: ctx.headers ?? new Headers(), cors: true }
   try {
     // Handle response from OneDrive API
     const requestUrl = new URL(`${driveApi}/root${ctx.requestPath}`)
@@ -59,20 +53,23 @@ export async function handleRaw(
       headers: { Authorization: `Bearer ${ctx.accessToken}` },
     }).then(res => (res.ok ? res.json() : Promise.reject(res)))
 
-    if (!downloadUrl) return ResponseCompat.json({ error: 'No download url found.' }, { status: 404, headers })
+    if (!downloadUrl) return ResponseCompat.json({ error: 'No download url found.' }, { status: 404, ...init })
 
     // Only proxy raw file content response for files up to 4MB
-    if (!(proxy && size && size < 4194304)) return ResponseCompat.redirect(downloadUrl, { headers })
+    if (!(proxy && size && size < 4194304)) return ResponseCompat.redirect(downloadUrl, init)
 
     const { body: dlBody, headers: dlHeader } = await fetch(downloadUrl)
     dlHeader.set('Cache-Control', cacheControlHeader)
 
     if (!dlBody)
-      return ResponseCompat.json({ error: 'No body from requested download URL.', url: downloadUrl }, { status: 404 })
+      return ResponseCompat.json(
+        { error: 'No body from requested download URL.', url: downloadUrl },
+        { status: 404, ...init }
+      )
 
-    return ResponseCompat.stream(dlBody, { status: 200, headers: dlHeader })
+    return ResponseCompat.stream(dlBody, { status: 200, ...init, headers: dlHeader })
   } catch (error) {
     const { data, status } = await handleResponseError(error)
-    return ResponseCompat.json(data, { status, headers })
+    return ResponseCompat.json(data, { status, ...init })
   }
 }

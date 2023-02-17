@@ -8,10 +8,7 @@
 
 type StaticOrigin = boolean | string | RegExp | (boolean | string | RegExp)[]
 
-type OriginFn = (
-  origin: string | undefined,
-  req: Request
-) => StaticOrigin | Promise<StaticOrigin>
+type OriginFn = (origin: string | undefined, req: Request) => StaticOrigin | Promise<StaticOrigin>
 
 interface CorsOptions {
   origin?: StaticOrigin | OriginFn
@@ -33,7 +30,7 @@ const defaultOptions: CorsOptions = {
 
 function isOriginAllowed(origin: string, allowed: StaticOrigin): boolean {
   return Array.isArray(allowed)
-    ? allowed.some((o) => isOriginAllowed(origin, o))
+    ? allowed.some(o => isOriginAllowed(origin, o))
     : typeof allowed === 'string'
     ? origin === allowed
     : allowed instanceof RegExp
@@ -65,13 +62,9 @@ function getOriginHeaders(reqOrigin: string | undefined, origin: StaticOrigin) {
 
 // originHeadersFromReq
 
-async function originHeadersFromReq(
-  req: Request,
-  origin: StaticOrigin | OriginFn
-) {
+async function originHeadersFromReq(req: Request, origin: StaticOrigin | OriginFn) {
   const reqOrigin = req.headers.get('Origin') || undefined
-  const value =
-    typeof origin === 'function' ? await origin(reqOrigin, req) : origin
+  const value = typeof origin === 'function' ? await origin(reqOrigin, req) : origin
 
   if (!value) return
   return getOriginHeaders(reqOrigin, value)
@@ -94,11 +87,7 @@ function getAllowedHeaders(req: Request, allowed?: string | string[]) {
   return headers
 }
 
-export default async function cors(
-  req: Request,
-  res: Response,
-  options?: CorsOptions
-) {
+export default async function cors(req: Request, res: Response, options?: CorsOptions) {
   const opts = { ...defaultOptions, ...options }
   const { headers } = res
   const originHeaders = await originHeadersFromReq(req, opts.origin ?? false)
@@ -116,9 +105,7 @@ export default async function cors(
     headers.set('Access-Control-Allow-Credentials', 'true')
   }
 
-  const exposed = Array.isArray(opts.exposedHeaders)
-    ? opts.exposedHeaders.join(',')
-    : opts.exposedHeaders
+  const exposed = Array.isArray(opts.exposedHeaders) ? opts.exposedHeaders.join(',') : opts.exposedHeaders
 
   if (exposed) {
     headers.set('Access-Control-Expose-Headers', exposed)
@@ -127,9 +114,7 @@ export default async function cors(
   // Handle the preflight request
   if (req.method === 'OPTIONS') {
     if (opts.methods) {
-      const methods = Array.isArray(opts.methods)
-        ? opts.methods.join(',')
-        : opts.methods
+      const methods = Array.isArray(opts.methods) ? opts.methods.join(',') : opts.methods
 
       headers.set('Access-Control-Allow-Methods', methods)
     }
@@ -150,6 +135,13 @@ export default async function cors(
   return res
 }
 
-export function initCors(options?: CorsOptions) {
-  return (req: Request, res: Response) => cors(req, res, options)
+export function initCors(req: Request, options?: CorsOptions) {
+  return (res: Response) => cors(req, res, options)
 }
+
+const options: CorsOptions = { methods: ['GET', 'HEAD'] }
+
+function _cors(req: Request, res: Response) {
+  return cors(req, res, options)
+}
+export { _cors as cors }
