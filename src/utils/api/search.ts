@@ -1,12 +1,8 @@
-import { encodePath, getAccessToken, handleResponseError, setCaching } from '@/utils/api'
-import { kv } from '@/utils/kv/edge'
+import { ResponseCompat, encodePath, getAccessToken, handleResponseError, setCaching } from '@/utils/api/common'
+import { Redis } from '@/utils/odAuthTokenStore'
 import apiConfig from '@cfg/api.config'
 import siteConfig from '@cfg/site.config'
-import { NextRequest, NextResponse } from 'next/server'
-
-export const config = {
-  runtime: 'edge',
-}
+import { NextRequest } from 'next/server'
 
 /**
  * Sanitize the search query
@@ -28,7 +24,7 @@ function sanitiseQuery(query: string): string {
   return encodeURIComponent(sanitisedQuery)
 }
 
-export default async function handler(req: NextRequest) {
+export default async function handler(kv: Redis, req: NextRequest) {
   // Get access token from storage
   const accessToken = await getAccessToken(kv)
 
@@ -39,7 +35,7 @@ export default async function handler(req: NextRequest) {
 
   setCaching(headers)
 
-  if (typeof searchQuery !== 'string') return NextResponse.json([], { status: 200, headers })
+  if (typeof searchQuery !== 'string') return ResponseCompat.json([], { status: 200, headers })
 
   // Construct Microsoft Graph Search API URL, and perform search only under the base directory
   const searchRootPath = encodePath('/')
@@ -53,9 +49,9 @@ export default async function handler(req: NextRequest) {
     const data = await fetch(searchApi, {
       headers: { Authorization: `Bearer ${accessToken}` },
     }).then(res => (res.ok ? res.json() : Promise.reject(res)))
-    return NextResponse.json(data.value, { status: 200, headers })
+    return ResponseCompat.json(data.value, { status: 200, headers })
   } catch (error) {
     const { data, status } = await handleResponseError(error)
-    return NextResponse.json(data, { status, headers })
+    return ResponseCompat.json(data, { status, headers })
   }
 }

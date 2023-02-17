@@ -1,11 +1,13 @@
-import apiConfig, { cacheControlHeader, driveApi } from '@cfg/api.config'
+import apiConfig, { driveApi } from '@cfg/api.config'
 import siteConfig from '@cfg/site.config'
-import { revealObfuscatedToken } from './oAuthHandler'
-import { Redis, getOdAuthTokens, storeOdAuthTokens } from './odAuthTokenStore'
-import { compareHashedToken } from './protectedRouteHandler'
+import { revealObfuscatedToken } from '../oAuthHandler'
+import { Redis, getOdAuthTokens, storeOdAuthTokens } from '../odAuthTokenStore'
+import { compareHashedToken } from '../protectedRouteHandler'
 import pathPosix from 'path-browserify'
 import { NextRequest, NextResponse } from 'next/server'
-import cors from './cors'
+import cors from '../cors'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { Response as NodeResponse } from 'node-fetch'
 
 const basePath = pathPosix.resolve('/', siteConfig.baseDirectory)
 const clientSecret = revealObfuscatedToken(apiConfig.obfuscatedClientSecret)
@@ -186,46 +188,6 @@ export function initCorsForRaw(req: NextRequest) {
   return (res: Response) => cors(req, res, { methods: ['GET', 'HEAD'] })
 }
 
-export async function handleRaw(
-  req: NextRequest,
-  ctx: { headers?: Headers; requestPath: string; accessToken: string },
-  proxy = false
-) {
-  const headers = ctx.headers ?? new Headers(),
-    cors = initCorsForRaw(req)
-
-  try {
-    // Handle response from OneDrive API
-    const requestUrl = new URL(`${driveApi}/root${ctx.requestPath}`)
-    // OneDrive international version fails when only selecting the downloadUrl (what a stupid bug)
-    requestUrl.searchParams.append('select', 'id,size,@microsoft.graph.downloadUrl')
-    const { ['@microsoft.graph.downloadUrl']: downloadUrl, size } = await fetch(requestUrl, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${ctx.accessToken}` },
-    }).then(res => (res.ok ? res.json() : Promise.reject(res)))
-
-    if (!downloadUrl)
-      return await cors(NextResponse.json({ error: 'No download url found.' }, { status: 404, headers }))
-
-    // Only proxy raw file content response for files up to 4MB
-    if (!(proxy && size && size < 4194304))
-      return await cors(NextResponse.redirect(downloadUrl, { headers }))
-
-    const { body: dlBody, headers: dlHeader } = await fetch(downloadUrl)
-    dlHeader.set('Cache-Control', cacheControlHeader)
-
-    if (!dlBody)
-      return await cors(
-        NextResponse.json({ error: 'No body from requested download URL.', url: downloadUrl }, { status: 404 })
-      )
-
-    return await cors(new Response(dlBody, { status: 200, headers: dlHeader }))
-  } catch (error) {
-    const { data, status } = await handleResponseError(error)
-    return await cors(NextResponse.json(data, { status, headers }))
-  }
-}
-
 export async function handleResponseError(error: unknown) {
   let output: { data: { error: string }; status: number }
   if (error instanceof Response) {
@@ -236,4 +198,84 @@ export async function handleResponseError(error: unknown) {
     console.error('Error while handling response:', error)
   }
   return output
+}
+
+export function NodeRequestToWeb(req: NextApiRequest): NextRequest {
+  const ctrl = new AbortController()
+  req.once('aborted', () => ctrl.abort())
+  return new NextRequest(new URL(req.url!, `http://${req.headers.host}`), {
+    headers: req.headers as Record<string, string>,
+    method: req.method,
+    body: req.method === 'GET' || req.method === 'HEAD' ? null : req.body,
+    signal: ctrl.signal,
+    referrer: req.headers.referer,
+  })
+}
+
+function setHeaders(res: NextApiResponse, init: ResponseInit | undefined) {
+  if (!init?.headers) return
+  if (init.headers instanceof Headers) {
+    init.headers.forEach((value, key) => res.setHeader(key, value))
+  } else if (Array.isArray(init.headers)) {
+    init.headers.forEach(([key, value]) => res.setHeader(key, value))
+  } else {
+    for (const [key, value] of Object.entries(init.headers)) {
+      res.setHeader(key, value)
+    }
+  }
+}
+
+export class ResponseCompat {
+  static redirect(url: string | URL, init?: number | Pick<ResponseInit, 'headers' | 'status'>) {
+    const status = typeof init === 'number' ? init : init?.status ?? 302
+    return {
+      toWeb() {
+        return NextResponse.redirect(url, init)
+      },
+      toNode(res: NextApiResponse) {
+        if (typeof init !== 'number') setHeaders(res, init)
+        res.redirect(status, url.toString())
+      },
+    }
+  }
+  static json(body: any, init?: Pick<ResponseInit, 'headers' | 'status'>) {
+    return {
+      toWeb() {
+        return NextResponse.json(body, init)
+      },
+      toNode(res: NextApiResponse) {
+        setHeaders(res, init)
+        res.status(init?.status ?? 200).json(body)
+      },
+    }
+  }
+  static text(body: string, init?: Pick<ResponseInit, 'headers' | 'status'>) {
+    return {
+      toWeb() {
+        return new NextResponse(body, init)
+      },
+      toNode(res: NextApiResponse) {
+        setHeaders(res, init)
+        res.status(init?.status ?? 200).send(body)
+      },
+    }
+  }
+  static stream(body: Response['body'] | NodeResponse['body'], init?: Pick<ResponseInit, 'headers' | 'status'>) {
+    return {
+      toWeb() {
+        if (isNodeStream(body)) throw new Error("Can't handle Node.js streams to the web")
+        return new NextResponse(body, init)
+      },
+      toNode(res: NextApiResponse) {
+        if (!isNodeStream(body)) throw new Error("Can't handle web streams to Node.js")
+        setHeaders(res, init)
+        if (body) body?.pipe(res)
+        res.status(init?.status ?? 200)
+      },
+    }
+  }
+}
+
+const isNodeStream = (body: Response['body'] | NodeResponse['body']): body is NodeResponse['body'] => {
+  return !!(body as NodeResponse['body'])?.pipe
 }

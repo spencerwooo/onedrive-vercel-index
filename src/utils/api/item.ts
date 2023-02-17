@@ -1,13 +1,9 @@
 import apiConfig from '@cfg/api.config'
-import { getAccessToken, handleResponseError, setCaching } from '@/utils/api'
-import { NextRequest, NextResponse } from 'next/server'
-import { kv } from '@/utils/kv/edge'
+import { ResponseCompat, getAccessToken, handleResponseError, setCaching } from '@/utils/api/common'
+import { NextRequest } from 'next/server'
+import { Redis } from '@/utils/odAuthTokenStore'
 
-export const config = {
-  runtime: 'edge',
-}
-
-export default async function handler(req: NextRequest) {
+export default async function handler(kv: Redis, req: NextRequest) {
   // Get access token from storage
   const accessToken = await getAccessToken(kv)
 
@@ -16,7 +12,7 @@ export default async function handler(req: NextRequest) {
 
   const headers = setCaching(new Headers())
 
-  if (typeof id !== 'string') return NextResponse.json({ error: 'Invalid driveItem ID.' }, { status: 400, headers })
+  if (typeof id !== 'string') return ResponseCompat.json({ error: 'Invalid driveItem ID.' }, { status: 400, headers })
   const itemApi = new URL(`${apiConfig.driveApi}/items/${id}`)
   itemApi.searchParams.set('select', 'id,name,parentReference')
 
@@ -24,9 +20,9 @@ export default async function handler(req: NextRequest) {
     const data = await fetch(itemApi, {
       headers: { Authorization: `Bearer ${accessToken}` },
     }).then(res => (res.ok ? res.json() : Promise.reject(res)))
-    return NextResponse.json(data, { status: 200, headers })
+    return ResponseCompat.json(data, { status: 200, headers })
   } catch (error) {
     const { data, status } = await handleResponseError(error)
-    return NextResponse.json(data, { status, headers })
+    return ResponseCompat.json(data, { status, headers })
   }
 }
