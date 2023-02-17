@@ -1,10 +1,5 @@
-import { NextRequest } from 'next/server'
 import rawFileHandler from '../raw-v2'
 
-export const config = {
-  runtime: 'edge',
-}
+export { config } from '@/utils/api/common/v2'
 
-export default async function handler(req: NextRequest) {
-  return await rawFileHandler(req)
-}
+export default rawFileHandler

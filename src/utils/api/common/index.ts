@@ -1,8 +1,8 @@
 import apiConfig, { driveApi } from '@cfg/api.config'
 import siteConfig from '@cfg/site.config'
-import { revealObfuscatedToken } from '../oAuthHandler'
-import { Redis, getOdAuthTokens, storeOdAuthTokens } from '../odAuthTokenStore'
-import { compareHashedToken } from '../protectedRouteHandler'
+import { revealObfuscatedToken } from '@/utils/oAuthHandler'
+import { Redis, getOdAuthTokens, storeOdAuthTokens } from '@/utils/odAuthTokenStore'
+import { compareHashedToken } from '@/utils/protectedRouteHandler'
 import pathPosix from 'path-browserify'
 import { NextRequest, NextResponse } from 'next/server'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -222,8 +222,14 @@ function setHeaders(res: NextApiResponse, init: ResponseInit | undefined) {
 
 type ResponseCompatInit = Pick<ResponseInit, 'headers' | 'status'> & { cors?: boolean }
 
+export interface ResponseCompat {
+  toWeb(): NextResponse
+  toNode(res: NextApiResponse): void
+  cors: boolean
+}
+
 export class ResponseCompat {
-  static redirect(url: string | URL, init?: number | ResponseCompatInit) {
+  static redirect(url: string | URL, init?: number | ResponseCompatInit): ResponseCompat {
     const status = typeof init === 'number' ? init : init?.status ?? 302
     return {
       toWeb() {
@@ -236,7 +242,7 @@ export class ResponseCompat {
       cors: (typeof init !== 'number' && init?.cors) ?? false,
     }
   }
-  static json(body: any, init?: ResponseCompatInit) {
+  static json(body: any, init?: ResponseCompatInit): ResponseCompat {
     return {
       toWeb() {
         return NextResponse.json(body, init)
@@ -248,7 +254,7 @@ export class ResponseCompat {
       cors: init?.cors ?? false,
     }
   }
-  static text(body: string, init?: ResponseCompatInit) {
+  static text(body: string, init?: ResponseCompatInit): ResponseCompat {
     return {
       toWeb() {
         return new NextResponse(body, init)
@@ -260,7 +266,7 @@ export class ResponseCompat {
       cors: init?.cors ?? false,
     }
   }
-  static stream(body: Response['body'] | NodeResponse['body'], init?: ResponseCompatInit) {
+  static stream(body: Response['body'] | NodeResponse['body'], init?: ResponseCompatInit): ResponseCompat {
     return {
       toWeb() {
         if (isNodeStream(body)) throw new Error("Can't handle Node.js streams to the web")
@@ -280,3 +286,5 @@ export class ResponseCompat {
 const isNodeStream = (body: Response['body'] | NodeResponse['body']): body is NodeResponse['body'] => {
   return !!(body as NodeResponse['body'])?.pipe
 }
+
+export type ReqHandler = (kv: Redis, req: NextRequest) => Promise<ResponseCompat>

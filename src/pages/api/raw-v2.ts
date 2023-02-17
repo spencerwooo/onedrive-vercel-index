@@ -1,16 +1,6 @@
-import { cors } from '@/utils/cors.web'
 import handle from '@/utils/api/raw'
-import { kv } from '@/utils/kv/edge'
-import { NextRequest } from 'next/server'
 
-export const config = {
-  runtime: 'edge',
-}
+export { config } from '@/utils/api/common/v2'
+import { getHandler } from '@/utils/api/common/v2'
 
-export default async function handler(req: NextRequest) {
-  const response = await handle(kv, req)
-  if (response.cors) {
-    return await cors(req, response.toWeb())
-  }
-  return response.toWeb()
-}
+export default getHandler(handle)
