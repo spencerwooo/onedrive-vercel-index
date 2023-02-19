@@ -1,5 +1,5 @@
-import rawFileHandler from '../raw-v2'
+export const config = {
+  runtime: 'edge',
+}
 
-export { config } from '@/utils/api/common/v2'
-
-export default rawFileHandler
+export { default } from '../raw-v2'

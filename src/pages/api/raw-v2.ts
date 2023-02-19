@@ -1,6 +1,7 @@
-import handle from '@/utils/api/raw'
+export const config = {
+  runtime: 'edge',
+}
 
-export { config } from '@/utils/api/common/v2'
 import { getHandler } from '@/utils/api/common/v2'
-
+import handle from '@/utils/api/raw'
 export default getHandler(handle)

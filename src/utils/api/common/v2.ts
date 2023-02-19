@@ -3,10 +3,6 @@ import { kv } from '@/utils/kv/edge'
 import { NextRequest } from 'next/server'
 import { ReqHandler } from '.'
 
-export const config = {
-  runtime: 'edge',
-}
-
 export function getHandler(handle: ReqHandler) {
   return async function handler(req: NextRequest) {
     const response = await handle(kv, req)
