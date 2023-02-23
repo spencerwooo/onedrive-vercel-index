@@ -10,7 +10,7 @@ specifiers:
   '@tailwindcss/line-clamp': ^0.4.2
   '@types/cors': ^2.8.13
   '@types/crypto-js': ^4.0.2
-  '@types/node': 18.14.0
+  '@types/node': 18.14.1
   '@types/react': 18.0.28
   '@types/react-copy-to-clipboard': ^5.0.4
   '@types/react-dom': ^18.0.10
@@ -111,7 +111,7 @@ dependencies:
 devDependencies:
   '@types/cors': 2.8.13
   '@types/crypto-js': 4.1.1
-  '@types/node': 18.14.0
+  '@types/node': 18.14.1
   '@types/react': 18.0.28
   '@types/react-copy-to-clipboard': 5.0.4
   '@types/react-dom': 18.0.10
@@ -625,7 +625,7 @@ packages:
   /@types/cors/2.8.13:
     resolution: {integrity: sha512-RG8AStHlUiV5ysZQKq97copd2UmVYw3/pRMLefISZ3S1hK104Cwm7iLQ3fTKx+lsUH2CE8FlLaYeEA2LSeqYUA==}
     dependencies:
-      '@types/node': 18.14.0
+      '@types/node': 18.14.1
     dev: true
 
   /@types/crypto-js/4.1.1:
@@ -684,8 +684,8 @@ packages:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: false
 
-  /@types/node/18.14.0:
-    resolution: {integrity: sha512-5EWrvLmglK+imbCJY0+INViFWUHg1AHel1sq4ZVSfdcNqGy9Edv3UB9IIzzg+xPaUcAgZYcfVs2fBcwDeZzU0A==}
+  /@types/node/18.14.1:
+    resolution: {integrity: sha512-QH+37Qds3E0eDlReeboBxfHbX9omAcBCXEzswCu6jySP642jiM3cYSIkU/REqwhCUqXdonHFuBfJDiAJxMNhaQ==}
     dev: true
 
   /@types/nprogress/0.2.0:
