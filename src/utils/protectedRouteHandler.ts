@@ -1,5 +1,5 @@
 import sha256 from 'crypto-js/sha256'
-import siteConfig from '../../config/site.config'
+import siteConfig from '@cfg/site.config'
 
 // Hash password token with SHA256
 function encryptToken(token: string): string {
@@ -35,7 +35,7 @@ export function compareHashedToken({
  */
 
 export function matchProtectedRoute(route: string): string {
-  const protectedRoutes: string[] = siteConfig.protectedRoutes
+  const protectedRoutes = siteConfig.protectedRoutes
   let authTokenPath = ''
 
   for (const r of protectedRoutes) {
