@@ -56,7 +56,12 @@ export async function handleRaw(ctx: { headers?: Headers; requestPath: string; a
     if (!downloadUrl) return ResponseCompat.json({ error: 'No download url found.' }, { status: 404, ...init })
 
     // Only proxy raw file content response for files up to 4MB
-    if (!(proxy && size && size < 4194304)) return ResponseCompat.redirect(downloadUrl, init)
+    if (!(proxy && size && size < 4194304)) {
+      // CDN Cache for 1 hour
+      // https://learn.microsoft.com/en-us/graph/api/resources/driveitem?view=graph-rest-1.0#instance-attributes
+      init.headers.set('Cache-Control', 'public, max-age=0, s-maxage=3600, immutable')
+      return ResponseCompat.redirect(downloadUrl, { status: 308, ...init })
+    }
 
     const { body: dlBody, headers: dlHeader } = await fetch(downloadUrl)
     dlHeader.set('Cache-Control', cacheControlHeader)
