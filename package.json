@@ -68,7 +68,7 @@
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.1",
     "eslint-config-prettier": "^8.6.0",
-    "i18next-parser": "^7.6.0",
+    "i18next-parser": "^8.0.0",
     "postcss": "^8.4.21",
     "prettier": "^2.8.3",
     "prettier-plugin-tailwindcss": "^0.2.2",
