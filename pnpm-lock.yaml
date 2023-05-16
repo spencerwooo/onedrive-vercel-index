@@ -139,8 +139,8 @@ devDependencies:
     specifier: ^4.0.2
     version: 4.1.1
   '@types/node':
-    specifier: 18.16.9
-    version: 18.16.9
+    specifier: 18.16.10
+    version: 18.16.10
   '@types/react':
     specifier: 18.2.6
     version: 18.2.6
@@ -704,7 +704,7 @@ packages:
   /@types/cors@2.8.13:
     resolution: {integrity: sha512-RG8AStHlUiV5ysZQKq97copd2UmVYw3/pRMLefISZ3S1hK104Cwm7iLQ3fTKx+lsUH2CE8FlLaYeEA2LSeqYUA==}
     dependencies:
-      '@types/node': 18.16.9
+      '@types/node': 18.16.10
     dev: true
 
   /@types/crypto-js@4.1.1:
@@ -763,8 +763,8 @@ packages:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: false
 
-  /@types/node@18.16.9:
-    resolution: {integrity: sha512-IeB32oIV4oGArLrd7znD2rkHQ6EDCM+2Sr76dJnrHwv9OHBTTM6nuDLK9bmikXzPa0ZlWMWtRGo/Uw4mrzQedA==}
+  /@types/node@18.16.10:
+    resolution: {integrity: sha512-sMo3EngB6QkMBlB9rBe1lFdKSLqljyWPPWv6/FzSxh/IDlyVWSzE9RiF4eAuerQHybrWdqBgAGb03PM89qOasA==}
     dev: true
 
   /@types/nprogress@0.2.0:
