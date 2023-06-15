@@ -42,7 +42,7 @@
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.0",
     "react-hotkeys-hook": "^4.3.3",
-    "react-i18next": "^12.1.4",
+    "react-i18next": "^13.0.0",
     "react-markdown": "^8.0.5",
     "react-reader": "^1.0.2",
     "react-syntax-highlighter": "^15.5.0",
