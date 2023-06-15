@@ -30,7 +30,7 @@
     "jszip": "^3.10.1",
     "mpegts.js": "^1.7.2",
     "next": "^13.1.6",
-    "next-i18next": "^13.0.3",
+    "next-i18next": "^14.0.0",
     "nextjs-progressbar": "^0.0.16",
     "plyr-react": "^5.1.2",
     "preview-office-docs": "^1.0.2",

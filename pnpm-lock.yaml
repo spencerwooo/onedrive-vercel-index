@@ -63,8 +63,8 @@ dependencies:
     specifier: ^13.1.6
     version: 13.1.6(react-dom@18.2.0)(react@18.2.0)
   next-i18next:
-    specifier: ^13.0.3
-    version: 13.0.3(i18next@22.4.9)(next@13.1.6)(react-i18next@12.1.4)(react@18.2.0)
+    specifier: ^14.0.0
+    version: 14.0.0(i18next@22.4.9)(next@13.1.6)(react-i18next@12.1.4)(react@18.2.0)
   nextjs-progressbar:
     specifier: ^0.0.16
     version: 0.0.16(next@13.1.6)(react@18.2.0)
@@ -197,7 +197,7 @@ packages:
     resolution: {integrity: sha512-eR8Lo9hnDS7tqkO7NsV+mKvCmv5boaXFSZ70DnfhcgiEne8hv9oCEd36Klw74EtizEqLsy4YnW8UWwpBVolHZA==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      regenerator-runtime: 0.13.9
+      regenerator-runtime: 0.13.11
     dev: false
 
   /@babel/runtime@7.20.13:
@@ -2675,8 +2675,8 @@ packages:
       entities: 4.4.0
     dev: true
 
-  /i18next-fs-backend@2.1.1:
-    resolution: {integrity: sha512-FTnj+UmNgT3YRml5ruRv0jMZDG7odOL/OP5PF5mOqvXud2vHrPOOs68Zdk6iqzL47cnnM0ZVkK2BAvpFeDJToA==}
+  /i18next-fs-backend@2.1.5:
+    resolution: {integrity: sha512-7fgSH8nVhXSBYPHR/W3tEXXhcnwHwNiND4Dfx9knzPzdsWTUTL/TdDVV+DY0dL0asHKLbdoJaXS4LdVW6R8MVQ==}
     dev: false
 
   /i18next-parser@7.6.0:
@@ -3697,21 +3697,21 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
-  /next-i18next@13.0.3(i18next@22.4.9)(next@13.1.6)(react-i18next@12.1.4)(react@18.2.0):
-    resolution: {integrity: sha512-7AA8J6WbkxRBtSf1+97LSAE7btxWZHsBIJEJ3FuTSBgYtpRiO5NGjcb8XbNAlz6yGU0TtS+yZE+/Wu83KhIT1Q==}
+  /next-i18next@14.0.0(i18next@22.4.9)(next@13.1.6)(react-i18next@12.1.4)(react@18.2.0):
+    resolution: {integrity: sha512-umv8hOZoSoAA+td3ErfemyO/5Ib2pnYCdQ8/Oy+fncS2skFIL3hHKRer3Oa3Nfm4Xbv5p6DHWzm3NhT1j4tWwg==}
     engines: {node: '>=14'}
     peerDependencies:
-      i18next: ^22.0.6
+      i18next: ^23.0.1
       next: '>= 12.0.0'
       react: '>= 17.0.2'
-      react-i18next: ^12.1.1
+      react-i18next: ^13.0.0
     dependencies:
       '@babel/runtime': 7.20.13
       '@types/hoist-non-react-statics': 3.3.1
       core-js: 3.27.2
       hoist-non-react-statics: 3.3.2
       i18next: 22.4.9
-      i18next-fs-backend: 2.1.1
+      i18next-fs-backend: 2.1.5
       next: 13.1.6(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-i18next: 12.1.4(i18next@22.4.9)(react-dom@18.2.0)(react@18.2.0)
@@ -4524,10 +4524,6 @@ packages:
 
   /regenerator-runtime@0.13.11:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
-
-  /regenerator-runtime@0.13.9:
-    resolution: {integrity: sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==}
-    dev: false
 
   /regexp.prototype.flags@1.4.3:
     resolution: {integrity: sha512-fjggEOO3slI6Wvgjwflkc4NFRCTZAu5CnNfBd5qOMYhWdn67nJBBu34/TkD++eeFmd8C9r9jfXJ27+nSiRkSUA==}
