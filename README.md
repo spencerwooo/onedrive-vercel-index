@@ -11,13 +11,6 @@
   <a href="https://github.com/spencerwooo/onedrive-vercel-index/discussions"><img src="https://img.shields.io/github/discussions/spencerwooo/onedrive-vercel-index?color=CF2B5B&labelColor=black&logo=github" alt="GitHub Discussions" /></a>
 </div>
 
-## Rapid Deploy
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2Fspencerwooo%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPLE_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET)
-
-> **Unless you already know what to do after clicking this button, it is highly recommended that you read the instructions below first. Thank you.**
-> 
-
 ## TL;DR
 
 Showcase, share, preview, and download files inside *your* OneDrive with onedrive-vercel-index -
@@ -30,6 +23,10 @@ Showcase, share, preview, and download files inside *your* OneDrive with onedriv
 🍌 More importantly, we are pretty (●'◡'●)
 
 ## Quick start
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2Fspencerwooo%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPLE_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET)
+
+> **Unless you already know what to do after clicking this button, it is highly recommended that you read the instructions below first. Thank you.**
 
 🚀 Quick start: [Getting started](https://ovi.swo.moe/docs/getting-started).
 
