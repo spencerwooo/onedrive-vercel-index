@@ -17,6 +17,8 @@ const CustomLink = ({ href, children, as, locale, ...props }): JSX.Element => {
 
 const localeText = (locale: string): string => {
   switch (locale) {
+    case 'de-DE':
+      return '🇩🇪 Deutsch'
     case 'en':
       return '🇬🇧 English'
     case 'es':
