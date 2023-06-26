@@ -8,7 +8,7 @@ This project is a fork from [spencerwooo/onedrive-vercel-index](https://github.c
 
 ## Demo
 
-The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](https://onedrive-index-iredscarf.vercel.app) of this One-Click Deployment version.
+The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](https://onedrive-index-demo.vercel.app) of this One-Click Deployment version.
 
 ![demo](./public/demo.png)
 

@@ -8,7 +8,7 @@
 
 ## 在线预览
 
-原作者提供的[在线预览](https://drive.swo.moe) | 本一键部署版的[在线预览](https://onedrive-index-iredscarf.vercel.app)
+原作者提供的[在线预览](https://drive.swo.moe) | 本一键部署版的[在线预览](https://onedrive-index-demo.vercel.app)
 
 ![demo](./public/demo.png)
 
