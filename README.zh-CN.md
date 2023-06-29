@@ -62,7 +62,7 @@
 
 - 因为Next.js的设计决策，以`NEXT_PUBLIC_`开头的环境变量不仅在服务器端可用，而且在客户端（浏览器）也可用。这意味着任何以`NEXT_PUBLIC_`开头的环境变量都会被包含在构建的JavaScript文件中，并会被发送到用户的浏览器。因此，任何访问你的网站的人都可以通过查看网站的源代码或网络请求来查看这些环境变量的值。应该避免在以`NEXT_PUBLIC_`开头的环境变量中存储敏感信息，如API密钥或数据库密码。这些信息应该只在服务器端代码中使用，并且应该使用不带`NEXT_PUBLIC_`前缀的环境变量来存储。
 
-- 最开始在把`config/api.config.js`中的`clientId`和`obfuscatedClientSecret`放在环境变量中设置时，有试过使用不以`NEXT_PUBLIC_`开头的环境变量键名，但会在OAuth认证的第一步时，无法获取到`clientId`和`obfuscatedClientSecret`的值，为了顺利部署，只好先使用以`NEXT_PUBLIC_`开头的环境变量键名了。考虑到`clientId`和`obfuscatedClientSecret`在没有OneDrive帐户的登录密码时，也不算是太敏感的信息，就暂时这样解决了。
+- 最开始在把`config/api.config.js`和`config/site.config.js`中的一些参数放在环境变量中设置时，有试过使用不以`NEXT_PUBLIC_`开头的环境变量键名，但会在OAuth认证的第一步时，无法获取到`clientId`和`obfuscatedClientSecret`的值，也会在OAuth认证第三步时无法获取`USER_PRINCIPLE_NAME`而不能通过认证，包括`SITE_TITLE`和`BASE_DIRECTORY`都不是环境变量的键值设置。为了顺利部署，只好所有参数都使用以`NEXT_PUBLIC_`开头的环境变量键名了。
 
 ## License
 
