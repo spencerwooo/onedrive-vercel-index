@@ -8,7 +8,7 @@
 
 ## 在线预览
 
-原作者提供的[在线预览](https://drive.swo.moe) | 本一键部署版的[在线预览](https://onedrive-index-demo.vercel.app)
+原作者提供的[在线预览](https://drive.swo.moe) | 本一键部署版的[在线预览](https://odi-demo.freeloop.one)
 
 ![demo](./public/demo.png)
 
@@ -36,7 +36,7 @@
 
 **当您做好准备工作，就可以点击下面的按钮进行部署了：**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPLE_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=SITE_TITLE,USER_PRINCIPLE_NAME,BASE_DIRECTORY,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET)
 
 - 初次部署成功后，部署的页面上去是404的，因为我们还需要连接到Redis数据库。
  
@@ -57,6 +57,12 @@
 - 留空了`config/site.config.js`中的`mail`(如果想在页面中展示自己的联系方式，可自行修改)，以及去除了GitHub图标旁的`GitHub`字样（因为感觉导航栏右边的图标有点多有点挤了）。
 
 - 另外就是加入了[Vercel Analytics](https://vercel.com/docs/concepts/analytics)的支持，方便查看分享的页面被访问情况（需要在部署后自行在项目的Analytics选项卡中开启）。
+
+## 安全风险和一些问题
+
+- 因为Next.js的设计决策，以`NEXT_PUBLIC_`开头的环境变量不仅在服务器端可用，而且在客户端（浏览器）也可用。这意味着任何以`NEXT_PUBLIC_`开头的环境变量都会被包含在构建的JavaScript文件中，并会被发送到用户的浏览器。因此，任何访问你的网站的人都可以通过查看网站的源代码或网络请求来查看这些环境变量的值。应该避免在以`NEXT_PUBLIC_`开头的环境变量中存储敏感信息，如API密钥或数据库密码。这些信息应该只在服务器端代码中使用，并且应该使用不带`NEXT_PUBLIC_`前缀的环境变量来存储。
+
+- 最开始在把`config/api.config.js`中的`clientId`和`obfuscatedClientSecret`放在环境变量中设置时，有试过使用不以`NEXT_PUBLIC_`开头的环境变量键名，但会在OAuth认证的第一步时，无法获取到`clientId`和`obfuscatedClientSecret`的值，为了顺利部署，只好先使用以`NEXT_PUBLIC_`开头的环境变量键名了。考虑到`clientId`和`obfuscatedClientSecret`在没有OneDrive帐户的登录密码时，也不算是太敏感的信息，就暂时这样解决了。
 
 ## License
 
