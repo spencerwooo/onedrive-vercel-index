@@ -58,11 +58,23 @@
 
 - 另外就是加入了[Vercel Analytics](https://vercel.com/docs/concepts/analytics)的支持，方便查看分享的页面被访问情况（需要在部署后自行在项目的Analytics选项卡中开启）。
 
-## 安全风险和一些问题
+## 安全风险
+
+- 当前版本会在网页的源代码中泄露部署者的OneDrive帐号`USER_PRINCIPLE_NAME`，亦可在OAuth认证第一步的网址中查看到部署者的`clientId`和`obfuscatedClientSecret`，这两个问题在原作者的归档版本同样存在。
 
 - 因为Next.js的设计决策，以`NEXT_PUBLIC_`开头的环境变量不仅在服务器端可用，而且在客户端（浏览器）也可用。这意味着任何以`NEXT_PUBLIC_`开头的环境变量都会被包含在构建的JavaScript文件中，并会被发送到用户的浏览器。因此，任何访问你的网站的人都可以通过查看网站的源代码或网络请求来查看这些环境变量的值。应该避免在以`NEXT_PUBLIC_`开头的环境变量中存储敏感信息，如API密钥或数据库密码。这些信息应该只在服务器端代码中使用，并且应该使用不带`NEXT_PUBLIC_`前缀的环境变量来存储。
 
-- 最开始在把`config/api.config.js`和`config/site.config.js`中的一些参数放在环境变量中设置时，有试过使用不以`NEXT_PUBLIC_`开头的环境变量键名，但会在OAuth认证的第一步时，无法获取到`clientId`和`obfuscatedClientSecret`的值，也会在OAuth认证第三步时无法获取`USER_PRINCIPLE_NAME`而不能通过认证，包括`SITE_TITLE`和`BASE_DIRECTORY`都不是环境变量的键值设置。为了顺利部署，只好所有参数都使用以`NEXT_PUBLIC_`开头的环境变量键名了。
+- 在最开始把`config/api.config.js`和`config/site.config.js`中的一些参数放在环境变量中设置时，有试过使用不以`NEXT_PUBLIC_`开头的环境变量键名，但会在OAuth认证的第一步时，无法获取到`clientId`和`obfuscatedClientSecret`的值，也会在OAuth认证第三步时无法获取`USER_PRINCIPLE_NAME`而不能通过认证，包括`SITE_TITLE`和`BASE_DIRECTORY`也都不是环境变量的键值设置。为了顺利部署，只好暂时把这些参数都使用以`NEXT_PUBLIC_`开头的环境变量键名了。
+ 
+## 待办备忘
+
+- 把`config/site.config.js`中的加密文件夹`protectedRoutes`参数放在环境变量中设置。
+  
+- 把密码放在环境变量而非`.password`文件。
+
+- 深入研究原版本代码，争取不以`NEXT_PUBLIC_`开头的环境变量键名实现功能。
+
+- 重新设计LOGO，原LOGO对比度太低，与页面中其他图标和字体风格不够一致。
 
 ## License
 
