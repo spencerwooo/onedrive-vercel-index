@@ -58,6 +58,24 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 - Also added support for [Vercel Analytics](https://vercel.com/docs/concepts/analytics) to conveniently check the access situation of the shared page (needs to be enabled in the Analytics tab of the project after deployment).
 
+## Security Risks
+
+- The current version reveals the OneDrive account `USER_PRINCIPLE_NAME` of the deployer in the webpage source code. The `clientId` and `obfuscatedClientSecret` of the deployer can also be seen in the URL of the first step of OAuth authentication. These issues also exist in the archived version of the original author.
+
+- Due to the design decision of Next.js, environment variables starting with `NEXT_PUBLIC_` are available not only on the server side but also on the client side (browser). This means that any environment variables starting with `NEXT_PUBLIC_` will be included in the built JavaScript files and will be sent to the user's browser. Therefore, anyone who visits your website can view the values of these environment variables by examining the source code of the website or network requests. It's clear that one should avoid storing sensitive information, such as API keys or database passwords, in environment variables starting with `NEXT_PUBLIC_`. This information should only be used in server-side code, and should be stored in environment variables without the `NEXT_PUBLIC_` prefix.
+
+- At the beginning, when setting some parameters in `config/api.config.js` and `config/site.config.js` in the environment variables, I tried to use environment variable key names that do not start with `NEXT_PUBLIC_`. However, in the first step of OAuth authentication, it couldn't get the values of `clientId` and `obfuscatedClientSecret`, and couldn't pass the authentication in the third step of OAuth authentication because it couldn't get `USER_PRINCIPLE_NAME`. Including `SITE_TITLE` and `BASE_DIRECTORY` are not set as environment variable key values. In order to deploy smoothly, I had to temporarily use environment variable key names that start with `NEXT_PUBLIC_`.
+
+## Todo List
+
+- Set the `protectedRoutes` parameter of encrypted folders in `config/site.config.js` in the environment variables.
+
+- Put the password in the environment variables instead of the `.password` file.
+
+- Deepen the study of the original version of the code and strive to implement the function with environment variable key names that do not start with `NEXT_PUBLIC_`.
+
+- Redesign the LOGO. The contrast of the original LOGO is too low, and it is not consistent enough with the style of other icons and fonts on the page.
+
 ## License
 
 [MIT License](LICENSE)
