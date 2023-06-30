@@ -9,6 +9,7 @@ import apiConfig from '../../../config/api.config'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { getAccessToken } from '../api'  // 导入getAccessToken函数
 
 function obfuscateSensitiveData(data) {
   if (data.length <= 12) {
@@ -157,6 +158,17 @@ export default function OAuthStep1() {
 }
 
 export async function getServerSideProps({ locale }) {
+  const accessToken = await getAccessToken(); // 使用getAccessToken函数获取访问令牌
+  // 如果访问令牌存在，重定向到主页
+  if (accessToken) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+  // 如果访问令牌不存在，正常渲染页面
   return {
     props: {
       ...(await serverSideTranslations(locale, ['common'])),
