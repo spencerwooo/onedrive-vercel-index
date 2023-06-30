@@ -56,7 +56,7 @@
 
 - 在进行OAuth认证第一步的页面中隐藏了`clientId`和`obfuscatedClientSecret`的具体值，只显示值的前6位和后6位用于核对。
 
-- 留空了`config/site.config.js`中的`mail`(如果想在页面中展示自己的联系方式，可自行修改)，以及去除了GitHub图标旁的`GitHub`字样（因为感觉导航栏右边的图标有点多有点挤了）。
+- 留空了`config/site.config.js`中的`mail`（如果想在页面中展示自己的联系方式，可自行修改，本版本的Demo显示了Email图标），以及去除了GitHub图标旁的`GitHub`字样（因为感觉导航栏右边的图标有点多有点挤了）。
 
 - 另外就是加入了[Vercel Analytics](https://vercel.com/docs/concepts/analytics)的支持，方便查看分享的页面被访问情况（需要在部署后自行在项目的Analytics选项卡中开启）。
 
