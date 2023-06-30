@@ -70,13 +70,13 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 ## Todo List
 
-- Set the `protectedRoutes` parameter of encrypted folders in `config/site.config.js` in the environment variables.
+- Transition the `protectedRoutes` settings from `config/site.config.js` to environment variables.
 
 - Put the password in the environment variables instead of the `.password` file.
 
 - Deepen the study of the original version of the code and strive to implement the function with environment variable key names that do not start with `NEXT_PUBLIC_`, to improve security.
 
-- After completing OAuth authentication, close the OAuth authentication channel, or optimize the OAuth authentication process, and strive not to leak the values of `USER_PRINCIPLE_NAME`, `clientId`, and `obfuscatedClientSecret`.
+- Close the OAuth authentication pathway after completing the OAuth authentication, or optimize the OAuth authentication process, and strive not to leak the values of `USER_PRINCIPLE_NAME`, `clientId`, and `obfuscatedClientSecret`.
 
 - Redesign the LOGO. The contrast of the original LOGO is too low, and it is not consistent enough with the style of other icons and fonts on the page.
 
