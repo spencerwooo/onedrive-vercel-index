@@ -52,15 +52,17 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 ## Modifications
 
-- Compared with the original version, this version mainly extracts the steps of modifying `clientId` and `obfuscatedClientSecret` in `config/api.config.js`, as well as modifying `userPrincipalName`, `title`, and `baseDirectory` in `config/site.config.js`, and sets them as environmental variables during Vercel deployment.
+- Compared with the original version, this version mainly extracts the steps of modifying `clientId` and `obfuscatedClientSecret` in `config/api.config.js`, as well as modifying `userPrincipalName`, `title`, and `baseDirectory` in `config/site.config.js`, and now sets them as environmental variables during Vercel deployment.
 
-- Left `mail` in `config/site.config.js` blank (if you want to display your contact information on the page, you can modify it yourself), and removed the `GitHub` text next to the GitHub icon (because the icons on the right side of the navigation bar felt a bit too crowded).
+- The specific values of `clientId` and `obfuscatedClientSecret` are hidden on the page of the first step of OAuth authentication and only the first 6 and last 6 characters are displayed for verification.
+
+- The mail field in config/site.config.js has been left blank, you can modify this yourself if you want to display your contact information on the page (the demo of this version shows an Email icon). Additionally, the word GitHub next to the GitHub icon has been removed (because the icons on the right side of the navigation bar felt a bit too crowded).
 
 - Also added support for [Vercel Analytics](https://vercel.com/docs/concepts/analytics) to conveniently check the access situation of the shared page (needs to be enabled in the Analytics tab of the project after deployment).
 
 ## Security Risks
 
-- The current version reveals the OneDrive account `USER_PRINCIPLE_NAME` of the deployer in the webpage source code. The `clientId` and `obfuscatedClientSecret` of the deployer can also be seen in the URL of the first step of OAuth authentication. These issues also exist in the archived version of the original author.
+- The current version leaks the deployer's OneDrive account `USER_PRINCIPLE_NAME` in the source code of the web page, and the deployer's `clientId` can be seen in the link used to obtain the authorization code in the second step of OAuth authentication. `obfuscatedClientSecret` can be seen in the source code of the first step of OAuth authentication. These problems also exist in the archived version of the original author.
 
 - Due to the design decision of Next.js, environment variables starting with `NEXT_PUBLIC_` are available not only on the server side but also on the client side (browser). This means that any environment variables starting with `NEXT_PUBLIC_` will be included in the built JavaScript files and will be sent to the user's browser. Therefore, anyone who visits your website can view the values of these environment variables by examining the source code of the website or network requests. It's clear that one should avoid storing sensitive information, such as API keys or database passwords, in environment variables starting with `NEXT_PUBLIC_`. This information should only be used in server-side code, and should be stored in environment variables without the `NEXT_PUBLIC_` prefix.
 
@@ -72,7 +74,9 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 - Put the password in the environment variables instead of the `.password` file.
 
-- Deepen the study of the original version of the code and strive to implement the function with environment variable key names that do not start with `NEXT_PUBLIC_`.
+- Deepen the study of the original version of the code and strive to implement the function with environment variable key names that do not start with `NEXT_PUBLIC_`, to improve security.
+
+- After completing OAuth authentication, close the OAuth authentication channel, or optimize the OAuth authentication process, and strive not to leak the values of `USER_PRINCIPLE_NAME`, `clientId`, and `obfuscatedClientSecret`.
 
 - Redesign the LOGO. The contrast of the original LOGO is too low, and it is not consistent enough with the style of other icons and fonts on the page.
 
