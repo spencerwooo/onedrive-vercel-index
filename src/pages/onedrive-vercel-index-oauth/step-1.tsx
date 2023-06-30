@@ -10,6 +10,15 @@ import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+function obfuscateSensitiveData(data) {
+  if (data.length <= 12) {
+    return data;
+  }
+  const start = data.substring(0, 6);
+  const end = data.substring(data.length - 6);
+  return `${start}******${end}`;
+}
+
 export default function OAuthStep1() {
   const router = useRouter()
 
@@ -73,7 +82,7 @@ export default function OAuthStep1() {
                       CLIENT_ID
                     </td>
                     <td className="whitespace-nowrap py-1 px-3 text-gray-500 dark:text-gray-400">
-                      <code className="font-mono text-sm">{apiConfig.clientId}</code>
+                      <code className="font-mono text-sm">{obfuscateSensitiveData(apiConfig.clientId)}</code>
                     </td>
                   </tr>
                   <tr className="border-y bg-white dark:border-gray-700 dark:bg-gray-900">
@@ -81,7 +90,7 @@ export default function OAuthStep1() {
                       CLIENT_SECRET*
                     </td>
                     <td className="whitespace-nowrap py-1 px-3 text-gray-500 dark:text-gray-400">
-                      <code className="font-mono text-sm">{apiConfig.obfuscatedClientSecret}</code>
+                      <code className="font-mono text-sm">{obfuscateSensitiveData(apiConfig.obfuscatedClientSecret)}</code>
                     </td>
                   </tr>
                   <tr className="border-y bg-white dark:border-gray-700 dark:bg-gray-900">
