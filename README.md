@@ -62,11 +62,17 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 ## Security Risks
 
-- The current version leaks the deployer's OneDrive account `USER_PRINCIPLE_NAME` in the source code of the web page, and the deployer's `clientId` can be seen in the link used to obtain the authorization code in the second step of OAuth authentication. `obfuscatedClientSecret` can be seen in the source code of the first step of OAuth authentication. These problems also exist in the archived version of the original author.
+- In both this version and the original archived version, the deployer's OneDrive account `USER_PRINCIPLE_NAME` is leaked in the source code of the webpage.
 
-- Due to the design decision of Next.js, environment variables starting with `NEXT_PUBLIC_` are available not only on the server side but also on the client side (browser). This means that any environment variables starting with `NEXT_PUBLIC_` will be included in the built JavaScript files and will be sent to the user's browser. Therefore, anyone who visits your website can view the values of these environment variables by examining the source code of the website or network requests. It's clear that one should avoid storing sensitive information, such as API keys or database passwords, in environment variables starting with `NEXT_PUBLIC_`. This information should only be used in server-side code, and should be stored in environment variables without the `NEXT_PUBLIC_` prefix.
+- In the original archived version, the deployer's `clientId` can be seen in the link used to obtain the authorization code in OAuth Step-2. The `obfuscatedClientSecret` can be seen in the source code of the OAuth Step-1.
 
-- At the beginning, when setting some parameters in `config/api.config.js` and `config/site.config.js` in the environment variables, I tried to use environment variable key names that do not start with `NEXT_PUBLIC_`. However, in the first step of OAuth authentication, it couldn't get the values of `clientId` and `obfuscatedClientSecret`, and couldn't pass the authentication in the third step of OAuth authentication because it couldn't get `USER_PRINCIPLE_NAME`. Including `SITE_TITLE` and `BASE_DIRECTORY` are not set as environment variable key values. In order to deploy smoothly, I had to temporarily use environment variable key names that start with `NEXT_PUBLIC_`.
+> This version checks whether authentication has already been passed when performing the OAuth authentication process. If it has, it redirects to the homepage; otherwise, it proceeds with the OAuth authentication process. It attempts to prevent individuals with malicious intent from obtaining the values of `clientId` and `obfuscatedClientSecret` through the link address of OAuth authentication.
+
+- Due to the design decisions of Next.js, environment variables starting with `NEXT_PUBLIC_` are available not only on the server side but also on the client side (browser). This means that any environment variable starting with `NEXT_PUBLIC_` will be included in the built JavaScript file and sent to the user's browser. Therefore, anyone visiting your website can see the values of these environment variables by looking at the source code of the website or network requests.
+
+> All environment variables used in this version start with `NEXT_PUBLIC_` (otherwise it cannot function properly)...
+>
+> Initially, there were attempts to use environment variable key names not starting with `NEXT_PUBLIC_`. However, it was not possible to get the values of `USER_PRINCIPLE_NAME`, `clientId`, and `obfuscatedClientSecret` for authentication during OAuth authentication, and even `SITE_TITLE` and `BASE_DIRECTORY` were not set as key values of environment variables. For the sake of smooth deployment, these parameters had to temporarily use environment variable key names starting with `NEXT_PUBLIC_`.
 
 ## Todo List
 
@@ -76,7 +82,9 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 - Deepen the study of the original version of the code and strive to implement the function with environment variable key names that do not start with `NEXT_PUBLIC_`, to improve security.
 
-- Close the OAuth authentication pathway after completing the OAuth authentication, or optimize the OAuth authentication process, and strive not to leak the values of `USER_PRINCIPLE_NAME`, `clientId`, and `obfuscatedClientSecret`.
+- Close the OAuth authentication pathway after completing the OAuth authentication, striving not to leak the values of `USER_PRINCIPLE_NAME`, `clientId`, and `obfuscatedClientSecret`.
+
+> It has been preliminarily achieved, but further verification is needed to determine whether the related security risks have been removed.
 
 - Redesign the LOGO. The contrast of the original LOGO is too low, and it is not consistent enough with the style of other icons and fonts on the page.
 
