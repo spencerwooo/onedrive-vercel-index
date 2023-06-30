@@ -74,7 +74,7 @@
 
 > 本版本使用的环境变量均以`NEXT_PUBLIC_`开头（否则无法正常运行）……
 >
-> 在最开始有试过使用不以`NEXT_PUBLIC_`开头的环境变量键名，但会在OAuth认证时，无法获取到`USER_PRINCIPLE_NAME`、`clientId`和`obfuscatedClientSecret`的值而不能通过认证，包括`SITE_TITLE`和`BASE_DIRECTORY`也都不是环境变量的键值设置。为了顺利部署，只好暂时把这些参数都使用以`NEXT_PUBLIC_`开头的环境变量键名了。
+> 在最开始有试过使用不以`NEXT_PUBLIC_`开头的环境变量键名，但会在OAuth认证时，无法获取到`USER_PRINCIPLE_NAME`、`clientId`和`obfuscatedClientSecret`的值而不能通过认证，甚至`SITE_TITLE`和`BASE_DIRECTORY`也都不是环境变量的键值设置。为了顺利部署，只好暂时把这些参数都使用以`NEXT_PUBLIC_`开头的环境变量键名了。
  
 ## 待办备忘
 
@@ -84,7 +84,9 @@
 
 - 深入研究原版本代码，争取不以`NEXT_PUBLIC_`开头的环境变量键名实现功能，以提高安全性。
  
-- 在完成OAuth认证后，关闭OAuth认证通道（目前已初步完成，但相关安全风险有无解除还有待进一步检验），争取不泄露`USER_PRINCIPLE_NAME`~~、`clientId`和`obfuscatedClientSecret`~~的值。
+- 在完成OAuth认证后，关闭OAuth认证通，争取不泄露`USER_PRINCIPLE_NAME`、`clientId`和`obfuscatedClientSecret`的值。
+
+> 目前已初步完成，但相关安全风险有无解除还有待进一步检验。
 
 - 重新设计LOGO，原LOGO对比度太低，与页面中其他图标和字体风格不够一致。
 
