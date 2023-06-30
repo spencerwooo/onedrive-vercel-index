@@ -56,17 +56,25 @@
 
 - 在进行OAuth认证第一步的页面中隐藏了`clientId`和`obfuscatedClientSecret`的具体值，只显示值的前6位和后6位用于核对。
 
+- 在OAuth认证的第一步和第二步页面代码中，添加了检查是否已通过OAuth认证的逻辑，若网站已完成OAuth认证，则重新定向到首页，否则正常进行认证流程。
+
 - 留空了`config/site.config.js`中的`mail`（如果想在页面中展示自己的联系方式，可自行修改，本版本的Demo显示了Email图标），以及去除了GitHub图标旁的`GitHub`字样（因为感觉导航栏右边的图标有点多有点挤了）。
 
 - 另外就是加入了[Vercel Analytics](https://vercel.com/docs/concepts/analytics)的支持，方便查看分享的页面被访问情况（需要在部署后自行在项目的Analytics选项卡中开启）。
 
 ## 安全风险
 
-- 当前版本会在网页的源代码中泄露部署者的OneDrive帐号`USER_PRINCIPLE_NAME`，亦可在OAuth认证第二步用来获取授权码的链接中查看到部署者的`clientId`，`obfuscatedClientSecret`则可在OAuth认证第一步的源代码中查看到。这些问题在原作者的归档版本同样存在。
+- 在本版本和原作者的归档版本中，都会在网页的源代码中泄露部署者的OneDrive帐号`USER_PRINCIPLE_NAME`。
 
-- 因为Next.js的设计决策，以`NEXT_PUBLIC_`开头的环境变量不仅在服务器端可用，而且在客户端（浏览器）也可用。这意味着任何以`NEXT_PUBLIC_`开头的环境变量都会被包含在构建的JavaScript文件中，并会被发送到用户的浏览器。因此，任何访问你的网站的人都可以通过查看网站的源代码或网络请求来查看这些环境变量的值。应该避免在以`NEXT_PUBLIC_`开头的环境变量中存储敏感信息，如API密钥或数据库密码。这些信息应该只在服务器端代码中使用，并且应该使用不带`NEXT_PUBLIC_`前缀的环境变量来存储。
+- 原作者的归档版本中，可在OAuth认证第二步用来获取授权码的链接中查看到部署者的`clientId`，`obfuscatedClientSecret`则可在OAuth认证第一步的源代码中查看到。
 
-- 在最开始把`config/api.config.js`和`config/site.config.js`中的一些参数放在环境变量中设置时，有试过使用不以`NEXT_PUBLIC_`开头的环境变量键名，但会在OAuth认证时，无法获取到`USER_PRINCIPLE_NAME`、`clientId`和`obfuscatedClientSecret`的值而不能通过认证，包括`SITE_TITLE`和`BASE_DIRECTORY`也都不是环境变量的键值设置。为了顺利部署，只好暂时把这些参数都使用以`NEXT_PUBLIC_`开头的环境变量键名了。
+> 本版本初步尝试在进行OAuth认证流程时检查是否已通过认证，若已通过则重定向至首页，否则才进行OAuth认证流程，设想如此来阻止有心之人通过OAuth认证的链接地址来获取`clientId`和`obfuscatedClientSecret`的值。
+
+- 因为Next.js的设计决策，以`NEXT_PUBLIC_`开头的环境变量不仅在服务器端可用，而且在客户端（浏览器）也可用。这意味着任何以`NEXT_PUBLIC_`开头的环境变量都会被包含在构建的JavaScript文件中，并会被发送到用户的浏览器。因此，任何访问你的网站的人都可以通过查看网站的源代码或网络请求来查看这些环境变量的值。
+
+> 本版本使用的环境变量均以`NEXT_PUBLIC_`开头（否则无法正常运行）……
+>
+> 在最开始有试过使用不以`NEXT_PUBLIC_`开头的环境变量键名，但会在OAuth认证时，无法获取到`USER_PRINCIPLE_NAME`、`clientId`和`obfuscatedClientSecret`的值而不能通过认证，包括`SITE_TITLE`和`BASE_DIRECTORY`也都不是环境变量的键值设置。为了顺利部署，只好暂时把这些参数都使用以`NEXT_PUBLIC_`开头的环境变量键名了。
  
 ## 待办备忘
 
@@ -76,7 +84,7 @@
 
 - 深入研究原版本代码，争取不以`NEXT_PUBLIC_`开头的环境变量键名实现功能，以提高安全性。
  
-- 在完成OAuth认证后，关闭OAuth认证通道，或优化OAuth认证流程，争取不对外泄露`USER_PRINCIPLE_NAME`、`clientId`和`obfuscatedClientSecret`的值。
+- 在完成OAuth认证后，关闭OAuth认证通道（目前已初步完成，但相关安全风险有无解除还有待进一步检验），争取不泄露`USER_PRINCIPLE_NAME`~~、`clientId`和`obfuscatedClientSecret`~~的值。
 
 - 重新设计LOGO，原LOGO对比度太低，与页面中其他图标和字体风格不够一致。
 
