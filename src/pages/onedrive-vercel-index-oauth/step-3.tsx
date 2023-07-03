@@ -12,6 +12,7 @@ import Footer from '../../components/Footer'
 
 import { getAuthPersonInfo, requestTokenWithAuthCode, sendTokenToServer } from '../../utils/oAuthHandler'
 import { LoadingIcon } from '../../components/Loading'
+import { getAccessToken } from '../api'  // 导入getAccessToken函数
 
 export default function OAuthStep3({ accessToken, expiryTime, refreshToken, error, description, errorUri }) {
   const router = useRouter()
@@ -226,7 +227,19 @@ export default function OAuthStep3({ accessToken, expiryTime, refreshToken, erro
 export async function getServerSideProps({ query, locale }) {
   const { authCode } = query
 
-  // Return if no auth code is present
+  // 检查是否已经通过OAuth认证
+  const accessToken = await getAccessToken();
+  if (accessToken) {
+    // 如果已经通过OAuth认证，重定向到主页
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  // 如果没有通过OAuth认证，继续执行OAuth认证的流程
   if (!authCode) {
     return {
       props: {
@@ -251,7 +264,7 @@ export async function getServerSideProps({ query, locale }) {
     }
   }
 
-  const { expiryTime, accessToken, refreshToken } = response
+  const { expiryTime, refreshToken } = response
 
   return {
     props: {
