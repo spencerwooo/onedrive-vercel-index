@@ -36,7 +36,7 @@
 
 **当您做好准备工作，就可以点击下面的按钮进行部署了：**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=SITE_TITLE,USER_PRINCIPLE_NAME,BASE_DIRECTORY,CLIENT_ID,CLIENT_SECRET,REDIS_URL)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,USER_PRINCIPLE_NAME,BASE_DIRECTORY,CLIENT_ID,CLIENT_SECRET,REDIS_URL)
 
 - 初次部署成功后，部署的页面上去是404的，因为我们还需要连接到Redis数据库。
  
