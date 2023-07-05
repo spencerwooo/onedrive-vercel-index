@@ -19,7 +19,8 @@ export function revealObfuscatedToken(obfuscated: string): string {
 
 // Generate the Microsoft OAuth 2.0 authorization URL, used for requesting the authorisation code
 export function generateAuthorisationUrl(): string {
-  const { clientId, redirectUri, authApi, scope } = apiConfig
+  const clientId = process.env.CLIENT_ID || '';
+  const { redirectUri, authApi, scope } = apiConfig
   const authUrl = authApi.replace('/token', '/authorize')
 
   // Construct URL parameters for OAuth2
@@ -55,8 +56,9 @@ export async function requestTokenWithAuthCode(
   | { expiryTime: string; accessToken: string; refreshToken: string }
   | { error: string; errorDescription: string; errorUri: string }
 > {
-  const { clientId, redirectUri, authApi } = apiConfig
-  const clientSecret = revealObfuscatedToken(apiConfig.obfuscatedClientSecret)
+  const clientId = process.env.CLIENT_ID || ''
+  const clientSecret = revealObfuscatedToken(process.env.CLIENT_SECRET || '')
+  const { redirectUri, authApi } = apiConfig
 
   // Construct URL parameters for OAuth2
   const params = new URLSearchParams()
