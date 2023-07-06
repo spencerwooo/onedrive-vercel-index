@@ -4,8 +4,9 @@ import CryptoJS from 'crypto-js'
 import apiConfig from '../../config/api.config'
 
 async function getConfig() {
-  const res = await fetch('/api/config')
-  return await res.json()
+  const res = await axios.get('/api/config')
+  const data = typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+  return data
 }
 
 // Just a disguise to obfuscate required tokens (including but not limited to client secret,
@@ -23,7 +24,7 @@ export function revealObfuscatedToken(obfuscated: string): string {
 }
 
 // Generate the Microsoft OAuth 2.0 authorization URL, used for requesting the authorisation code
-export function generateAuthorisationUrl(): string {
+export async function generateAuthorisationUrl(): Promise<string> {
   const config = await getConfig()
   const clientId = config.clientId
   const { redirectUri, authApi, scope } = apiConfig
