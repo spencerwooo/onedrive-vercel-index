@@ -12,25 +12,41 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 ![demo](./public/demo.png)
 
+## Modifications
+
+- This version mainly moves some parameters that need to be set in the `api.config.js` and `site.config.js` in the `config/` to the environment variables of Vercel for setting. In this way, there is no need to - first fork the original repository - then manually modify the configuration file - and then deploy, but you can directly click the one-click deployment button in this document, enter the value of the environment variable during the deployment process, and then complete the deployment.
+
+- Another thing is that this version is set to automatically close the OAuth authentication channel after completing OAuth authentication, to prevent people with intentions from easily obtaining user configuration information through the OAuth authentication URL link.
+
+## Environment Variables
+
+**Necessary parameters**
+| Name | Description | Original Path | Note |
+| --- | --- | --- | --- |
+| `NEXT_PUBLIC_SITE_TITLE` | Title of the display page | `config/site.config.js` | e.g. Nicaragua's richest man's OneDrive |
+| `NEXT_PUBLIC_USER_PRINCIPAL_NAME` | Your OneDrive account | `config/site.config.js` | **Case-sensitive** ｜
+| `NEXT_PUBLIC_BASE_DIRECTORY` | The OneDrive directory you want to share | `config/site.config.js` | `/directory name`, root directory is `/` |
+| `NEXT_PUBLIC_CLIENT_ID` | The client ID of the app you registered in Microsoft Azure | `config/api.config.js` | The one provided by the original author has expired, it is recommended to register one yourself, the validity period can be set to two years (anyway, you have to set the API permissions of the account, by the way). The acquisition method refers to the [DOCS](https://ovi.swo.moe/docs/advanced#using-your-own-clientid-and-clientsecret) |
+| `NEXT_PUBLIC_CLIENT_SECRET` | The client secret of the app registered in Microsoft Azure | `config/api.config.js` | The acquisition method is the same, especially note that this **needs to encrypt the original secret with AES** (can be done in the [DOCS](https://ovi.swo.moe/docs/advanced#modify-configs-in-apiconfigjs)) |
+
+*Optional parameters*
+| Name | Description | Original Path | Note |
+| --- | --- | --- | --- |
+| `NEXT_PUBLIC_PROTECTED_ROUTES` | The path of the folder that needs password access | `config/site.config.js` | Format: `/route1,/route2`, multiple paths are separated by `,` |
+| `NEXT_PUBLIC_EMAIL` | Contact Email displayed in the upper right corner | `config/site.config.js` | `example@example.com` |
+| `KV_PREFIX` | Prefix for KV storage (key-value pair storage) | `config/site.config.js` | Upstash only provides a free `Redis` database, if you want to deploy multiple OneDrive-Index, you can set different `KV_PREFIX` values for different Index, so there will be no key value conflict |
+
 ## Getting Started
 
 ### Preparations
 
 1. **Setting up the API permissions for your OneDrive account:**
 
-  This project retrieves the file list and download links by calling OneDrive's API, so setting up the API permissions for your OneDrive account is essential. Please refer to the [Docs](https://ovi.swo.moe/docs/advanced#modify-api-permissions) written by the original author for retrieval methods.
+  This project retrieves the file list and download links by calling OneDrive's API, so setting up the API permissions for your OneDrive account is essential. Please refer to the [DOCS](https://ovi.swo.moe/docs/advanced#modify-api-permissions).
 
   The three API permissions that need to be set up are: `user.read`, `files.read.all`, `offline_access`.
 
-2. **Prepare the five environmental parameters to be filled in during deployment on Vercel:**
-
-| Name | Description | Default | Note |
-| --- | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_TITLE` | Title of the displayed page | `null` | e.g., OneDrive of the Richest Man in Nicaragua |
-| `NEXT_PUBLIC_USER_PRINCIPLE_NAME` | Your OneDrive account | `null` | **Case-sensitive** |
-| `NEXT_PUBLIC_BASE_DIRECTORY` | The OneDrive directory you want to share | `null` | Format is `/directory-name`, for root directory, fill in `/` |
-| `NEXT_PUBLIC_CLIENT_ID` | Client ID of the app you registered in Microsoft Azure | `null` | The one provided by the original author has expired, it's recommended to register your own, which can be valid for up to two years. Retrieval methods are the same as in the [Docs](https://ovi.swo.moe/docs/advanced#using-your-own-clientid-and-clientsecret) written by the original author |
-| `NEXT_PUBLIC_CLIENT_SECRET` | Client Secret of the app you registered in Microsoft Azure | `null` | Retrieval methods are the same as above, note that you need to **AES encrypt the original secret** (can be done as described in the [Docs](https://ovi.swo.moe/docs/advanced#modify-configs-in-apiconfigjs)) |
+2. **Prepare the five necessary environmental parameters to be filled in during deployment on Vercel.**
 
 ### Deploying to Vercel
 
@@ -40,7 +56,7 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 - After the initial successful deployment, the deployed page will return a 404 error because we still need to connect to the Redis database.
 
-- `REDIS_URL`:If you are encountering Redis database for the first time like me, I strongly recommend using Upstash, which is free and deeply integrated with Vercel. For details, refer to [Vercel Integration](https://docs.upstash.com/redis/howto/vercelintegration). Follow the instructions to set it up in Vercel's [Upstash Integration](https://vercel.com/integrations/upstash), it will automatically fill in the environment variables after project deployment.
+- `REDIS_URL`:If you are encountering Redis database for the first time, I strongly recommend using Upstash, which is free and deeply integrated with Vercel. For details, refer to [Vercel Integration](https://docs.upstash.com/redis/howto/vercelintegration). Follow the instructions to set it up in Vercel's [Upstash Integration](https://vercel.com/integrations/upstash)(simply create a new database in the `Redis` of Upstash, then create a new integration in `Vercel Integrations`, and associate the just deployed OneDrive-Index project with the Redis database), it will automatically fill in the environment variables after project deployment.
 
 - After `REDIS_URL` is successfully set, redeploy the project again.
 
@@ -48,43 +64,25 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 ## Documentation
 
-**For more usage methods, please refer to the [Docs](https://ovi.swo.moe/docs/getting-started) written by the original author.**
-
-## Modifications
-
-- Compared with the original version, this version mainly extracts the steps of modifying `clientId` and `obfuscatedClientSecret` in `config/api.config.js`, as well as modifying `userPrincipalName`, `title`, and `baseDirectory` in `config/site.config.js`, and now sets them as environmental variables during Vercel deployment.
-
-- The specific values of `clientId` and `obfuscatedClientSecret` are hidden on the page of the first step of OAuth authentication and only the first 6 and last 6 characters are displayed for verification.
-
-- The mail field in config/site.config.js has been left blank, you can modify this yourself if you want to display your contact information on the page (the demo of this version shows an Email icon). Additionally, the word GitHub next to the GitHub icon has been removed (because the icons on the right side of the navigation bar felt a bit too crowded).
-
-- Also added support for [Vercel Analytics](https://vercel.com/docs/concepts/analytics) to conveniently check the access situation of the shared page (needs to be enabled in the Analytics tab of the project after deployment).
+**For more usage methods, please refer to the [DOCS](https://ovi.swo.moe/docs/getting-started) written by the original author.**
 
 ## Security Risks
 
-- In both this version and the original archived version, the deployer's OneDrive account `USER_PRINCIPLE_NAME` is leaked in the source code of the webpage.
+- In both this version and the original archived version, the deployer's OneDrive account `USER_PRINCIPAL_NAME` is leaked in the source code of the webpage.
 
 - In the original archived version, the deployer's `clientId` can be seen in the link used to obtain the authorization code in OAuth Step-2. The `obfuscatedClientSecret` can be seen in the source code of the OAuth Step-1.
 
 > This version checks whether authentication has already been passed when performing the OAuth authentication process. If it has, it redirects to the homepage; otherwise, it proceeds with the OAuth authentication process. It attempts to prevent individuals with malicious intent from obtaining the values of `clientId` and `obfuscatedClientSecret` through the link address of OAuth authentication.
 
-- Due to the design decisions of Next.js, environment variables starting with `NEXT_PUBLIC_` are available not only on the server side but also on the client side (browser). This means that any environment variable starting with `NEXT_PUBLIC_` will be included in the built JavaScript file and sent to the user's browser. Therefore, anyone visiting your website can see the values of these environment variables by looking at the source code of the website or network requests.
+- Because of the design decision of Next.js, environment variables starting with `NEXT_PUBLIC_` are not only available on the server side, but also on the client side (browser). This means that any environment variable starting with `NEXT_PUBLIC_` will be included in the built JavaScript file and will be sent to the user's browser. Therefore, anyone visiting your website can view the values of these environment variables by viewing the source code of the website or network requests.
 
-> All environment variables used in this version start with `NEXT_PUBLIC_` (otherwise it cannot function properly)...
->
-> Initially, there were attempts to use environment variable key names not starting with `NEXT_PUBLIC_`. However, it was not possible to get the values of `USER_PRINCIPLE_NAME`, `clientId`, and `obfuscatedClientSecret` for authentication during OAuth authentication, and even `SITE_TITLE` and `BASE_DIRECTORY` were not set as key values of environment variables. For the sake of smooth deployment, these parameters had to temporarily use environment variable key names starting with `NEXT_PUBLIC_`.
+- At the beginning, when setting the `clientId` and `obfuscatedClientSecret` in `config/api.config.js` to the environment variables, I have tried to use environment variable key names that do not start with `NEXT_PUBLIC_`, but there will be various problems during OAuth authentication and OAuth authentication cannot be completed. In order to deploy smoothly, I had to use environment variable key names starting with `NEXT_PUBLIC_`. Considering that `clientId` and `ClientSecret` will not have much problem without the login password of the OneDrive account, and it is also set that the OAuth authentication page cannot be accessed easily to obtain these sensitive information after completing OAuth authentication, it is temporarily solved in this way.
 
 ## Todo List
-
-- Transition the `protectedRoutes` settings from `config/site.config.js` to environment variables.
 
 - Put the password in the environment variables instead of the `.password` file.
 
 - Deepen the study of the original version of the code and strive to implement the function with environment variable key names that do not start with `NEXT_PUBLIC_`, to improve security.
-
-- Close the OAuth authentication pathway after completing the OAuth authentication, striving not to leak the values of `USER_PRINCIPLE_NAME`, `clientId`, and `obfuscatedClientSecret`.
-
-> It has been preliminarily achieved, but further verification is needed to determine whether the related security risks have been removed.
 
 - Redesign the LOGO. The contrast of the original LOGO is too low, and it is not consistent enough with the style of other icons and fonts on the page.
 
