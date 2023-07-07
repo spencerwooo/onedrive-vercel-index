@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useTranslation, Trans } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -13,25 +13,6 @@ import { LoadingIcon } from '../../components/Loading'
 import { extractAuthCodeFromRedirected, generateAuthorisationUrl } from '../../utils/oAuthHandler'
 import { getAccessToken } from '../api'  // 导入getAccessToken函数
 
-export async function getServerSideProps({ locale }) {
-  const accessToken = await getAccessToken(); // 使用getAccessToken函数获取访问令牌
-  // 如果访问令牌存在，重定向到主页
-  if (accessToken) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    }
-  }
-  // 如果访问令牌不存在，正常渲染页面
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ['common'])),
-    },
-  }
-}
-
 export default function OAuthStep2() {
   const router = useRouter()
 
@@ -41,13 +22,7 @@ export default function OAuthStep2() {
 
   const { t } = useTranslation()
 
-  // const oAuthUrl = generateAuthorisationUrl()
-
-  const [oAuthUrl, setOAuthUrl] = useState<string | null>(null)
-
-  useEffect(() => {
-    generateAuthorisationUrl().then(url => setOAuthUrl(url))
-  }, [])
+  const oAuthUrl = generateAuthorisationUrl()
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
@@ -85,9 +60,7 @@ export default function OAuthStep2() {
             <div
               className="relative my-2 cursor-pointer rounded border border-gray-500/50 bg-gray-50 font-mono text-sm hover:opacity-80 dark:bg-gray-800"
               onClick={() => {
-                if (oAuthUrl) {
-                  window.open(oAuthUrl)
-                }
+                window.open(oAuthUrl)
               }}
             >
               <div className="absolute top-0 right-0 p-1 opacity-60">
@@ -167,4 +140,23 @@ export default function OAuthStep2() {
       <Footer />
     </div>
   )
+}
+
+export async function getServerSideProps({ locale }) {
+  const accessToken = await getAccessToken(); // 使用getAccessToken函数获取访问令牌
+  // 如果访问令牌存在，重定向到主页
+  if (accessToken) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+  // 如果访问令牌不存在，正常渲染页面
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  }
 }
