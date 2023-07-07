@@ -45,7 +45,7 @@ module.exports = {
   protectedRoutes: process.env.NEXT_PUBLIC_PROTECTED_ROUTES ? process.env.NEXT_PUBLIC_PROTECTED_ROUTES.split(',') : [],
 
   // [OPTIONAL] Use "" here if you want to remove this email address from the nav bar.
-  email: 'mailto:iredscarf@freeloop.one',
+  email: process.env.NEXT_PUBLIC_EMAIL ? `mailto:${process.env.NEXT_PUBLIC_EMAIL}` : '',
 
   // [OPTIONAL] This is an array of names and links for setting your social information and links.
   // In the latest update, all brand icons inside font awesome is supported and the icon to render is based on the name
