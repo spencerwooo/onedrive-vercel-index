@@ -230,7 +230,7 @@ export async function getServerSideProps({ query, locale }) {
   // 检查是否已经通过OAuth认证
   const accessToken = await getAccessToken();
   if (accessToken) {
-    如果已经通过OAuth认证，重定向到主页
+    // 如果已经通过OAuth认证，重定向到主页
     return {
       redirect: {
         destination: '/',
