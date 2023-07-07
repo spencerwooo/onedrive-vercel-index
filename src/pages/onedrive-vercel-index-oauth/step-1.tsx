@@ -24,7 +24,7 @@ export async function getServerSideProps({ locale }) {
   const clientId = process.env.CLIENT_ID || '';
   const clientSecret = process.env.CLIENT_SECRET || '';
   const accessToken = await getAccessToken(); // 使用getAccessToken函数获取访问令牌
-
+  
   // 如果访问令牌存在，重定向到主页
   if (accessToken) {
     return {
@@ -34,7 +34,7 @@ export async function getServerSideProps({ locale }) {
       },
     }
   }
-
+  
   // 如果访问令牌不存在，正常渲染页面
   return {
     props: {

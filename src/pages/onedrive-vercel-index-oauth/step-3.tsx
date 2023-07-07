@@ -16,18 +16,19 @@ import { getAccessToken } from '../api'  // 导入getAccessToken函数
 
 export async function getServerSideProps({ query, locale }) {
   const { authCode } = query
+  const userPrincipalName = process.env.USER_PRINCIPLE_NAME || '';
 
   // 检查是否已经通过OAuth认证
-  const accessToken = await getAccessToken();
-  if (accessToken) {
-    // 如果已经通过OAuth认证，重定向到主页
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    }
-  }
+  //const accessToken = await getAccessToken();
+  //if (accessToken) {
+    //如果已经通过OAuth认证，重定向到主页
+    //return {
+      //redirect: {
+        //destination: '/',
+        //permanent: false,
+      //},
+    //}
+  //}
 
   // 如果没有通过OAuth认证，继续执行OAuth认证的流程
   if (!authCode) {
@@ -35,7 +36,6 @@ export async function getServerSideProps({ query, locale }) {
       props: {
         error: 'No auth code present',
         description: 'Where is the auth code? Did you follow step 2 you silly donut?',
-        userPrincipalName: process.env.USER_PRINCIPLE_NAME || '',
         ...(await serverSideTranslations(locale, ['common'])),
       },
     }
@@ -50,13 +50,12 @@ export async function getServerSideProps({ query, locale }) {
         error: response.error,
         description: response.errorDescription,
         errorUri: response.errorUri,
-        userPrincipalName: process.env.USER_PRINCIPLE_NAME || '',
         ...(await serverSideTranslations(locale, ['common'])),
       },
     }
   }
 
-  const { expiryTime, refreshToken } = response
+  const { expiryTime, accessToken, refreshToken } = response
 
   return {
     props: {
@@ -64,7 +63,6 @@ export async function getServerSideProps({ query, locale }) {
       expiryTime,
       accessToken,
       refreshToken,
-      userPrincipalName: process.env.USER_PRINCIPLE_NAME || '',
       ...(await serverSideTranslations(locale, ['common'])),
     },
   }

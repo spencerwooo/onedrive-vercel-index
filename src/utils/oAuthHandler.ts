@@ -5,8 +5,7 @@ import apiConfig from '../../config/api.config'
 
 async function getConfig() {
   const res = await axios.get('/api/config')
-  const data = typeof res.data === 'string' ? JSON.parse(res.data) : res.data
-  return data
+  return res.data
 }
 
 // Just a disguise to obfuscate required tokens (including but not limited to client secret,

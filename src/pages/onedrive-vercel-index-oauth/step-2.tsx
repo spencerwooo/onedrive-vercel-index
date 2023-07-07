@@ -13,6 +13,25 @@ import { LoadingIcon } from '../../components/Loading'
 import { extractAuthCodeFromRedirected, generateAuthorisationUrl } from '../../utils/oAuthHandler'
 import { getAccessToken } from '../api'  // 导入getAccessToken函数
 
+export async function getServerSideProps({ locale }) {
+  const accessToken = await getAccessToken(); // 使用getAccessToken函数获取访问令牌
+  // 如果访问令牌存在，重定向到主页
+  if (accessToken) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+  // 如果访问令牌不存在，正常渲染页面
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  }
+}
+
 export default function OAuthStep2() {
   const router = useRouter()
 
@@ -148,23 +167,4 @@ export default function OAuthStep2() {
       <Footer />
     </div>
   )
-}
-
-export async function getServerSideProps({ locale }) {
-  const accessToken = await getAccessToken(); // 使用getAccessToken函数获取访问令牌
-  // 如果访问令牌存在，重定向到主页
-  if (accessToken) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    }
-  }
-  // 如果访问令牌不存在，正常渲染页面
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ['common'])),
-    },
-  }
 }
