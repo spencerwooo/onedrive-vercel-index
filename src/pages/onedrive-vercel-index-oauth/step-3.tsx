@@ -59,6 +59,7 @@ export async function getServerSideProps({ query, locale }) {
 
   return {
     props: {
+      userPrincipalName,
       error: null,
       expiryTime,
       accessToken,
