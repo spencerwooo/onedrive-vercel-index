@@ -34,7 +34,7 @@
 | --- | --- | --- | --- |
 | `NEXT_PUBLIC_PROTECTED_ROUTES` | 需要密码访问的文件夹 | `config/site.config.js` | 格式：`/route1,/route2`， 多个路径使用`,`间隔 |
 | `NEXT_PUBLIC_EMAIL` | 您的联系用Email | `config/site.config.js` | example@example.com |
-| `KV_PREFIX` | 用于键值对存储的前缀 | `config/site.config.js` | 如果您想要使用同一个`Redis`数据库部署多个OneDrive-Index，那么您就可以在部署时设置这个环境变量，例如第一个Index的`KV_PREFIX`可以设置为`index1`，第二个Index的`KV_PREFIX`可以设置为`index2`，那么它们在Vercel部署时就不会有键值冲突了 |
+| `KV_PREFIX` | 用于键值对存储的前缀 | `config/site.config.js` | Upstash只提供一个免费的`Redis`数据库，如果想要部署多个OneDrive-Index，就可为不同的Index设置不同的`KV_PREFIX`值，那么它们在Vercel部署时就不会有键值冲突了 |
 
 ## 部署方法
 
