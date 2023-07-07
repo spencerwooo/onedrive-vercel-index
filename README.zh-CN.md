@@ -20,17 +20,18 @@
 
 **在环境变量中设置的配置参数**
 
+**必要参数**
 | 名称 | 描述 | 原路径 | 说明 |
-| --- |
-| **必要参数** |
 | --- | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_TITLE` | 展示页面的标题 | `config/site.config.js` | 例如：尼加拉瓜首富的OneDrive |
 | `NEXT_PUBLIC_USER_PRINCIPLE_NAME` | 您的OneDrive帐户 | `config/site.config.js` | **字母大小写必须一致** ｜
 | `NEXT_PUBLIC_BASE_DIRECTORY` | 您要分享的OneDrive目录 | `config/site.config.js` | （格式为`/目录名`），根目录则填写`/` |
 | `NEXT_PUBLIC_CLIENT_ID` | 您在微软Azure注册的应用程序客户端ID | `config/api.config.js` | 原作者提供的已过期，建议自己注册一个，有效期可以设到两年（反正也要设置帐户的API权限，顺道咯）。获取方式参照原作者编写的[使用文档](https://ovi.swo.moe/zh/docs/advanced#使用你自己的-client-id-与-secret) |
 | `NEXT_PUBLIC_CLIENT_SECRET` | 您在微软Azure注册的应用程序客户端密钥 | `config/api.config.js` | 获取方式同上，特别注意这个**需要对原密钥进行AES加密**（可在原作者编写的[使用文档](https://ovi.swo.moe/zh/docs/advanced#修改-apiconfigjs)中进行） |
-| --- |
-| 可选参数 |
+
+*可选参数*
+| 名称 | 描述 | 原路径 | 说明 |
+| --- | --- | --- | --- |
 | `NEXT_PUBLIC_PROTECTED_ROUTES` | 需要密码访问的文件夹 | `config/site.config.js` | 格式：`/route1,/route2` 多个路径使用`,`间隔 |
 | `NEXT_PUBLIC_EMAIL` | 您的联系用Email | `config/site.config.js` | example@example.com ｜
 | `KV_PREFIX` | 用于键值对存储的前缀 | `config/site.config.js` | 如果您想要使用同一个`Redis`数据库部署多个OneDrive-Index，那么你就可以在部署时设置这个环境变量，例如第一个Index的`KV_PREFIX`可以设置为`index1`，第二个Index的`KV_PREFIX`可以设置为`index2`，那么它们在Vercel部署时就不会有键值冲突了 |
@@ -51,7 +52,7 @@
 
 **当您做好准备工作，就可以点击下面的按钮进行部署了：**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIP AL_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPAL_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET)
 
 - 初次部署成功后，部署的页面上去是404的，因为我们还需要连接到Redis数据库。
  
