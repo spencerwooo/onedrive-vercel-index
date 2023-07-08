@@ -56,7 +56,7 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 - After the initial successful deployment, the deployed page will return a 404 error because we still need to connect to the Redis database.
 
-- `REDIS_URL`:If you are encountering Redis database for the first time, I strongly recommend using Upstash, which is free and deeply integrated with Vercel. For details, refer to [Vercel Integration](https://docs.upstash.com/redis/howto/vercelintegration). Follow the instructions to set it up in Vercel's [Upstash Integration](https://vercel.com/integrations/upstash)(simply create a new database in the `Redis` of Upstash, then create a new integration in `Vercel Integrations`, and associate the just deployed OneDrive-Index project with the Redis database), it will automatically fill in the environment variables after project deployment.
+> `REDIS_URL`:If you are encountering Redis database for the first time, I strongly recommend using Upstash, which is free and deeply integrated with Vercel. For details, refer to [Vercel Integration](https://docs.upstash.com/redis/howto/vercelintegration). Follow the instructions to set it up in Vercel's [Upstash Integration](https://vercel.com/integrations/upstash)(simply create a new database in the `Redis` of Upstash, then create a new integration in `Vercel Integrations`, and associate the just deployed OneDrive-Index project with the Redis database), it will automatically fill in the environment variables after project deployment.
 
 - After `REDIS_URL` is successfully set, redeploy the project again.
 
