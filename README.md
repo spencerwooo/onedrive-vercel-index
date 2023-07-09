@@ -29,7 +29,7 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 | `NEXT_PUBLIC_CLIENT_ID` | The client ID of the app you registered in Microsoft Azure | `config/api.config.js` | The one provided by the original author has expired, it is recommended to register one yourself, the validity period can be set to two years (anyway, you have to set the API permissions of the account, by the way). The acquisition method refers to the [DOCS](https://ovi.swo.moe/docs/advanced#using-your-own-clientid-and-clientsecret) |
 | `NEXT_PUBLIC_CLIENT_SECRET` | The client secret of the app registered in Microsoft Azure | `config/api.config.js` | The acquisition method is the same, especially note that this **needs to encrypt the original secret with AES** (can be done in the [DOCS](https://ovi.swo.moe/docs/advanced#modify-configs-in-apiconfigjs)) |
 
-*Optional parameters*
+***Optional parameters***
 | Name | Description | Original Path | Note |
 | --- | --- | --- | --- |
 | `NEXT_PUBLIC_PROTECTED_ROUTES` | The path of the folder that needs password access | `config/site.config.js` | Format: `/route1,/route2`, multiple paths are separated by `,` |
@@ -40,11 +40,11 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 ### Preparations
 
-1. **Setting up the API permissions for your OneDrive account:**
+1. **Setting up the API permissions for your OneDrive account.**
 
-  This project retrieves the file list and download links by calling OneDrive's API, so setting up the API permissions for your OneDrive account is essential. Please refer to the [DOCS](https://ovi.swo.moe/docs/advanced#modify-api-permissions).
+- This project retrieves the file list and download links by calling OneDrive's API, so setting up the API permissions for your OneDrive account is essential. Please refer to the [DOCS](https://ovi.swo.moe/docs/advanced#modify-api-permissions).
 
-  The three API permissions that need to be set up are: `user.read`, `files.read.all`, `offline_access`.
+- The three API permissions that need to be set up are: `user.read`, `files.read.all`, `offline_access`.
 
 2. **Prepare the five necessary environmental parameters to be filled in during deployment on Vercel.**
 
@@ -56,7 +56,7 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 - After the initial successful deployment, the deployed page will return a 404 error because we still need to connect to the Redis database.
 
-- `REDIS_URL`:If you are encountering Redis database for the first time, I strongly recommend using Upstash, which is free and deeply integrated with Vercel. For details, refer to [Vercel Integration](https://docs.upstash.com/redis/howto/vercelintegration). Follow the instructions to set it up in Vercel's [Upstash Integration](https://vercel.com/integrations/upstash)(simply create a new database in the `Redis` of Upstash, then create a new integration in `Vercel Integrations`, and associate the just deployed OneDrive-Index project with the Redis database), it will automatically fill in the environment variables after project deployment.
+> `REDIS_URL`:If you are encountering Redis database for the first time, I strongly recommend using Upstash, which is free and deeply integrated with Vercel. For details, refer to [Vercel Integration](https://docs.upstash.com/redis/howto/vercelintegration). Follow the instructions to set it up in Vercel's [Upstash Integration](https://vercel.com/integrations/upstash)(simply create a new database in the `Redis` of Upstash, then create a new integration in `Vercel Integrations`, and associate the just deployed OneDrive-Index project with the Redis database), it will automatically fill in the environment variables after project deployment.
 
 - After `REDIS_URL` is successfully set, redeploy the project again.
 
