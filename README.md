@@ -18,24 +18,6 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 - Another thing is that this version is set to automatically close the OAuth authentication channel after completing OAuth authentication, to prevent people with intentions from easily obtaining user configuration information through the OAuth authentication URL link.
 
-## Environment Variables
-
-**Necessary parameters**
-| Name | Description | Original Path | Note |
-| --- | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_TITLE` | Title of the display page | `config/site.config.js` | e.g. Nicaragua's richest man's OneDrive |
-| `NEXT_PUBLIC_USER_PRINCIPAL_NAME` | Your OneDrive account | `config/site.config.js` | **Case-sensitive** ｜
-| `NEXT_PUBLIC_BASE_DIRECTORY` | The OneDrive directory you want to share | `config/site.config.js` | `/directory name`, root directory is `/` |
-| `NEXT_PUBLIC_CLIENT_ID` | The client ID of the app you registered in Microsoft Azure | `config/api.config.js` | The one provided by the original author has expired, it is recommended to register one yourself, the validity period can be set to two years (anyway, you have to set the API permissions of the account, by the way). The acquisition method refers to the [DOCS](https://ovi.swo.moe/docs/advanced#using-your-own-clientid-and-clientsecret) |
-| `NEXT_PUBLIC_CLIENT_SECRET` | The client secret of the app registered in Microsoft Azure | `config/api.config.js` | The acquisition method is the same, especially note that this **needs to encrypt the original secret with AES** (can be done in the [DOCS](https://ovi.swo.moe/docs/advanced#modify-configs-in-apiconfigjs)) |
-
-***Optional parameters***
-| Name | Description | Original Path | Note |
-| --- | --- | --- | --- |
-| `NEXT_PUBLIC_PROTECTED_ROUTES` | The path of the folder that needs password access | `config/site.config.js` | Format: `/route1,/route2`, multiple paths are separated by `,` |
-| `NEXT_PUBLIC_EMAIL` | Contact Email displayed in the upper right corner | `config/site.config.js` | `example@example.com` |
-| `KV_PREFIX` | Prefix for KV storage (key-value pair storage) | `config/site.config.js` | Upstash only provides a free `Redis` database, if you want to deploy multiple OneDrive-Index, you can set different `KV_PREFIX` values for different Index, so there will be no key value conflict |
-
 ## Getting Started
 
 ### Preparations
@@ -46,7 +28,7 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 - The three API permissions that need to be set up are: `user.read`, `files.read.all`, `offline_access`.
 
-2. **Prepare the five necessary environmental parameters to be filled in during deployment on Vercel.**
+2. **Prepare the five [necessary environmental variables](#necessary-variables) to be filled in during deployment on Vercel.**
 
 ### Deploying to Vercel
 
@@ -61,6 +43,24 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 - After `REDIS_URL` is successfully set, redeploy the project again.
 
 **After successful deployment, when you visit your `onedrive-vercel-index` page for the first time, it will guide you to perform OAuth authentication (quite simple). For details, please refer to the [Instructions](https://ovi.swo.moe/zh/docs/getting-started#authentication) written by the original author.**
+
+## Environment Variables
+
+### Necessary Variables
+| Name | Description | Original Path | Note |
+| --- | --- | --- | --- |
+| `NEXT_PUBLIC_SITE_TITLE` | Title of the display page | `config/site.config.js` | e.g. Nicaragua's richest man's OneDrive |
+| `NEXT_PUBLIC_USER_PRINCIPAL_NAME` | Your OneDrive account | `config/site.config.js` | **Case-sensitive** ｜
+| `NEXT_PUBLIC_BASE_DIRECTORY` | The OneDrive directory you want to share | `config/site.config.js` | `/directory name`, root directory is `/` |
+| `NEXT_PUBLIC_CLIENT_ID` | The client ID of the app you registered in Microsoft Azure | `config/api.config.js` | The one provided by the original author has expired, it is recommended to register one yourself, the validity period can be set to two years (anyway, you have to set the API permissions of the account, by the way). The acquisition method refers to the [DOCS](https://ovi.swo.moe/docs/advanced#using-your-own-clientid-and-clientsecret) |
+| `NEXT_PUBLIC_CLIENT_SECRET` | The client secret of the app registered in Microsoft Azure | `config/api.config.js` | The acquisition method is the same, especially note that this **needs to encrypt the original secret with AES** (can be done in the [DOCS](https://ovi.swo.moe/docs/advanced#modify-configs-in-apiconfigjs)) |
+
+### Optional Variables
+| Name | Description | Original Path | Note |
+| --- | --- | --- | --- |
+| `NEXT_PUBLIC_PROTECTED_ROUTES` | The path of the folder that needs password access | `config/site.config.js` | Format: `/route1,/route2`, multiple paths are separated by `,` |
+| `NEXT_PUBLIC_EMAIL` | Contact Email displayed in the upper right corner | `config/site.config.js` | `example@example.com` |
+| `KV_PREFIX` | Prefix for KV storage (key-value pair storage) | `config/site.config.js` | Upstash only provides a free `Redis` database, if you want to deploy multiple OneDrive-Index, you can set different `KV_PREFIX` values for different Index, so there will be no key value conflict |
 
 ## Documentation
 
