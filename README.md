@@ -36,6 +36,13 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPAL_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET)
 
+> If you have folders that need password protection `+ NEXT_PUBLIC_PROTECTED_ROUTES`:
+> [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPAL_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_PROTECTED_ROUTES,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET)
+> If you have multiple OneDrive accounts that need to use the same Redis database `+ KV_PREFIX`:
+> [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPAL_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET,KV_PREFIX)
+> If you need to deploy multiple OneDrive-Index, and all have folders that need password protection `+ NEXT_PUBLIC_PROTECTED_ROUTES & KV_PREFIX`:
+> [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPAL_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_PROTECTED_ROUTES,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET,KV_PREFIX)
+
 - After the initial successful deployment, the deployed page will return a 404 error because we still need to connect to the Redis database.
 
 > `REDIS_URL`:If you are encountering Redis database for the first time, I strongly recommend using Upstash, which is free and deeply integrated with Vercel. For details, refer to [Vercel Integration](https://docs.upstash.com/redis/howto/vercelintegration). Follow the instructions to set it up in Vercel's [Upstash Integration](https://vercel.com/integrations/upstash)(simply create a new database in the `Redis` of Upstash, then create a new integration in `Vercel Integrations`, and associate the just deployed OneDrive-Index project with the Redis database), it will automatically fill in the environment variables after project deployment.
@@ -50,7 +57,7 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 | Name | Description | Original Path | Note |
 | --- | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_TITLE` | Title of the display page | `config/site.config.js` | e.g. Nicaragua's richest man's OneDrive |
-| `NEXT_PUBLIC_USER_PRINCIPAL_NAME` | Your OneDrive account | `config/site.config.js` | **Case-sensitive** ｜
+| `NEXT_PUBLIC_USER_PRINCIPAL_NAME` | Your OneDrive account | `config/site.config.js` | **Case-sensitive** |
 | `NEXT_PUBLIC_BASE_DIRECTORY` | The OneDrive directory you want to share | `config/site.config.js` | `/directory name`, root directory is `/` |
 | `NEXT_PUBLIC_CLIENT_ID` | The client ID of the app you registered in Microsoft Azure | `config/api.config.js` | The one provided by the original author has expired, it is recommended to register one yourself, the validity period can be set to two years (anyway, you have to set the API permissions of the account, by the way). The acquisition method refers to the [DOCS](https://ovi.swo.moe/docs/advanced#using-your-own-clientid-and-clientsecret) |
 | `NEXT_PUBLIC_CLIENT_SECRET` | The client secret of the app registered in Microsoft Azure | `config/api.config.js` | The acquisition method is the same, especially note that this **needs to encrypt the original secret with AES** (can be done in the [DOCS](https://ovi.swo.moe/docs/advanced#modify-configs-in-apiconfigjs)) |

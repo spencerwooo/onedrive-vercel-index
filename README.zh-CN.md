@@ -36,6 +36,13 @@
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPAL_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET)
 
+> 如果你有需要密码保护的目录`+ NEXT_PUBLIC_PROTECTED_ROUTES`：
+> [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPAL_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_PROTECTED_ROUTES,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET)
+> 如果你有多个OneDrive帐户需要使用同一个Redis数据库`+ KV_PREFIX`：
+> [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPAL_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET,KV_PREFIX)
+> 如果你需要部署多个OneDrive-Index同时都有需要密码保护的目录`+ NEXT_PUBLIC_PROTECTED_ROUTES & KV_PREFIX`：
+> [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPAL_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_PROTECTED_ROUTES,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET,KV_PREFIX)
+
 - 初次部署成功后，部署的页面上去是404的，因为我们还需要连接到Redis数据库。
  
 > `REDIS_URL`：如果您是第一次接触Redis数据库，那么强烈推荐您使用免费且与Vercel深度合作的Upstash，详细参考[Vercel Integration](https://docs.upstash.com/redis/howto/vercelintegration)，按说明在Vercel的[Upstash集成](https://vercel.com/integrations/upstash)中设置好（简单说就是在Upstash的`Redis`选项卡中新建一个数据库，再在`Vercel Integrations`中新建集成，把刚部署的OneDrive-Index项目与Redis数据库进行关联），它会自动填入项目部署后的环境变量中。
@@ -50,7 +57,7 @@
 | 名称 | 描述 | 原路径 | 说明 |
 | --- | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_TITLE` | 展示页面的标题 | `config/site.config.js` | 例如：尼加拉瓜首富的OneDrive |
-| `NEXT_PUBLIC_USER_PRINCIPAL_NAME` | 您的OneDrive帐户 | `config/site.config.js` | **字母大小写必须一致** ｜
+| `NEXT_PUBLIC_USER_PRINCIPAL_NAME` | 您的OneDrive帐户 | `config/site.config.js` | **字母大小写必须一致** |
 | `NEXT_PUBLIC_BASE_DIRECTORY` | 您要分享的OneDrive目录 | `config/site.config.js` | （格式为`/目录名`），根目录则填写`/` |
 | `NEXT_PUBLIC_CLIENT_ID` | 您在微软Azure注册的应用程序客户端ID | `config/api.config.js` | 原作者提供的已过期，建议自己注册一个，有效期可以设到两年（反正也要设置帐户的API权限，顺道咯）。获取方式参照原作者编写的[使用文档](https://ovi.swo.moe/zh/docs/advanced#使用你自己的-client-id-与-secret) |
 | `NEXT_PUBLIC_CLIENT_SECRET` | 您在微软Azure注册的应用程序客户端密钥 | `config/api.config.js` | 获取方式同上，特别注意这个**需要对原密钥进行AES加密**（可在原作者编写的[使用文档](https://ovi.swo.moe/zh/docs/advanced#修改-apiconfigjs)中进行） |
