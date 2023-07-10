@@ -99,7 +99,7 @@ export default function OAuthStep1({ clientId, clientSecret }) {
                       CLIENT_ID
                     </td>
                     <td className="whitespace-nowrap py-1 px-3 text-gray-500 dark:text-gray-400">
-                      <code className="font-mono text-sm">{obfuscateSensitiveData(clientId)}</code>
+                      <code className="font-mono text-sm">{clientId}</code>
                     </td>
                   </tr>
                   <tr className="border-y bg-white dark:border-gray-700 dark:bg-gray-900">
@@ -107,7 +107,7 @@ export default function OAuthStep1({ clientId, clientSecret }) {
                       CLIENT_SECRET*
                     </td>
                     <td className="whitespace-nowrap py-1 px-3 text-gray-500 dark:text-gray-400">
-                      <code className="font-mono text-sm">{obfuscateSensitiveData(clientSecret)}</code>
+                      <code className="font-mono text-sm">{clientSecret}</code>
                     </td>
                   </tr>
                   <tr className="border-y bg-white dark:border-gray-700 dark:bg-gray-900">
