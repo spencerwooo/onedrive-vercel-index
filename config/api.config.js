@@ -17,7 +17,7 @@
 //   throw new Error('`clientSecret` is not defined in api.config.js');	
 // }	
 
-module.exports = {	module.exports = {
+module.exports = {
   // The clientId and clientSecret are used to authenticate the user with Microsoft Graph API using OAuth. You would	  // The clientId and clientSecret are used to authenticate the user with Microsoft Graph API using OAuth. You would
   // not need to change anything here if you can authenticate with your personal Microsoft account with OneDrive International.	  // not need to change anything here if you can authenticate with your personal Microsoft account with OneDrive International.
 //   clientId: clientIdEnv,	
