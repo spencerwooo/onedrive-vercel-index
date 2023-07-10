@@ -11,7 +11,32 @@ import Footer from '../../components/Footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getAccessToken } from '../api'  // 导入getAccessToken函数
 
-export default function OAuthStep1() {
+export async function getServerSideProps({ locale }) {
+  const clientId = process.env.CLIENT_ID || '';
+  const clientSecret = process.env.CLIENT_SECRET || '';
+  const accessToken = await getAccessToken(); // 使用getAccessToken函数获取访问令牌
+  
+  // 如果访问令牌存在，重定向到主页
+  if (accessToken) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+  
+  // 如果访问令牌不存在，正常渲染页面
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+      clientId,
+      clientSecret,
+    },
+  }
+}
+
+export default function OAuthStep1({ clientId, clientSecret }) {
   const router = useRouter()
 
   const { t } = useTranslation()
@@ -74,7 +99,7 @@ export default function OAuthStep1() {
                       CLIENT_ID
                     </td>
                     <td className="whitespace-nowrap py-1 px-3 text-gray-500 dark:text-gray-400">
-                      <code className="font-mono text-sm">{apiConfig.clientId}</code>
+                      <code className="font-mono text-sm">{obfuscateSensitiveData(clientId)}</code>
                     </td>
                   </tr>
                   <tr className="border-y bg-white dark:border-gray-700 dark:bg-gray-900">
@@ -82,7 +107,7 @@ export default function OAuthStep1() {
                       CLIENT_SECRET*
                     </td>
                     <td className="whitespace-nowrap py-1 px-3 text-gray-500 dark:text-gray-400">
-                      <code className="font-mono text-sm">{apiConfig.obfuscatedClientSecret}</code>
+                      <code className="font-mono text-sm">{obfuscateSensitiveData(clientSecret)}</code>
                     </td>
                   </tr>
                   <tr className="border-y bg-white dark:border-gray-700 dark:bg-gray-900">
@@ -147,23 +172,3 @@ export default function OAuthStep1() {
     </div>
   )
 }
-
-export async function getServerSideProps({ locale }) {
-  const accessToken = await getAccessToken(); // 使用getAccessToken函数获取访问令牌
-  // 如果访问令牌存在，重定向到主页
-  if (accessToken) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    }
-  }
-  // 如果访问令牌不存在，正常渲染页面
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ['common'])),
-    },
-  }
-}
-
