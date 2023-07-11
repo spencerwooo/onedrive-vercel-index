@@ -92,7 +92,8 @@ export async function requestTokenWithAuthCode(
         const { error, error_description, error_uri } = err.response.data
         return { error, errorDescription: error_description, errorUri: error_uri }
       })
-  } catch (error: unknown) {
+  } 
+  catch (error) {
     console.error("Failed to get config:", error)
     let errorMessage = ""
     if (error instanceof Error) {
@@ -103,10 +104,15 @@ export async function requestTokenWithAuthCode(
       return requestTokenWithAuthCode(code, retry - 1)
     }
     else {
-      return { error: "Failed to get config", errorDescription: error.message, errorUri: "" }
+      if (error instanceof Error) {
+        return { error: "Failed to get config", errorDescription: error.message, errorUri: "" }
+      } 
+      else {
+        // If error is not an instance of Error, we can return a generic error message
+        return { error: "Failed to get config", errorDescription: "Unknown error", errorUri: "" }
+      }
     }
   }
-}
 
 // Verify the identity of the user with the access token and compare it with the userPrincipalName
 // in the Microsoft Graph API. If the userPrincipalName matches, proceed with token storing.
