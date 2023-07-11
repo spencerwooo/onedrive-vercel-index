@@ -92,14 +92,18 @@ export async function requestTokenWithAuthCode(
         const { error, error_description, error_uri } = err.response.data
         return { error, errorDescription: error_description, errorUri: error_uri }
       })
-  } catch (error) {
-    console.error("Failed to get api/config:", error)
+  } catch (error: unknown) {
+    console.error("Failed to get config:", error)
+    let errorMessage = ""
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
     if (retry > 0) {
       console.log(`Retrying... ${retry} attempts left.`)
       return requestTokenWithAuthCode(code, retry - 1)
     }
     else {
-      return { error: "Failed to get api/config", errorDescription: error.message, errorUri: "" }
+      return { error: "Failed to get config", errorDescription: error.message, errorUri: "" }
     }
   }
 }
