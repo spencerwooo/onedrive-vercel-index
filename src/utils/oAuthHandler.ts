@@ -99,7 +99,7 @@ export async function requestTokenWithAuthCode(
       return requestTokenWithAuthCode(code, retry - 1)
     }
     else {
-      return { error: "Failed to get api/config", errorDescription: error.message }
+      return { error: "Failed to get api/config", errorDescription: error.message, errorUri: "" }
     }
   }
 }
