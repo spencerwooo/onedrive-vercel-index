@@ -57,7 +57,7 @@ export function extractAuthCodeFromRedirected(url: string): string {
 // will be used to request an access token. This function requests the access token with the authorisation code
 // and returns the access token and refresh token on success.
 export async function requestTokenWithAuthCode(
-  code: string
+  code: string,
   retry = 5
 ): Promise<
   | { expiryTime: string; accessToken: string; refreshToken: string }
