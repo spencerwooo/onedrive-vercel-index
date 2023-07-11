@@ -58,38 +58,50 @@ export function extractAuthCodeFromRedirected(url: string): string {
 // and returns the access token and refresh token on success.
 export async function requestTokenWithAuthCode(
   code: string
+  retry = 5
 ): Promise<
   | { expiryTime: string; accessToken: string; refreshToken: string }
   | { error: string; errorDescription: string; errorUri: string }
 > {
-  const config = await getConfig()
-  const clientId = config.clientId
-  const clientSecret = revealObfuscatedToken(config.clientSecret)
-  const { redirectUri, authApi } = apiConfig
+  try {
+    const config = await getConfig()
+    const clientId = config.clientId
+    const clientSecret = revealObfuscatedToken(config.clientSecret)
+    const { redirectUri, authApi } = apiConfig
 
-  // Construct URL parameters for OAuth2
-  const params = new URLSearchParams()
-  params.append('client_id', clientId)
-  params.append('redirect_uri', redirectUri)
-  params.append('client_secret', clientSecret)
-  params.append('code', code)
-  params.append('grant_type', 'authorization_code')
+    // Construct URL parameters for OAuth2
+    const params = new URLSearchParams()
+    params.append('client_id', clientId)
+    params.append('redirect_uri', redirectUri)
+    params.append('client_secret', clientSecret)
+    params.append('code', code)
+    params.append('grant_type', 'authorization_code')
 
-  // Request access token
-  return axios
-    .post(authApi, params, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    })
-    .then(resp => {
-      const { expires_in, access_token, refresh_token } = resp.data
-      return { expiryTime: expires_in, accessToken: access_token, refreshToken: refresh_token }
-    })
-    .catch(err => {
-      const { error, error_description, error_uri } = err.response.data
-      return { error, errorDescription: error_description, errorUri: error_uri }
-    })
+    // Request access token
+    return axios
+      .post(authApi, params, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
+      .then(resp => {
+        const { expires_in, access_token, refresh_token } = resp.data
+        return { expiryTime: expires_in, accessToken: access_token, refreshToken: refresh_token }
+      })
+      .catch(err => {
+        const { error, error_description, error_uri } = err.response.data
+        return { error, errorDescription: error_description, errorUri: error_uri }
+      })
+  } catch (error) {
+    console.error("Failed to get api/config:", error)
+    if (retry > 0) {
+      console.log(`Retrying... ${retry} attempts left.`)
+      return requestTokenWithAuthCode(code, retry - 1)
+    }
+    else {
+      return { error: "Failed to get api/config", errorDescription: error.message }
+    }
+  }
 }
 
 // Verify the identity of the user with the access token and compare it with the userPrincipalName
