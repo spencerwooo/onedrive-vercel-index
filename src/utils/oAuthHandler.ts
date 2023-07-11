@@ -113,6 +113,7 @@ export async function requestTokenWithAuthCode(
       }
     }
   }
+}
 
 // Verify the identity of the user with the access token and compare it with the userPrincipalName
 // in the Microsoft Graph API. If the userPrincipalName matches, proceed with token storing.
