@@ -45,8 +45,8 @@ export async function getServerSideProps({ query, locale }) {
       },
     }
   }
-
-  const response = await requestTokenWithAuthCode(authCode)
+  const config = { clientId, clientSecret, userPrincipalName, baseDirectory };
+  const response = await requestTokenWithAuthCode(authCode, config)
 
   // If error response, return invalid
   if ('error' in response) {
