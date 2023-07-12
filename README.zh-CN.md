@@ -34,19 +34,19 @@
 
 **当您做好准备工作，就可以点击下面的按钮进行部署了：**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPAL_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,USER_PRINCIPAL_NAME,BASE_DIRECTORY,CLIENT_ID,CLIENT_SECRET)
 
 > - 如果你有需要密码保护的目录：
 >
-> [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPAL_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_PROTECTED_ROUTES,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET) with `NEXT_PUBLIC_PROTECTED_ROUTES`
+> [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,USER_PRINCIPAL_NAME,BASE_DIRECTORY,NEXT_PUBLIC_PROTECTED_ROUTES,CLIENT_ID,CLIENT_SECRET) with `NEXT_PUBLIC_PROTECTED_ROUTES`
 >
 > - 如果你有多个OneDrive帐户需要使用同一个Redis数据库：
 >
-> [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPAL_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET,KV_PREFIX) with `KV_PREFIX`
+> [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,USER_PRINCIPAL_NAME,BASE_DIRECTORY,CLIENT_ID,CLIENT_SECRET,KV_PREFIX) with `KV_PREFIX`
 >
 > - 如果你需要部署多个OneDrive-Index同时都有需要密码保护的目录：
 >
-> [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,NEXT_PUBLIC_USER_PRINCIPAL_NAME,NEXT_PUBLIC_BASE_DIRECTORY,NEXT_PUBLIC_PROTECTED_ROUTES,NEXT_PUBLIC_CLIENT_ID,NEXT_PUBLIC_CLIENT_SECRET,KV_PREFIX) with `NEXT_PUBLIC_PROTECTED_ROUTES` & `KV_PREFIX`
+> [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,USER_PRINCIPAL_NAME,BASE_DIRECTORY,NEXT_PUBLIC_PROTECTED_ROUTES,CLIENT_ID,CLIENT_SECRET,KV_PREFIX) with `NEXT_PUBLIC_PROTECTED_ROUTES` & `KV_PREFIX`
 
 - 初次部署成功后，部署的页面上去是404的，因为我们还需要连接到Redis数据库。
  
@@ -62,10 +62,10 @@
 | 名称 | 描述 | 原路径 | 说明 |
 | --- | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_TITLE` | 展示页面的标题 | `config/site.config.js` | 例如：尼加拉瓜首富的OneDrive |
-| `NEXT_PUBLIC_USER_PRINCIPAL_NAME` | 您的OneDrive帐户 | `config/site.config.js` | **字母大小写必须一致** |
-| `NEXT_PUBLIC_BASE_DIRECTORY` | 您要分享的OneDrive目录 | `config/site.config.js` | （格式为`/目录名`），根目录则填写`/` |
-| `NEXT_PUBLIC_CLIENT_ID` | 您在微软Azure注册的应用程序客户端ID | `config/api.config.js` | 原作者提供的已过期，建议自己注册一个，有效期可以设到两年（反正也要设置帐户的API权限，顺道咯）。获取方式参照原作者编写的[使用文档](https://ovi.swo.moe/zh/docs/advanced#使用你自己的-client-id-与-secret) |
-| `NEXT_PUBLIC_CLIENT_SECRET` | 您在微软Azure注册的应用程序客户端密钥 | `config/api.config.js` | 获取方式同上，特别注意这个**需要对原密钥进行AES加密**（可在原作者编写的[使用文档](https://ovi.swo.moe/zh/docs/advanced#修改-apiconfigjs)中进行） |
+| `USER_PRINCIPAL_NAME` | 您的OneDrive帐户 | `config/site.config.js` | **字母大小写必须一致** |
+| `BASE_DIRECTORY` | 您要分享的OneDrive目录 | `config/site.config.js` | （格式为`/目录名`），根目录则填写`/` |
+| `CLIENT_ID` | 您在微软Azure注册的应用程序客户端ID | `config/api.config.js` | 原作者提供的已过期，建议自己注册一个，有效期可以设到两年（反正也要设置帐户的API权限，顺道咯）。获取方式参照原作者编写的[使用文档](https://ovi.swo.moe/zh/docs/advanced#使用你自己的-client-id-与-secret) |
+| `CLIENT_SECRET` | 您在微软Azure注册的应用程序客户端密钥 | `config/api.config.js` | 获取方式同上，特别注意这个**需要对原密钥进行AES加密**（可在原作者编写的[使用文档](https://ovi.swo.moe/zh/docs/advanced#修改-apiconfigjs)中进行） |
 
 ### 可选变量
 | 名称 | 描述 | 原路径 | 说明 |
@@ -80,21 +80,17 @@
 
 ## 安全风险
 
-- 本版本和原作者的存档版本中，部署者的OneDrive账户`USER_PRINCIPAL_NAME`都会暴露在网页的源代码中。
+- 原作者的存档版本中，部署者的OneDrive账户`USER_PRINCIPAL_NAME`都会暴露在网页的源代码中。
 
 - 在原作者的存档版本中，部署者的`clientId`可以在OAuth认证第二步中获取授权码的链接中看到，`obfuscatedClientSecret`可以在OAuth认证第一步的源代码中看到。
 
-> 本版本在执行OAuth认证过程时会检查是否已经通过了认证，若已通过认证则会重定向到主页，否则才会继续进行OAuth认证过程。如此试图阻止有心人通过OAuth认证的链接地址获取`clientId`和`obfuscatedClientSecret`的值。
+> 本版本在执行OAuth认证过程时会检查是否已经通过了认证，若已通过认证则会重定向到主页，否则才会继续进行OAuth认证过程。
 
 - 因为Next.js的设计决策，以`NEXT_PUBLIC_`开头的环境变量不仅在服务器端可用，而且在客户端（浏览器）也可用。这意味着任何以`NEXT_PUBLIC_`开头的环境变量都会被包含在构建的JavaScript文件中，并会被发送到用户的浏览器。因此，任何访问你的网站的人都可以通过查看网站的源代码或网络请求来查看这些环境变量的值。
-
-- 最开始在把`config/api.config.js`中的`clientId`和`obfuscatedClientSecret`放在环境变量中设置时，有试过使用不以`NEXT_PUBLIC_`开头的环境变量键名，但会在OAuth认证时，出现各种各样的问题而无法完成OAuth认证。为了顺利部署，只好先使用以`NEXT_PUBLIC_`开头的环境变量键名了。考虑到`clientId`和`ClientSecret`在没有OneDrive帐户的登录密码时，也不会有太大问题，并且也设定了当完成OAuth认证后无法轻易访问OAuth认证页面获取这些敏感信息，就暂时这样解决了。
 
 ## 待办事项
 
 - 将密码放在环境变量中，而不是加密目录下的`.password`文件中。
-
-- 深入研究原始版本的代码，努力以非`NEXT_PUBLIC_`开头的环境变量键名实现功能，以提高安全性。
 
 - 重新设计LOGO。原始LOGO的对比度太低，与页面上其他图标和字体的风格不够一致。
 
