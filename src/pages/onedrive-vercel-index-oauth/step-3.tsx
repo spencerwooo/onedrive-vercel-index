@@ -10,7 +10,7 @@ import siteConfig from '../../../config/site.config'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 
-import { getAuthPersonInfo, requestTokenWithAuthCode, sendTokenToServer, getConfig } from '../../utils/oAuthHandler'
+import { getAuthPersonInfo, requestTokenWithAuthCode, sendTokenToServer } from '../../utils/oAuthHandler'
 import { LoadingIcon } from '../../components/Loading'
 import { getAccessToken } from '../api'  // 导入getAccessToken函数
 
