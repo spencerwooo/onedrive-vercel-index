@@ -10,12 +10,14 @@ import siteConfig from '../../../config/site.config'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 
-import { getAuthPersonInfo, requestTokenWithAuthCode, sendTokenToServer } from '../../utils/oAuthHandler'
+import { getAuthPersonInfo, requestTokenWithAuthCode, sendTokenToServer, getConfig } from '../../utils/oAuthHandler'
 import { LoadingIcon } from '../../components/Loading'
 import { getAccessToken } from '../api'  // 导入getAccessToken函数
 
 export async function getServerSideProps({ query, locale }) {
   const { authCode } = query
+  const clientId = process.env.CLIENT_ID || '';
+  const clientSecret = process.env.CLIENT_SECRET || '';
   const userPrincipalName = process.env.USER_PRINCIPAL_NAME || '';
 
   // 检查是否已经通过OAuth认证
@@ -37,6 +39,8 @@ export async function getServerSideProps({ query, locale }) {
         error: 'No auth code present',
         description: 'Where is the auth code? Did you follow step 2 you silly donut?',
         ...(await serverSideTranslations(locale, ['common'])),
+        clientId,
+        clientSecret,
         userPrincipalName,
       },
     }
@@ -60,6 +64,8 @@ export async function getServerSideProps({ query, locale }) {
 
   return {
     props: {
+      clientId,
+      clientSecret,
       userPrincipalName,
       error: null,
       expiryTime,

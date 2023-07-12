@@ -57,13 +57,13 @@ export function extractAuthCodeFromRedirected(url: string): string {
 // and returns the access token and refresh token on success.
 export async function requestTokenWithAuthCode(
   code: string,
+  config: any,
   retry = 5
 ): Promise<
   | { expiryTime: string; accessToken: string; refreshToken: string }
   | { error: string; errorDescription: string; errorUri: string }
 > {
   try {
-    const config = await getConfig()
     const clientId = config.clientId
     const clientSecret = revealObfuscatedToken(config.clientSecret)
     const { redirectUri, authApi } = apiConfig
