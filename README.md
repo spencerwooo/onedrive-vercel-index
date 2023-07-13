@@ -6,17 +6,19 @@ This project is a fork from [spencerwooo/onedrive-vercel-index](https://github.c
 
 > This version has only been tested with an E5 Developer account. Other types of OneDrive accounts need further testing.
 
-## Demo
-
-The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](https://odi-demo.freeloop.one) of this One-Click Deployment version.
-
-![demo](./public/demo.png)
-
 ## Modifications
 
-- This version mainly moves some parameters that need to be set in the `api.config.js` and `site.config.js` in the `config/` to the environment variables of Vercel for setting. In this way, there is no need to - first fork the original repository - then manually modify the configuration file - and then deploy, but you can directly click the one-click deployment button in this document, enter the value of the environment variable during the deployment process, and then complete the deployment.
+- In this version, some variables that needed to be set in the `api.config.js` and `site.config.js` configuration files in the `config/` are now set in the environment variables of Vercel. In this way, there is no need to - first fork the original repository - then manually modify the configuration file - and then deploy. Instead, you can directly click the one-click deployment button in this document, enter the values of the environment variables during the deployment process, and then complete the deployment.
 
-- Another thing is that this version is set to automatically close the OAuth authentication channel after completing OAuth authentication, to prevent people with intentions from easily obtaining user configuration information through the OAuth authentication URL link.
+> In this version, some sensitive variables are set using environment variables with prefixes other than `NEXT_PUBLIC_`. This is done to prevent casual website visitors from easily obtaining your OneDrive account, ClientID, and ClientSecret information.
+
+- Additionally, this version is set to automatically close the OAuth authentication channel after OAuth authentication is completed. This is to prevent malicious individuals from easily obtaining user configuration information through the OAuth authentication URL link.
+
+## Demo
+
+The [Demo](https://odi-demo.freeloop.one) of this One-Click Deploy version. | The [Demo](https://drive.swo.moe) (UNMAINTAINED) by the original author.
+
+![demo](./public/demo.png)
 
 ## Getting Started
 
@@ -26,13 +28,13 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 - This project retrieves the file list and download links by calling OneDrive's API, so setting up the API permissions for your OneDrive account is essential. Please refer to the [DOCS](https://ovi.swo.moe/docs/advanced#modify-api-permissions).
 
-- The three API permissions that need to be set up are: `user.read`, `files.read.all`, `offline_access`.
+> The three API permissions that need to be set up are: `user.read`, `files.read.all`, `offline_access`.
 
-2. **Prepare the five [necessary environmental variables](#necessary-variables) to be filled in during deployment on Vercel.**
+2. **Prepare the five [necessary environmental variables (click to view)](#necessary-variables) to be filled in during deployment on Vercel.**
 
 ### Deploying to Vercel
 
-**Once you're prepared, you can click the button below to deploy:**
+3. **Once you're prepared, you can click the button below to deploy:**
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,USER_PRINCIPAL_NAME,BASE_DIRECTORY,CLIENT_ID,CLIENT_SECRET)
 
@@ -48,7 +50,7 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 >
 > [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FiRedScarf%2Fonedrive-vercel-index&env=NEXT_PUBLIC_SITE_TITLE,USER_PRINCIPAL_NAME,BASE_DIRECTORY,NEXT_PUBLIC_PROTECTED_ROUTES,CLIENT_ID,CLIENT_SECRET,KV_PREFIX) with `NEXT_PUBLIC_PROTECTED_ROUTES` & `KV_PREFIX`
 
-- After the initial successful deployment, the deployed page will return a 404 error because we still need to connect to the Redis database.
+4. After the initial successful deployment, the deployed page will return a 404 error because we still need to connect to the Redis database.
 
 > `REDIS_URL`:If you are encountering Redis database for the first time, I strongly recommend using Upstash, which is free and deeply integrated with Vercel. For details, refer to [Vercel Integration](https://docs.upstash.com/redis/howto/vercelintegration). Follow the instructions to set it up in Vercel's [Upstash Integration](https://vercel.com/integrations/upstash)(simply create a new database in the `Redis` of Upstash, then create a new integration in `Vercel Integrations`, and associate the just deployed OneDrive-Index project with the Redis database), it will automatically fill in the environment variables after project deployment.
 
@@ -80,17 +82,19 @@ The [Demo](https://drive.swo.moe) provided by the original author | The [Demo](h
 
 ## Security Risks
 
-- In the original archived version, the deployer's OneDrive account `USER_PRINCIPAL_NAME` is leaked in the source code of the webpage.
+- In the archived version of the original author, the `userPrincipalName`, `clientId`, and `obfuscatedClientSecret` of the OneDrive account of the deployer are exposed in the source code of the web page.
 
-- In the original archived version, the deployer's `clientId` can be seen in the link used to obtain the authorization code in OAuth Step-2. The `obfuscatedClientSecret` can be seen in the source code of the OAuth Step-1.
-
-> This version checks whether authentication has already been passed when performing the OAuth authentication process. If it has, it redirects to the homepage; otherwise, it proceeds with the OAuth authentication process. It attempts to prevent individuals with malicious intent from obtaining the values of `clientId` and `obfuscatedClientSecret` through the link address of OAuth authentication.
+> This version checks whether authentication has already been passed when performing the OAuth authentication process. If it has, it redirects to the homepage, otherwise, it proceeds with the OAuth authentication process. It attempts to prevent individuals with malicious intent from obtaining the values of `clientId` and `obfuscatedClientSecret` through the link address of OAuth authentication.
 
 - Because of the design decision of Next.js, environment variables starting with `NEXT_PUBLIC_` are not only available on the server side, but also on the client side (browser). This means that any environment variable starting with `NEXT_PUBLIC_` will be included in the built JavaScript file and will be sent to the user's browser. Therefore, anyone visiting your website can view the values of these environment variables by viewing the source code of the website or network requests.
+
+> This version uses non-`NEXT_PUBLIC_` prefixed environment variables for the `userPrincipalName`, `clientId`, `obfuscatedClientSecret`, and `baseDirectory` variables, making it as difficult as possible for website visitors to easily obtain your OneDrive account, ClientID, and ClientSecret information.
 
 ## Todo List
 
 - Put the password in the environment variables instead of the `.password` file.
+
+> However, in this way, it is more difficult to set different access passwords for different encrypted directories.
 
 - Redesign the LOGO. The contrast of the original LOGO is too low, and it is not consistent enough with the style of other icons and fonts on the page.
 

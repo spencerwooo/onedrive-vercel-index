@@ -12,27 +12,26 @@ import Footer from '../../components/Footer'
 
 import { getAuthPersonInfo, requestTokenWithAuthCode, sendTokenToServer } from '../../utils/oAuthHandler'
 import { LoadingIcon } from '../../components/Loading'
-import { getAccessToken } from '../api'  // 导入getAccessToken函数
+import { getAccessToken } from '../api'
 
 export async function getServerSideProps({ query, locale }) {
   const { authCode } = query
   const clientId = process.env.CLIENT_ID || '';
   const clientSecret = process.env.CLIENT_SECRET || '';
   const userPrincipalName = process.env.USER_PRINCIPAL_NAME || '';
-
-  // 检查是否已经通过OAuth认证
+  
+  // Check if OAuth authentication has been completed
   const existingAccessToken = await getAccessToken();
   if (existingAccessToken) {
-  // 如果已经通过OAuth认证，重定向到主页
+  // If OAuth authentication has been completed, redirect to the homepage
     return {
-      edirect: {
-        estination: '/',
-        ermanent: false,
+      redirect: {
+        destination: '/',
+        permanent: false,
       },
     }
   }
-
-  // 如果没有通过OAuth认证，继续执行OAuth认证的流程
+  // If the OAuth authentication is not completed, continue the process of OAuth authentication
   if (!authCode) {
     return {
       props: {

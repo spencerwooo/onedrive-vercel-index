@@ -55,11 +55,7 @@ export function extractAuthCodeFromRedirected(url: string): string {
 // After a successful authorisation, the code returned from the Microsoft OAuth 2.0 authorization URL
 // will be used to request an access token. This function requests the access token with the authorisation code
 // and returns the access token and refresh token on success.
-export async function requestTokenWithAuthCode(
-  code: string,
-  config: any,
-  retry = 5
-): Promise<
+export async function requestTokenWithAuthCode(code: string, config: any): Promise<
   | { expiryTime: string; accessToken: string; refreshToken: string }
   | { error: string; errorDescription: string; errorUri: string }
 > {
@@ -91,26 +87,10 @@ export async function requestTokenWithAuthCode(
         const { error, error_description, error_uri } = err.response.data
         return { error, errorDescription: error_description, errorUri: error_uri }
       })
-  } 
-  catch (error) {
+  } catch (error) {
     console.error("Failed to get config:", error)
-    let errorMessage = ""
-    if (error instanceof Error) {
-      errorMessage = error.message
-    }
-    if (retry > 0) {
-      console.log(`Retrying... ${retry} attempts left.`)
-      return requestTokenWithAuthCode(code, retry - 1)
-    }
-    else {
-      if (error instanceof Error) {
-        return { error: "Failed to get config", errorDescription: error.message, errorUri: "" }
-      } 
-      else {
-        // If error is not an instance of Error, we can return a generic error message
-        return { error: "Failed to get config", errorDescription: "Unknown error", errorUri: "" }
-      }
-    }
+    const errorMessage = error instanceof Error ? error.message : "Unknown error"
+    return { error: "Failed to get config", errorDescription: errorMessage, errorUri: "" }
   }
 }
 

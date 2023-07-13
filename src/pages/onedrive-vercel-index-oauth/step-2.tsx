@@ -11,11 +11,12 @@ import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import { LoadingIcon } from '../../components/Loading'
 import { extractAuthCodeFromRedirected, generateAuthorisationUrl } from '../../utils/oAuthHandler'
-import { getAccessToken } from '../api'  // 导入getAccessToken函数
+import { getAccessToken } from '../api'
 
 export async function getServerSideProps({ locale }) {
-  const accessToken = await getAccessToken(); // 使用getAccessToken函数获取访问令牌
-  // 如果访问令牌存在，重定向到主页
+  // Get accessToken using getAccessToken function
+  const accessToken = await getAccessToken();
+  // If the accessToken exists, redirect to the home page
   if (accessToken) {
     return {
       redirect: {
@@ -24,7 +25,7 @@ export async function getServerSideProps({ locale }) {
       },
     }
   }
-  // 如果访问令牌不存在，正常渲染页面
+  // If the accessToken does not exist, render the page normally
   return {
     props: {
       ...(await serverSideTranslations(locale, ['common'])),
